@@ -281,7 +281,6 @@ const Search = () => {
                   placeholder="Цена, От"
                   variant="filled"
                   min={0}
-                  max={filterQueries.maxPrice}
                   className="font-semibold w-full h-12 mb-[1px] p-2"
                   onChange={(min) => {
                     dispatch(
@@ -296,7 +295,7 @@ const Search = () => {
                 <DebouncedInput
                   placeholder="Цена, До"
                   variant="filled"
-                  min={filterQueries.minPrice}
+                  min={0}
                   className="font-semibold w-full h-12 mb-[1px] p-2"
                   onChange={(max) =>
                     dispatch(
@@ -341,7 +340,6 @@ const Search = () => {
                   placeholder="Год выпуска, От"
                   variant="filled"
                   min={0}
-                  max={filterQueries.maxYear}
                   className="font-semibold w-full h-12 mb-[1px] p-2"
                   onChange={(min) =>
                     dispatch(
@@ -356,8 +354,7 @@ const Search = () => {
                 <DebouncedInput
                   placeholder="Год выпуска, До"
                   variant="filled"
-                  min={filterQueries.minYear}
-                  max={new Date().getFullYear()}
+                  min={0}
                   className="font-semibold w-full h-12 mb-[1px] p-2"
                   onChange={(max) =>
                     dispatch(
@@ -693,8 +690,8 @@ const Search = () => {
                   {filteredData &&
                     filteredData.map((i) => (
                       <Link
-                        key={i.id}
-                        to={`/product/${i.id}`}
+                        key={i._id}
+                        to={`/product/${i._id}`}
                         className="w-[32%]"
                       >
                         <Card

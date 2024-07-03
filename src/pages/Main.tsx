@@ -108,6 +108,8 @@ const Main = () => {
     },
   ];
 
+  console.log(premiumData);
+
   return (
     <div>
       <div className="container mx-auto mt-10">
@@ -293,23 +295,23 @@ const Main = () => {
 
                             <img
                               alt="Car"
-                              src="/car.webp"
+                              src={i.images[0].imageUrl}
                               className="transition duration-300 hover:scale-110"
                             />
                           </div>
                         }
                       >
                         <p className="text-lg font-bold flex items-center justify-between">
-                          <span>
-                            {truncate("Mercedes-Benz12345rtefes", 13)}
+                          <span>{truncate(i.title, 13)}</span>
+                          <span className="text-[#707070] text-sm">
+                            {i.year}
                           </span>
-                          <span className="text-[#707070] text-sm">2025</span>
                         </p>
                         <p className="text-xl font-bold">
-                          {formatNumber(Number(1000000))} сомони
+                          {formatNumber(Number(i.price))} сомони
                         </p>
-                        <p className="text-[#ff8718] mt-1 font-bold">
-                          В кредит от 3500 сом/мес
+                        <p className="text-[#ff8718] mt-1 font-bold h-[22px]">
+                          {!!i.credit && `В кредит от {i.credit} сом/мес`}
                         </p>
                       </Card>
                     </Link>

@@ -12,6 +12,8 @@ export interface ProductType {
   rastamojen: string;
   color: string;
   domen: string;
+  images: { imageUrl: string; _id: string }[];
+  credit: number;
 }
 
 export interface MetaResponseType {
