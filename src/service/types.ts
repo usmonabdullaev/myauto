@@ -1,27 +1,35 @@
 export interface ProductType {
   _id: string;
+  tarif: "free" | "premium";
   title: string;
   description: string;
-  price: string;
-  year: string;
+  price: number;
+  year: number;
   phone: string;
   probeg: number;
   obyom: number;
   korobka: string;
   privod: string;
   rastamojen: string;
-  color: string;
-  domen: string;
   images: { imageUrl: string; _id: string }[];
   credit: number;
+  characteristics: {
+    mileage: number;
+    color: {
+      hex: string;
+      name: string;
+    };
+    transmission: string;
+    driveUnit: string;
+    engineCapacity: number;
+  };
+  city: string;
+  views: number;
 }
 
 export interface MetaResponseType {
-  total_items?: number;
-  total_pages?: number;
-  current_page?: number;
-  per_page?: number;
-  remaining_count?: number;
+  total_items: number;
+  total_pages: number;
 }
 
 export interface FilterQueriesType {
@@ -34,7 +42,7 @@ export interface FilterQueriesType {
   credit: boolean;
   minYear: number | undefined;
   maxYear: number | undefined;
-  mileage: number;
+  mileage: number | undefined;
   saddened: boolean;
   transmission: string[];
   gasEquipment: boolean;
@@ -48,11 +56,11 @@ export interface FilterQueriesToUrlType {
   sortBy?: "date" | "price";
   city?: string;
   model?: string;
-  minPrice?: number | undefined;
-  maxPrice?: number | undefined;
+  minPrice?: number;
+  maxPrice?: number;
   credit?: boolean;
-  minYear?: number | undefined;
-  maxYear?: number | undefined;
+  minYear?: number;
+  maxYear?: number;
   mileage?: number;
   saddened?: boolean;
   transmission?: string[];
@@ -60,7 +68,7 @@ export interface FilterQueriesToUrlType {
   fuelType?: string[];
   bargain?: boolean;
   exchange?: boolean;
-  limit?: number;
+  limit: number;
 }
 
 export type UserInfoType = {
@@ -81,9 +89,8 @@ export interface DataInitType {
   newDataLoading: boolean;
   filteredData: ProductType[];
   filteredDataLoading: boolean;
-  metaQuery: MetaResponseType;
+  metaData: MetaResponseType;
   filterQueries: FilterQueriesType;
-  gridType: "grid" | "line";
   singleData: ProductType | null;
   singleDataLoading: boolean;
   userInfo: UserInfoType | null;

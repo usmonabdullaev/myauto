@@ -8,7 +8,7 @@ import {
   MetaResponseType,
   ProductType,
 } from "../types.ts";
-import { filterObject, objectToQueryString } from "../functions.ts";
+import { filterObject } from "../functions.ts";
 
 const initialState: DataInitType = {
   data: [],
@@ -21,12 +21,9 @@ const initialState: DataInitType = {
   newDataLoading: false,
   filteredData: [],
   filteredDataLoading: false,
-  metaQuery: {
+  metaData: {
     total_items: 0,
     total_pages: 0,
-    current_page: 0,
-    per_page: 0,
-    remaining_count: 0,
   },
   filterQueries: {
     page: 1,
@@ -38,7 +35,7 @@ const initialState: DataInitType = {
     credit: false,
     minYear: undefined,
     maxYear: undefined,
-    mileage: 0,
+    mileage: undefined,
     saddened: false,
     transmission: [],
     gasEquipment: false,
@@ -46,7 +43,6 @@ const initialState: DataInitType = {
     bargain: false,
     exchange: false,
   },
-  gridType: "grid",
   singleData: null,
   singleDataLoading: false,
   userInfo: null,
@@ -111,19 +107,18 @@ export const getFilteredData = createAsyncThunk(
   "dataApi/getFilteredData",
   async (filter: FilterQueriesToUrlType, { rejectWithValue, dispatch }) => {
     const filtered = filterObject(filter);
-    const query = objectToQueryString(filtered);
     try {
-      const uri = `/data?${query}`;
-      const { data } = await axiosInstance.get<{
-        items: ProductType[];
+      const uri = `/car/filter`;
+      const { data } = await axiosInstance.post<{
+        data: ProductType[];
         meta: MetaResponseType;
-      }>(uri);
+      }>(uri, filtered);
 
       if (data.meta) {
         dispatch(setMetaQuery(data.meta));
       }
 
-      return data.items;
+      return data.data;
     } catch (err) {
       return rejectWithValue(err.message);
     }
@@ -134,7 +129,7 @@ export const getSingleData = createAsyncThunk(
   "dataApi/getSingleData",
   async (id: string, { rejectWithValue }) => {
     try {
-      const uri = `/data/${id}`;
+      const uri = `/car/${id}`;
       const { data } = await axiosInstance.get<ProductType>(uri);
       return data;
     } catch (err) {
@@ -178,13 +173,10 @@ export const dataSlice = createSlice({
   initialState,
   reducers: {
     setMetaQuery: (state, action: PayloadAction<MetaResponseType>) => {
-      state.metaQuery = { ...state.metaQuery, ...action.payload };
+      state.metaData = action.payload;
     },
     setFilterQueries: (state, action: PayloadAction<FilterQueriesType>) => {
       state.filterQueries = { ...state.filterQueries, ...action.payload };
-    },
-    setGridType: (state, action: PayloadAction<"grid" | "line">) => {
-      state.gridType = action.payload;
     },
   },
   extraReducers(builder) {
@@ -278,7 +270,6 @@ export const dataSlice = createSlice({
   },
 });
 
-export const { setMetaQuery, setFilterQueries, setGridType } =
-  dataSlice.actions;
+export const { setMetaQuery, setFilterQueries } = dataSlice.actions;
 
 export default dataSlice.reducer;

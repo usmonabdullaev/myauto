@@ -61,36 +61,60 @@ const Product = () => {
     },
   ];
 
-  const characteristics = [
+  const characteristics: {
+    label: string;
+    slug: string;
+    type: "number" | "string" | "bool" | "obj";
+  }[] = [
     {
-      id: 1,
-      key: "Пробег",
-      value: "80 км",
+      label: "Пробег",
+      slug: "mileage",
+      type: "number",
     },
     {
-      id: 2,
-      key: "Обьём двигателя",
-      value: "2.5 л",
+      label: "Обьём двигателя",
+      slug: "engineCapacity",
+      type: "number",
     },
     {
-      id: 3,
-      key: "Коробка передач",
-      value: "Автомат",
+      label: "Коробка передач",
+      slug: "transmission",
+      type: "string",
     },
     {
-      id: 4,
-      key: "Привод",
-      value: "Полный",
+      label: "Привод",
+      slug: "driveUnit",
+      type: "string",
     },
     {
-      id: 5,
-      key: "Растаможен",
-      value: "Да",
+      label: "Растаможен",
+      slug: "saddened",
+      type: "bool",
     },
     {
-      id: 6,
-      key: "Цвет",
-      value: "Черный",
+      label: "Цвет",
+      slug: "color",
+      type: "obj",
+    },
+    {
+      label: "Тип топлива",
+      slug: "fuelType",
+      type: "string",
+    },
+    {
+      label: "Газовое оборудование",
+      slug: "gasEquipment",
+      type: "bool",
+    },
+    {
+      label: "Торг",
+      slug: "bargain",
+      type: "bool",
+    },
+    {
+      label: "Обмен",
+      slug: "exchange",
+      type: "bool",
     },
   ];
 
@@ -99,6 +123,10 @@ const Product = () => {
       setShowAllCharacteristics(true);
     }
   }, [characteristics.length]);
+
+  if (!singleData) {
+    return null;
+  }
 
   return (
     <div>
@@ -158,15 +186,15 @@ const Product = () => {
           <div className="w-[69%]">
             <div className="flex items-start justify-start">
               <div className="w-[10%] h-full flex flex-col items-center gap-y-1 justify-between">
-                {[0, 1, 2, 3].map((i) => (
+                {singleData.images.map((i, index) => (
                   <div
-                    key={i}
-                    onClick={() => sliderRef.current?.goTo(i)}
+                    key={i._id}
+                    onClick={() => sliderRef.current?.goTo(index)}
                     className={`w-[80px] h-[80px] rounded-lg border-[#008eff] cursor-pointer ${
-                      activeSlider === i ? "border-2" : ""
+                      activeSlider === index ? "border-2" : ""
                     }`}
                     style={{
-                      backgroundImage: "url(/car-original.png)",
+                      backgroundImage: `url(${i.imageUrl})`,
                       backgroundRepeat: "no-repeat",
                       backgroundSize: "cover",
                       backgroundPosition: "center center",
@@ -223,57 +251,26 @@ const Product = () => {
                   draggable
                   arrows
                 >
-                  <div className="h-[400px] w-full">
-                    <div
-                      className="h-full w-full"
-                      style={{
-                        backgroundImage: "url(/car-original.png)",
-                        backgroundRepeat: "no-repeat",
-                        backgroundSize: "cover",
-                        backgroundPosition: "center center",
-                      }}
-                    ></div>
-                  </div>
-                  <div className="h-[400px] w-full">
-                    <div
-                      className="!h-full w-full"
-                      style={{
-                        backgroundImage: "url(/car-original.png)",
-                        backgroundRepeat: "no-repeat",
-                        backgroundSize: "cover",
-                        backgroundPosition: "center",
-                      }}
-                    ></div>
-                  </div>
-                  <div className="h-[400px] w-full">
-                    <div
-                      className="!h-full w-full"
-                      style={{
-                        backgroundImage: "url(/car-original.png)",
-                        backgroundRepeat: "no-repeat",
-                        backgroundSize: "cover",
-                        backgroundPosition: "center",
-                      }}
-                    ></div>
-                  </div>
-                  <div className="h-[400px] w-full">
-                    <div
-                      className="!h-full w-full"
-                      style={{
-                        backgroundImage: "url(/car-original.png)",
-                        backgroundRepeat: "no-repeat",
-                        backgroundSize: "cover",
-                        backgroundPosition: "center",
-                      }}
-                    ></div>
-                  </div>
+                  {singleData.images.map((i) => (
+                    <div key={i._id} className="h-[400px] w-full">
+                      <div
+                        className="h-full w-full"
+                        style={{
+                          backgroundImage: `url(${i.imageUrl})`,
+                          backgroundRepeat: "no-repeat",
+                          backgroundSize: "cover",
+                          backgroundPosition: "center center",
+                        }}
+                      ></div>
+                    </div>
+                  ))}
                 </Carousel>
               </div>
             </div>
             <div className="mt-10">
               <h3 className="text-[#0a192d] font-bold text-2xl">Описание</h3>
               <p className="mt-3 text-[#62676d] font-normal">
-                {singleData?.description}
+                {singleData.description}
               </p>
             </div>
             <div className="mt-12">
@@ -322,7 +319,7 @@ const Product = () => {
                             >
                               <p className="text-[#62676d] text-xs">Это авто</p>
                               <p className="text-[#0a192d] font-bold">
-                                {formatNumber(180000)} сом.
+                                {formatNumber(singleData.price)} сом.
                               </p>
                             </div>
                           </div>
@@ -444,14 +441,17 @@ const Product = () => {
           <div className="w-[30%]">
             <div className="bg-white rounded-lg p-4">
               <p className="text-[#0a192d] font-semibold">
-                Toyota Camry <span className="text-[#62676d]">2023</span>
+                {singleData.title}{" "}
+                <span className="text-[#62676d]">{singleData.year}</span>
               </p>
               <p className="font-bold text-2xl text-[#0a192d]">
-                {formatNumber(180000)} сом.
+                {formatNumber(singleData.price)} сом.
               </p>
-              <p className="text-[#ff8718] font-bold">
-                В кредит от 3450 с./мес.
-              </p>
+              {!!singleData.credit && (
+                <p className="text-[#ff8718] mt-1 font-bold h-[22px]">
+                  В кредит от {singleData.credit} сом/мес
+                </p>
+              )}
               <div className="bg-[#07a8cb] text-white py-1 px-2 inline-block mt-4 rounded-lg font-normal">
                 <p className="flex items-center gap-2">
                   <svg
@@ -472,9 +472,11 @@ const Product = () => {
                 В наличии
               </p>
               <div className="flex items-center gap-3 mt-4">
-                <p className="bg-[#ff8718] text-white w-full rounded-lg font-bold h-12 flex items-center justify-center cursor-pointer">
-                  КУПИТЬ В КРЕДИТ
-                </p>
+                {!!singleData.credit && (
+                  <p className="bg-[#ff8718] text-white w-full rounded-lg font-bold h-12 flex items-center justify-center cursor-pointer">
+                    КУПИТЬ В КРЕДИТ
+                  </p>
+                )}
                 <p className="bg-[#008eff] text-white w-full rounded-lg font-bold h-12 flex items-center justify-center gap-2 cursor-pointer">
                   <span>ПОЗВОНИТЬ</span>
                   <svg
@@ -502,10 +504,32 @@ const Product = () => {
                       return null;
                     }
                   }
+
+                  if (i.type === "obj") {
+                    return (
+                      <div key={i.slug} className="grid grid-cols-12">
+                        <p className="text-[#62676d] col-span-8">Цвет:</p>
+                        <p className="text-[#3c5069] col-span-4">
+                          {singleData.characteristics.color.name}
+                        </p>
+                      </div>
+                    );
+                  }
+
                   return (
-                    <div key={i.id} className="grid grid-cols-2">
-                      <p className="text-[#62676d]">{i.key}:</p>
-                      <p className="text-[#3c5069]">{i.value}</p>
+                    <div key={i.slug} className="grid grid-cols-12">
+                      <p className="text-[#62676d] col-span-8">{i.label}:</p>
+                      <p className="text-[#3c5069] col-span-4">
+                        {(i.type === "string" || i.type === "number") &&
+                          singleData.characteristics[i.slug]}
+                        {i.type === "bool"
+                          ? singleData.characteristics[i.slug]
+                            ? "Да"
+                            : "Нет"
+                          : null}{" "}
+                        {i.slug === "mileage" && "км"}
+                        {i.slug === "engineCapacity" && "л"}
+                      </p>
                     </div>
                   );
                 })}
@@ -631,7 +655,7 @@ const Product = () => {
             {filteredData &&
               filteredData.map((i) => (
                 <Card
-                  key={i.id}
+                  key={i._id}
                   className="w-[19%]"
                   style={{ cursor: "pointer" }}
                   cover={

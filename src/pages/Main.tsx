@@ -24,7 +24,7 @@ const Main = () => {
     data,
     dataLoading,
     filterQueries,
-    metaQuery,
+    metaData,
     premiumData,
     premiumDataLoading,
     searchCar,
@@ -74,7 +74,7 @@ const Main = () => {
   };
 
   useEffect(() => {
-    dispatch(getFilteredData({}));
+    dispatch(getFilteredData({ limit: 10, page: 1 }));
   }, [filterQueries, dispatch]);
 
   const selectOptions = [
@@ -107,8 +107,6 @@ const Main = () => {
       id: "7",
     },
   ];
-
-  console.log(premiumData);
 
   return (
     <div>
@@ -248,7 +246,7 @@ const Main = () => {
                 to="/search"
                 className="h-full flex items-center justify-center flex-1 bg-[#008eff] text-white rounded font-semibold text-md"
               >
-                ПОКАЗАТЬ {metaQuery.total_items || 0} ОБЪЯВЛЕНИЙ
+                ПОКАЗАТЬ {metaData.total_items || 0} ОБЪЯВЛЕНИЙ
               </Link>
             </div>
           </div>
@@ -257,7 +255,12 @@ const Main = () => {
 
       <div className="container mx-auto mt-12">
         <div className="flex items-center justify-between">
-          <h3 className="font-bold text-xl">Премиум объявление</h3>
+          <h3 className="font-bold text-xl">
+            Премиум объявление{" "}
+            <span className="text-[#707070] text-base font-normal">
+              {premiumData?.length}
+            </span>
+          </h3>
           <Link
             to="/"
             className="text-[#008eff] font-semibold border-[1px] border-[#008eff] border-solid p-2 hover:text-white hover:bg-[#008eff] transition"
@@ -308,10 +311,10 @@ const Main = () => {
                           </span>
                         </p>
                         <p className="text-xl font-bold">
-                          {formatNumber(Number(i.price))} сомони
+                          {formatNumber(i.price)} сомони
                         </p>
                         <p className="text-[#ff8718] mt-1 font-bold h-[22px]">
-                          {!!i.credit && `В кредит от {i.credit} сом/мес`}
+                          {!!i.credit && `В кредит от ${i.credit} сом/мес`}
                         </p>
                       </Card>
                     </Link>
@@ -342,7 +345,9 @@ const Main = () => {
         <div className="flex items-center justify-between">
           <h3 className="font-bold text-xl">
             Ищу авто{" "}
-            <span className="text-[#707070] text-base font-normal">203</span>
+            <span className="text-[#707070] text-base font-normal">
+              {searchCar?.length}
+            </span>
           </h3>
           <Link
             to="/"
@@ -369,26 +374,33 @@ const Main = () => {
                       style={{ width: 240, cursor: "pointer" }}
                       cover={
                         <div className="overflow-hidden rounded-t-lg relative">
+                          {i.tarif === "premium" && (
+                            <img
+                              src="/premium.svg"
+                              alt="Premium"
+                              className="absolute z-10 -top-[0.4px] -left-[24.4px]"
+                            />
+                          )}
                           <div className="absolute z-10 right-4 top-4 bg-[#ffffff44] hover:bg-[#ffffff7d] rounded-lg flex items-center justify-center p-[2px]">
                             <img src="/heart.png" alt="Bookmark" />
                           </div>
                           <img
                             alt="Car"
-                            src="/car.webp"
+                            src={i.images[0].imageUrl}
                             className="transition duration-300 hover:scale-110"
                           />
                         </div>
                       }
                     >
                       <p className="text-lg font-bold flex items-center justify-between">
-                        <span>{truncate("Mercedes-Benz12345rtefes", 13)}</span>
-                        <span className="text-[#707070] text-sm">2025</span>
+                        <span>{truncate(i.title, 13)}</span>
+                        <span className="text-[#707070] text-sm">{i.year}</span>
                       </p>
                       <p className="text-xl font-bold">
-                        {formatNumber(Number(1000000))} сомони
+                        {formatNumber(i.price)} сомони
                       </p>
-                      <p className="text-[#ff8718] mt-1 font-bold">
-                        В кредит от 3500 сом/мес
+                      <p className="text-[#ff8718] mt-1 font-bold h-[22px]">
+                        {!!i.credit && `В кредит от ${i.credit} сом/мес`}
                       </p>
                     </Card>
                   </SwiperSlide>
@@ -418,7 +430,9 @@ const Main = () => {
         <div className="flex items-center justify-between">
           <h3 className="font-bold text-xl">
             Новые объявления{" "}
-            <span className="text-[#707070] text-base font-normal">203</span>
+            <span className="text-[#707070] text-base font-normal">
+              {newData?.length || 0}
+            </span>
           </h3>
           <Link
             to="/"
@@ -445,26 +459,33 @@ const Main = () => {
                       style={{ width: 240, cursor: "pointer" }}
                       cover={
                         <div className="overflow-hidden rounded-t-lg relative">
+                          {i.tarif === "premium" && (
+                            <img
+                              src="/premium.svg"
+                              alt="Premium"
+                              className="absolute z-10 -top-[0.4px] -left-[24.4px]"
+                            />
+                          )}
                           <div className="absolute z-10 right-4 top-4 bg-[#ffffff44] hover:bg-[#ffffff7d] rounded-lg flex items-center justify-center p-[2px]">
                             <img src="/heart.png" alt="Bookmark" />
                           </div>
                           <img
                             alt="Car"
-                            src="/car.webp"
+                            src={i.images[0].imageUrl}
                             className="transition duration-300 hover:scale-110"
                           />
                         </div>
                       }
                     >
                       <p className="text-lg font-bold flex items-center justify-between">
-                        <span>{truncate("Mercedes-Benz12345rtefes", 13)}</span>
-                        <span className="text-[#707070] text-sm">2025</span>
+                        <span>{truncate(i.title, 13)}</span>
+                        <span className="text-[#707070] text-sm">{i.year}</span>
                       </p>
                       <p className="text-xl font-bold">
-                        {formatNumber(Number(1000000))} сомони
+                        {formatNumber(i.price)} сомони
                       </p>
-                      <p className="text-[#ff8718] mt-1 font-bold">
-                        В кредит от 3500 сом/мес
+                      <p className="text-[#ff8718] mt-1 font-bold h-[22px]">
+                        {!!i.credit && `В кредит от ${i.credit} сом/мес`}
                       </p>
                     </Card>
                   </SwiperSlide>
@@ -494,7 +515,9 @@ const Main = () => {
         <div className="flex items-center justify-between">
           <h3 className="font-bold text-xl">
             Электромобили{" "}
-            <span className="text-[#707070] text-base font-normal">203</span>
+            <span className="text-[#707070] text-base font-normal">
+              {data?.length || 0}
+            </span>
           </h3>
           <Link
             to="/"
@@ -521,26 +544,33 @@ const Main = () => {
                       style={{ width: 240, cursor: "pointer" }}
                       cover={
                         <div className="overflow-hidden rounded-t-lg relative">
+                          {i.tarif === "premium" && (
+                            <img
+                              src="/premium.svg"
+                              alt="Premium"
+                              className="absolute z-10 -top-[0.4px] -left-[24.4px]"
+                            />
+                          )}
                           <div className="absolute z-10 right-4 top-4 bg-[#ffffff44] hover:bg-[#ffffff7d] rounded-lg flex items-center justify-center p-[2px]">
                             <img src="/heart.png" alt="Bookmark" />
                           </div>
                           <img
                             alt="Car"
-                            src="/car.webp"
+                            src={i.images[0].imageUrl}
                             className="transition duration-300 hover:scale-110"
                           />
                         </div>
                       }
                     >
                       <p className="text-lg font-bold flex items-center justify-between">
-                        <span>{truncate("Mercedes-Benz12345rtefes", 13)}</span>
-                        <span className="text-[#707070] text-sm">2025</span>
+                        <span>{truncate(i.title, 13)}</span>
+                        <span className="text-[#707070] text-sm">{i.year}</span>
                       </p>
                       <p className="text-xl font-bold">
-                        {formatNumber(Number(1000000))} сомони
+                        {formatNumber(i.price)} сомони
                       </p>
-                      <p className="text-[#ff8718] mt-1 font-bold">
-                        В кредит от 3500 сом/мес
+                      <p className="text-[#ff8718] mt-1 font-bold h-[22px]">
+                        {!!i.credit && `В кредит от ${i.credit} сом/мес`}
                       </p>
                     </Card>
                   </SwiperSlide>

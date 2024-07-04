@@ -13,35 +13,32 @@ import { Link } from "react-router-dom";
 import { MainSliderSkeleton } from "../components/Skeletons.tsx";
 import { formatNumber, truncate } from "../service/functions.ts";
 import { useAppDispatch, useAppSelector } from "../service/hooks.ts";
-import {
-  getFilteredData,
-  setFilterQueries,
-  setGridType,
-} from "../service/slices/data.ts";
+import { getFilteredData, setFilterQueries } from "../service/slices/data.ts";
 import SelectLabel from "../components/SelectLabel.tsx";
 import DebouncedInput from "../components/DebouncedInput.tsx";
 
 const Search = () => {
-  const {
-    filteredDataLoading,
-    filteredData,
-    metaQuery,
-    filterQueries,
-    gridType,
-  } = useAppSelector((state) => state.data);
+  const { filteredDataLoading, filteredData, metaData, filterQueries } =
+    useAppSelector((state) => state.data);
   const dispatch = useAppDispatch();
   const [showAllColors, setShowAllColors] = useState(false);
+  const [gridType, setGridType] = useState<"grid" | "line">("grid");
 
   const onPageChange = (p: number) => {
     dispatch(setFilterQueries({ ...filterQueries, page: p }));
   };
 
   useEffect(() => {
-    dispatch(getFilteredData({ page: filterQueries.page }));
+    dispatch(
+      getFilteredData({
+        ...filterQueries,
+        limit: 9,
+      })
+    );
   }, [dispatch, filterQueries]);
 
   const onGridTypeChange = (value: "grid" | "line") => {
-    dispatch(setGridType(value));
+    setGridType(value);
   };
 
   const colorsOptions = [
@@ -145,7 +142,7 @@ const Search = () => {
 
       <div className="container mx-auto mt-14">
         <h1 className="text-3xl font-bold text-[#0a192d]">
-          Найдено {formatNumber(metaQuery.total_items || 0)} объявлений
+          Найдено {formatNumber(metaData.total_items || 0)} объявлений
         </h1>
       </div>
 
@@ -685,7 +682,7 @@ const Search = () => {
                 />
               ) : !filteredData.length ? (
                 <p className="text-center text-xl">Товары не найден</p>
-              ) : (
+              ) : gridType === "grid" ? (
                 <div className="flex flex-wrap justify-start gap-x-3 gap-y-6">
                   {filteredData &&
                     filteredData.map((i) => (
@@ -698,44 +695,51 @@ const Search = () => {
                           style={{ cursor: "pointer" }}
                           cover={
                             <div className="overflow-hidden rounded-t-lg relative">
+                              {i.tarif === "premium" && (
+                                <img
+                                  src="/premium.svg"
+                                  alt="Premium"
+                                  className="absolute z-10 -top-[0.4px] -left-[24.4px]"
+                                />
+                              )}
                               <div className="absolute z-10 right-4 top-4 bg-[#ffffff44] hover:bg-[#ffffff7d] rounded-lg flex items-center justify-center p-[2px]">
                                 <img src="/heart.png" alt="Bookmark" />
                               </div>
                               <img
                                 alt="Car"
-                                src="/car.webp"
+                                src={i.images[0].imageUrl}
                                 className="transition duration-300 hover:scale-110"
                               />
                             </div>
                           }
                         >
                           <p className="text-lg font-bold flex items-center justify-between">
-                            <span title={"Mercedes-Benz GLS K-1200"}>
-                              {truncate("Mercedes-Benz GLS K-1200", 15)}
+                            <span title={i.title}>{truncate(i.title, 15)}</span>
+                            <span className="text-[#707070] text-md">
+                              {i.year}
                             </span>
-                            <span className="text-[#707070] text-md">2025</span>
                           </p>
                           <p className="text-xl font-bold">
-                            {formatNumber(Number(1000000))} сомони
+                            {formatNumber(i.price)} сомони
                           </p>
-                          <p className="text-[#ff8718] mt-1 font-bold">
-                            В кредит от 3500 сом/мес
+                          <p className="text-[#ff8718] mt-1 font-bold h-[22px]">
+                            {!!i.credit && `В кредит от ${i.credit} сом/мес`}
                           </p>
                           <div className="font-semibold text-[#707070] flex flex-wrap gap-x-4 mt-2">
                             <p>Кроссовер</p>
-                            <p>Полный</p>
-                            <p>Автомат</p>
+                            <p>{i.characteristics.driveUnit}</p>
+                            <p>{i.characteristics.transmission}</p>
                             <p>Бензиновый</p>
-                            <p>2.0 л</p>
-                            <p>{formatNumber(18100)} км</p>
+                            <p>{i.characteristics.engineCapacity} л</p>
+                            <p>{formatNumber(i.characteristics.mileage)} км</p>
                           </div>
                           <hr className="mt-5" />
                           <div className="mt-3 flex items-center justify-between">
                             <p className="font-bold text-[#707070]">
-                              Вчера • Душанбе
+                              Вчера • {i.city}
                             </p>
                             <p className="text-[#707070] flex items-center gap-1 font-bold">
-                              33{" "}
+                              {i.views}{" "}
                               <svg
                                 xmlns="http://www.w3.org/2000/svg"
                                 width="16"
@@ -753,13 +757,90 @@ const Search = () => {
                       </Link>
                     ))}
                 </div>
+              ) : (
+                <div className="flex flex-col justify-start gap-y-5">
+                  {filteredData &&
+                    filteredData.map((i) => (
+                      <Link
+                        key={i._id}
+                        to={`/product/${i._id}`}
+                        className="w-full"
+                      >
+                        <div className="cursor-pointer bg-white rounded-l-lg grid grid-cols-3 w-full">
+                          <div className="overflow-hidden rounded-l-lg relative w-full h-full col-span-1">
+                            {i.tarif === "premium" && (
+                              <img
+                                src="/premium.svg"
+                                alt="Premium"
+                                className="absolute z-10 -top-[0.4px] -left-[24.4px]"
+                              />
+                            )}
+                            <div className="absolute z-10 right-4 top-4 bg-[#ffffff44] hover:bg-[#ffffff7d] rounded-lg flex items-center justify-center p-[2px]">
+                              <img src="/heart.png" alt="Bookmark" />
+                            </div>
+                            <img
+                              alt="Car"
+                              src={i.images[0].imageUrl}
+                              className="transition duration-300 hover:scale-110 h-full w-full object-cover"
+                            />
+                          </div>
+                          <div className="p-4 col-span-2">
+                            <p className="text-lg font-bold flex items-center justify-between">
+                              <span title={i.title}>
+                                {truncate(i.title, 15)}
+                              </span>
+                              <span className="text-[#707070] text-md">
+                                {i.year}
+                              </span>
+                            </p>
+                            <p className="text-xl font-bold">
+                              {formatNumber(i.price)} сомони
+                            </p>
+                            <p className="text-[#ff8718] mt-1 font-bold h-[22px]">
+                              {!!i.credit && `В кредит от ${i.credit} сом/мес`}
+                            </p>
+                            <div className="font-semibold text-[#707070] flex flex-wrap gap-x-4 mt-2">
+                              <p>Кроссовер</p>
+                              <p>{i.characteristics.driveUnit}</p>
+                              <p>{i.characteristics.transmission}</p>
+                              <p>Бензиновый</p>
+                              <p>{i.characteristics.engineCapacity} л</p>
+                              <p>
+                                {formatNumber(i.characteristics.mileage)} км
+                              </p>
+                            </div>
+                            <hr className="mt-5" />
+                            <div className="mt-3 flex items-center justify-between">
+                              <p className="font-bold text-[#707070]">
+                                Вчера • {i.city}
+                              </p>
+                              <p className="text-[#707070] flex items-center gap-1 font-bold">
+                                {i.views}{" "}
+                                <svg
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  width="16"
+                                  height="16"
+                                  fill="#707070"
+                                  className="bi bi-eye-fill"
+                                  viewBox="0 0 16 16"
+                                >
+                                  <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0" />
+                                  <path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8m8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7" />
+                                </svg>
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      </Link>
+                    ))}
+                </div>
               )}
             </div>
             <div className="mt-7 flex justify-end">
               <Pagination
-                defaultCurrent={metaQuery.current_page}
+                defaultCurrent={1}
                 defaultPageSize={1}
-                total={metaQuery.total_pages}
+                total={metaData.total_pages}
                 showSizeChanger={false}
                 onChange={onPageChange}
               />
