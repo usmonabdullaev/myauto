@@ -74,7 +74,7 @@ const Main = () => {
   };
 
   useEffect(() => {
-    dispatch(getFilteredData({ limit: 10, page: 1 }));
+    dispatch(getFilteredData({ limit: 10, ...filterQueries }));
   }, [filterQueries, dispatch]);
 
   const selectOptions = [
