@@ -299,7 +299,8 @@ const Main = () => {
                             <img
                               alt="Car"
                               src={i.images[0].imageUrl}
-                              className="transition duration-300 hover:scale-110"
+                              className="transition duration-300 hover:scale-110 h-[180px] w-full object-cover"
+                              height={180}
                             />
                           </div>
                         }
@@ -387,7 +388,8 @@ const Main = () => {
                           <img
                             alt="Car"
                             src={i.images[0].imageUrl}
-                            className="transition duration-300 hover:scale-110"
+                            className="transition duration-300 hover:scale-110 h-[180px] w-full object-cover"
+                            height={180}
                           />
                         </div>
                       }
@@ -472,7 +474,8 @@ const Main = () => {
                           <img
                             alt="Car"
                             src={i.images[0].imageUrl}
-                            className="transition duration-300 hover:scale-110"
+                            className="transition duration-300 hover:scale-110 h-[180px] w-full object-cover"
+                            height={180}
                           />
                         </div>
                       }
@@ -557,7 +560,8 @@ const Main = () => {
                           <img
                             alt="Car"
                             src={i.images[0].imageUrl}
-                            className="transition duration-300 hover:scale-110"
+                            className="transition duration-300 hover:scale-110 h-[180px] w-full object-cover"
+                            height={180}
                           />
                         </div>
                       }

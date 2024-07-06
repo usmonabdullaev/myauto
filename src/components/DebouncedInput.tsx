@@ -9,6 +9,7 @@ const DebouncedInput = ({
   max,
   className,
   value,
+  disabled = false,
 }: {
   onChange: (value: number) => void;
   placeholder?: string;
@@ -17,6 +18,7 @@ const DebouncedInput = ({
   max?: number;
   className?: string;
   value?: number;
+  disabled?: boolean;
 }) => {
   const [inputValue, setInputValue] = React.useState(0);
   const [debouncedValue, setDebouncedValue] = React.useState(0);
@@ -42,6 +44,7 @@ const DebouncedInput = ({
       className={className}
       onChange={(n) => handleInputChange(n || 0)}
       value={value}
+      disabled={disabled}
     />
   );
 };

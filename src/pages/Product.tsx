@@ -5,7 +5,7 @@ import { CarouselRef } from "antd/es/carousel/index";
 
 import { getFilteredData, getSingleData } from "../service/slices/data.ts";
 import { useAppDispatch, useAppSelector } from "../service/hooks.ts";
-import { formatNumber, truncate } from "../service/functions.ts";
+import { formatDate, formatNumber, truncate } from "../service/functions.ts";
 import { MainSliderSkeleton } from "../components/Skeletons.tsx";
 
 const Product = () => {
@@ -150,19 +150,24 @@ const Product = () => {
             {
               title: (
                 <Link to="/search" className="font-semibold">
-                  Toyota Camry
+                  {singleData.model}
                 </Link>
               ),
             },
             {
               title: (
-                <span className="font-semibold">Toyota Camry 2023 года</span>
+                <span className="font-semibold">
+                  {singleData.title} {singleData.year} года
+                </span>
               ),
             },
           ]}
         />
         <div className="flex items-center gap-4 text-[#77818d] text-sm">
-          <p>Опубликовано: Вчера, г.Душанбе</p>
+          <p>
+            Опубликовано: {formatDate(new Date(singleData.updated))}, г.
+            {singleData.city}
+          </p>
           <p>ID: {id}</p>
           <p className="flex items-center gap-1">
             <svg
@@ -176,7 +181,7 @@ const Product = () => {
               <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0" />
               <path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8m8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7" />
             </svg>
-            185
+            {singleData.views}
           </p>
         </div>
       </div>
@@ -377,7 +382,7 @@ const Product = () => {
                       Стоимость автомобиля
                     </span>
                     <p className="text-xl text-[#565656] p-2 pt-0">
-                      {formatNumber(180000)} сом.
+                      {formatNumber(singleData.price)} сом.
                     </p>
                   </div>
                   <div className="rounded-xl border-[1px] border-[#008eff] p-2 w-full flexflex-col">
@@ -477,7 +482,10 @@ const Product = () => {
                     КУПИТЬ В КРЕДИТ
                   </p>
                 )}
-                <p className="bg-[#008eff] text-white w-full rounded-lg font-bold h-12 flex items-center justify-center gap-2 cursor-pointer">
+                <a
+                  href={`tel:${singleData.authorPhone}`}
+                  className="bg-[#008eff] text-white w-full rounded-lg font-bold h-12 flex items-center justify-center gap-2 cursor-pointer"
+                >
                   <span>ПОЗВОНИТЬ</span>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -492,7 +500,7 @@ const Product = () => {
                       d="M1.885.511a1.745 1.745 0 0 1 2.61.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.68.68 0 0 0 .178.643l2.457 2.457a.68.68 0 0 0 .644.178l2.189-.547a1.75 1.75 0 0 1 1.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.6 18.6 0 0 1-7.01-4.42 18.6 18.6 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877z"
                     />
                   </svg>
-                </p>
+                </a>
               </div>
             </div>
             <div className="bg-white rounded-lg p-4 mt-4">
@@ -576,7 +584,9 @@ const Product = () => {
                     >
                       <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6" />
                     </svg>
-                    <p className="text-[#0a192d]">Пользователь myauto.tj</p>
+                    <p className="text-[#0a192d]">
+                      Пользователь {singleData.authorName}
+                    </p>
                   </div>
                   <div>
                     <svg
@@ -614,11 +624,11 @@ const Product = () => {
                         Номер телефона
                       </span>
                       <span className="font-semibold text-[#2d3744]">
-                        887422929
+                        {singleData.authorPhone}
                       </span>
                     </p>
                   </div>
-                  <div>
+                  {/* <div>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="14"
@@ -629,7 +639,7 @@ const Product = () => {
                     >
                       <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z" />
                     </svg>
-                  </div>
+                  </div> */}
                 </div>
               </div>
             </div>
@@ -649,7 +659,9 @@ const Product = () => {
         {filteredDataLoading ? (
           <MainSliderSkeleton limit={5} />
         ) : !filteredData.length ? (
-          <p className="text-center text-xl">Пусто</p>
+          <p className="text-center text-xl font-medium">
+            Нет похожих объявлений
+          </p>
         ) : (
           <div className="mt-4 flex item-center gap-4 justify-between">
             {filteredData &&
@@ -660,26 +672,34 @@ const Product = () => {
                   style={{ cursor: "pointer" }}
                   cover={
                     <div className="overflow-hidden rounded-t-lg relative">
+                      {i.tarif === "premium" && (
+                        <img
+                          src="/premium.svg"
+                          alt="Premium"
+                          className="absolute z-10 -top-[0.4px] -left-[24.4px]"
+                        />
+                      )}
                       <div className="absolute z-10 right-4 top-4 bg-[#ffffff44] hover:bg-[#ffffff7d] rounded-lg flex items-center justify-center p-[2px]">
                         <img src="/heart.png" alt="Bookmark" />
                       </div>
                       <img
                         alt="Car"
-                        src="/car.webp"
-                        className="transition duration-300 hover:scale-110"
+                        src={i.images[0].imageUrl}
+                        className="transition duration-300 hover:scale-110 h-[180px] w-full object-cover"
+                        height={180}
                       />
                     </div>
                   }
                 >
                   <p className="text-lg font-bold flex items-center justify-between">
-                    <span>{truncate("Mercedes-Benz12345rtefes", 13)}</span>
-                    <span className="text-[#707070] text-sm">2025</span>
+                    <span>{truncate(i.title, 13)}</span>
+                    <span className="text-[#707070] text-sm">{i.year}</span>
                   </p>
                   <p className="text-xl font-bold">
-                    {formatNumber(Number(1000000))} сомони
+                    {formatNumber(i.price)} сомони
                   </p>
-                  <p className="text-[#ff8718] mt-1 font-bold">
-                    В кредит от 3500 сом/мес
+                  <p className="text-[#ff8718] mt-1 font-bold h-[22px]">
+                    {!!i.credit && `В кредит от ${i.credit} сом/мес`}
                   </p>
                 </Card>
               ))}

@@ -11,7 +11,7 @@ import {
 import { Link } from "react-router-dom";
 
 import { MainSliderSkeleton } from "../components/Skeletons.tsx";
-import { formatNumber, truncate } from "../service/functions.ts";
+import { formatDate, formatNumber, truncate } from "../service/functions.ts";
 import { useAppDispatch, useAppSelector } from "../service/hooks.ts";
 import { getFilteredData, setFilterQueries } from "../service/slices/data.ts";
 import SelectLabel from "../components/SelectLabel.tsx";
@@ -23,6 +23,7 @@ const Search = () => {
   const dispatch = useAppDispatch();
   const [showAllColors, setShowAllColors] = useState(false);
   const [gridType, setGridType] = useState<"grid" | "line">("grid");
+  const [selectedColors, setSelectedColors] = useState<string[]>([]);
 
   const onPageChange = (p: number) => {
     dispatch(setFilterQueries({ ...filterQueries, page: p }));
@@ -36,6 +37,11 @@ const Search = () => {
       })
     );
   }, [dispatch, filterQueries]);
+
+  useEffect(() => {
+    dispatch(setFilterQueries({ ...filterQueries, colors: selectedColors }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedColors, dispatch]);
 
   const onGridTypeChange = (value: "grid" | "line") => {
     setGridType(value);
@@ -56,31 +62,6 @@ const Search = () => {
       label: "Черный",
       hex: "black",
       id: 3,
-    },
-    {
-      label: "Черный",
-      hex: "black",
-      id: 4,
-    },
-    {
-      label: "Черный",
-      hex: "black",
-      id: 5,
-    },
-    {
-      label: "Черный",
-      hex: "black",
-      id: 6,
-    },
-    {
-      label: "Черный",
-      hex: "black",
-      id: 7,
-    },
-    {
-      label: "Черный",
-      hex: "black",
-      id: 8,
     },
   ];
 
@@ -110,14 +91,14 @@ const Search = () => {
   ];
 
   const modelOptions = [
-    { value: "bmw", label: "BMW" },
+    { value: "Toyota", label: "Toyota" },
     {
-      value: "mers",
+      value: "Mers",
       label: "Mersedes-Benz",
     },
     {
-      value: "ferrari",
-      label: "Ferrari",
+      value: "BMW",
+      label: "BMW",
     },
   ];
 
@@ -180,6 +161,7 @@ const Search = () => {
                     }}
                     trigger={["click"]}
                     placement="bottomRight"
+                    disabled={filteredDataLoading}
                   >
                     <p className="text-[#3ca7fd] flex items-center gap-1 font-normal">
                       {sortByOptions.find((i) => i.key === filterQueries.sortBy)
@@ -244,21 +226,22 @@ const Search = () => {
             <div className="mt-5">
               <Select
                 placeholder="Выберите город"
-                onChange={(city) =>
+                onChange={(city) => {
                   dispatch(
                     setFilterQueries({
                       ...filterQueries,
                       city,
                     })
-                  )
-                }
+                  );
+                }}
                 className="custom-select font-semibold w-full h-12 placeholder:text-[#3f4e60]"
                 options={cityOptions.map((i) => ({
-                  value: i.value,
+                  value: i.label,
                   label: <SelectLabel>{i.label}</SelectLabel>,
                 }))}
                 variant="filled"
                 defaultValue={filterQueries.city || undefined}
+                disabled={filteredDataLoading}
               />
               <Select
                 placeholder="Марка и модель"
@@ -272,6 +255,7 @@ const Search = () => {
                 }))}
                 variant="filled"
                 defaultValue={filterQueries.model || undefined}
+                disabled={filteredDataLoading}
               />
               <div className="mt-2">
                 <DebouncedInput
@@ -288,6 +272,7 @@ const Search = () => {
                     );
                   }}
                   value={filterQueries.minPrice}
+                  disabled={filteredDataLoading}
                 />
                 <DebouncedInput
                   placeholder="Цена, До"
@@ -303,6 +288,7 @@ const Search = () => {
                     )
                   }
                   value={filterQueries.maxPrice}
+                  disabled={filteredDataLoading}
                 />
               </div>
               <div className="mt-2 bg-[#e8eaee] rounded-md h-12 px-2.5 flex items-center justify-between">
@@ -330,6 +316,7 @@ const Search = () => {
                     dispatch(setFilterQueries({ ...filterQueries, credit }))
                   }
                   checked={filterQueries.credit}
+                  disabled={filteredDataLoading}
                 />
               </div>
               <div className="mt-2">
@@ -347,6 +334,7 @@ const Search = () => {
                     )
                   }
                   value={filterQueries.minYear || undefined}
+                  disabled={filteredDataLoading}
                 />
                 <DebouncedInput
                   placeholder="Год выпуска, До"
@@ -362,6 +350,7 @@ const Search = () => {
                     )
                   }
                   value={filterQueries.maxYear}
+                  disabled={filteredDataLoading}
                 />
               </div>
               <DebouncedInput
@@ -378,6 +367,7 @@ const Search = () => {
                   )
                 }
                 value={filterQueries.mileage || undefined}
+                disabled={filteredDataLoading}
               />
               <div className="mt-2 bg-[#e8eaee] rounded-md h-12 px-2.5 flex items-center justify-between">
                 <p className="font-semibold text-[#3f4e60]">Растаможен в РТ</p>
@@ -388,13 +378,14 @@ const Search = () => {
                     )
                   }
                   checked={filterQueries.saddened}
+                  disabled={filteredDataLoading}
                 />
               </div>
               <div className="mt-2 bg-[#e8eaee] rounded-md p-2.5">
                 <h5 className="font-bold text-[#5c6774]">КОРОБКА ПЕРЕДАЧ</h5>
                 <div className="flex flex-col items-start gap-2 mt-3 select-none">
                   <Checkbox
-                    value="auto"
+                    value="Автомат"
                     className="font-semibold text-[#5c6774]"
                     onChange={(e) => {
                       if (e.target.checked) {
@@ -418,12 +409,13 @@ const Search = () => {
                         );
                       }
                     }}
-                    checked={filterQueries.transmission.includes("auto")}
+                    checked={filterQueries.transmission.includes("Автомат")}
+                    disabled={filteredDataLoading}
                   >
                     Автомат
                   </Checkbox>
                   <Checkbox
-                    value="manual"
+                    value="Механика"
                     className="font-semibold text-[#5c6774]"
                     onChange={(e) => {
                       if (e.target.checked) {
@@ -447,7 +439,8 @@ const Search = () => {
                         );
                       }
                     }}
-                    checked={filterQueries.transmission.includes("manual")}
+                    checked={filterQueries.transmission.includes("Механика")}
+                    disabled={filteredDataLoading}
                   >
                     Механика
                   </Checkbox>
@@ -457,8 +450,8 @@ const Search = () => {
                 <h5 className="font-bold text-[#5c6774]">ТИП ТОПЛИВА</h5>
                 <div className="flex flex-col items-start gap-2 mt-3">
                   <Checkbox
-                    value={"elect"}
-                    checked={filterQueries.fuelType.includes("elect")}
+                    value={"Электрический"}
+                    checked={filterQueries.fuelType.includes("Электрический")}
                     onChange={(e) => {
                       if (e.target.checked) {
                         dispatch(
@@ -482,12 +475,13 @@ const Search = () => {
                       }
                     }}
                     className="font-semibold text-[#5c6774]"
+                    disabled={filteredDataLoading}
                   >
                     Электрический
                   </Checkbox>
                   <Checkbox
-                    value={"benzin"}
-                    checked={filterQueries.fuelType.includes("benzin")}
+                    value={"Бензиновый"}
+                    checked={filterQueries.fuelType.includes("Бензиновый")}
                     className="font-semibold text-[#5c6774]"
                     onChange={(e) => {
                       if (e.target.checked) {
@@ -511,12 +505,13 @@ const Search = () => {
                         );
                       }
                     }}
+                    disabled={filteredDataLoading}
                   >
                     Бензиновый
                   </Checkbox>
                   <Checkbox
-                    value={"gibrid"}
-                    checked={filterQueries.fuelType.includes("gibrid")}
+                    value={"Гибридный"}
+                    checked={filterQueries.fuelType.includes("Гибридный")}
                     className="font-semibold text-[#5c6774]"
                     onChange={(e) => {
                       if (e.target.checked) {
@@ -540,12 +535,13 @@ const Search = () => {
                         );
                       }
                     }}
+                    disabled={filteredDataLoading}
                   >
                     Гибридный
                   </Checkbox>
                   <Checkbox
-                    value={"disel"}
-                    checked={filterQueries.fuelType.includes("disel")}
+                    value={"Дизельный"}
+                    checked={filterQueries.fuelType.includes("Дизельный")}
                     className="font-semibold text-[#5c6774]"
                     onChange={(e) => {
                       if (e.target.checked) {
@@ -569,6 +565,7 @@ const Search = () => {
                         );
                       }
                     }}
+                    disabled={filteredDataLoading}
                   >
                     Дизельный
                   </Checkbox>
@@ -585,6 +582,7 @@ const Search = () => {
                     )
                   }
                   checked={filterQueries.gasEquipment}
+                  disabled={filteredDataLoading}
                 />
               </div>
               <div className="mt-2 bg-[#e8eaee] rounded-md p-2.5">
@@ -600,54 +598,80 @@ const Search = () => {
                       <div
                         key={i.id}
                         className="flex items-center gap-4 cursor-pointer color-block"
+                        onClick={() => {
+                          if (!filteredDataLoading) {
+                            if (selectedColors.includes(i.label)) {
+                              setSelectedColors(
+                                selectedColors.filter((j) => j !== i.label)
+                              );
+                            } else {
+                              setSelectedColors([...selectedColors, i.label]);
+                            }
+                          }
+                        }}
                       >
                         <div
-                          className={`size-6 rounded bg-white`}
+                          className={`size-6 rounded flex items-center justify-center`}
                           style={{ backgroundColor: i.hex }}
-                        ></div>
+                        >
+                          {selectedColors.includes(i.label) && (
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              width="24"
+                              height="24"
+                              fill="green"
+                              className="bi bi-check"
+                              viewBox="0 0 16 16"
+                            >
+                              <path d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425z" />
+                            </svg>
+                          )}
+                        </div>
                         <p className="text-[#5c6774] font-semibold text-sm">
                           {i.label}
                         </p>
                       </div>
                     );
                   })}
-                  <div
-                    className="flex items-center gap-4 cursor-pointer"
-                    onClick={() => setShowAllColors(!showAllColors)}
-                  >
-                    {showAllColors ? (
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="24"
-                        height="24"
-                        fill="#ef4444"
-                        className="bi bi-dash-square"
-                        viewBox="0 0 16 16"
-                      >
-                        <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z" />
-                        <path d="M4 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 4 8" />
-                      </svg>
-                    ) : (
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="24"
-                        height="24"
-                        fill="#008eff"
-                        className="bi bi-plus-square"
-                        viewBox="0 0 16 16"
-                      >
-                        <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z" />
-                        <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4" />
-                      </svg>
-                    )}
-                    <p
-                      className={`font-semibold text-sm ${
-                        showAllColors ? "text-red-500" : "text-[#008eff]"
-                      }`}
+                  {colorsOptions.length > 5 && (
+                    <div
+                      className="flex items-center gap-4 cursor-pointer"
+                      onClick={() => setShowAllColors(!showAllColors)}
                     >
-                      {showAllColors ? "Скрыт" : "Показать"} все цвета
-                    </p>
-                  </div>
+                      {showAllColors ? (
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="24"
+                          height="24"
+                          fill="#ef4444"
+                          className="bi bi-dash-square"
+                          viewBox="0 0 16 16"
+                        >
+                          <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z" />
+                          <path d="M4 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 4 8" />
+                        </svg>
+                      ) : (
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="24"
+                          height="24"
+                          fill="#008eff"
+                          className="bi bi-plus-square"
+                          viewBox="0 0 16 16"
+                        >
+                          <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z" />
+                          <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4" />
+                        </svg>
+                      )}
+                      <p
+                        className={`font-semibold text-sm ${
+                          showAllColors ? "text-red-500" : "text-[#008eff]"
+                        }`}
+                      >
+                        {showAllColors ? "Скрыт" : "Показать"} все цвета
+                      </p>
+                    </div>
+                  )}
                 </div>
               </div>
               <div className="mt-2 bg-[#e8eaee] rounded-t-md h-12 px-2.5 flex items-center justify-between">
@@ -657,6 +681,7 @@ const Search = () => {
                     dispatch(setFilterQueries({ ...filterQueries, bargain: e }))
                   }
                   checked={filterQueries.bargain}
+                  disabled={filteredDataLoading}
                 />
               </div>
               <div className="mt-[1px] bg-[#e8eaee] rounded-b-md h-12 px-2.5 flex items-center justify-between">
@@ -668,6 +693,7 @@ const Search = () => {
                     )
                   }
                   checked={filterQueries.exchange}
+                  disabled={filteredDataLoading}
                 />
               </div>
             </div>
@@ -676,7 +702,7 @@ const Search = () => {
             <div className="">
               {filteredDataLoading ? (
                 <MainSliderSkeleton
-                  limit={12}
+                  limit={9}
                   className="flex flex-wrap"
                   itemWidth="w-[33%]"
                 />
@@ -708,7 +734,8 @@ const Search = () => {
                               <img
                                 alt="Car"
                                 src={i.images[0].imageUrl}
-                                className="transition duration-300 hover:scale-110"
+                                className="transition duration-300 hover:scale-110 w-full h-[180px] object-cover"
+                                height={180}
                               />
                             </div>
                           }
@@ -729,14 +756,14 @@ const Search = () => {
                             <p>Кроссовер</p>
                             <p>{i.characteristics.driveUnit}</p>
                             <p>{i.characteristics.transmission}</p>
-                            <p>Бензиновый</p>
+                            <p>{i.characteristics.fuelType}</p>
                             <p>{i.characteristics.engineCapacity} л</p>
                             <p>{formatNumber(i.characteristics.mileage)} км</p>
                           </div>
                           <hr className="mt-5" />
                           <div className="mt-3 flex items-center justify-between">
                             <p className="font-bold text-[#707070]">
-                              Вчера • {i.city}
+                              {formatDate(new Date(i.updated))} • {i.city}
                             </p>
                             <p className="text-[#707070] flex items-center gap-1 font-bold">
                               {i.views}{" "}

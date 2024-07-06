@@ -11,7 +11,12 @@ export const filterObject = (obj: { [key: string]: any }) => {
   for (let i = 0; i < Object.keys(obj).length; i++) {
     const key = Object.keys(obj)[i];
     const value = obj[key];
-    if (value === "" || value === undefined || value === null) {
+    if (
+      value === "" ||
+      value === undefined ||
+      value === null ||
+      (typeof value === "object" && !value.length)
+    ) {
       continue;
     }
     filteredObj[key] = value;
@@ -27,4 +32,14 @@ export const objectToQueryString = (obj: { [key: string]: any }) => {
     queryArray.push([key, String(value)]);
   }
   return queryArray.map((i) => i.join("=")).join("&");
+};
+
+export const formatDate = (date: Date) => {
+  return date
+    .toLocaleDateString("en-GB", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+    })
+    .replace(/\//g, ".");
 };

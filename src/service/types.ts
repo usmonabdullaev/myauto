@@ -22,9 +22,17 @@ export interface ProductType {
     transmission: string;
     driveUnit: string;
     engineCapacity: number;
+    fuelType: string;
   };
   city: string;
   views: number;
+  created: string;
+  updated: string;
+  createdAt: string;
+  updatedAt: string;
+  authorPhone: string;
+  authorName: string;
+  model: string;
 }
 
 export interface MetaResponseType {
@@ -49,6 +57,7 @@ export interface FilterQueriesType {
   fuelType: string[];
   bargain: boolean;
   exchange: boolean;
+  colors: string[];
 }
 
 export interface FilterQueriesToUrlType {
