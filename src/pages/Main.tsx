@@ -11,6 +11,7 @@ import {
   getPremiumData,
   getSearchCar,
   getNewCars,
+  getElectCars,
 } from "../service/slices/data.ts";
 import { formatNumber, truncate } from "../service/functions.ts";
 import { MainSliderSkeleton } from "../components/Skeletons.tsx";
@@ -21,8 +22,6 @@ import SelectLabel from "../components/SelectLabel.tsx";
 const Main = () => {
   const dispatch = useAppDispatch();
   const {
-    data,
-    dataLoading,
     filterQueries,
     metaData,
     premiumData,
@@ -31,6 +30,8 @@ const Main = () => {
     searchCarLoading,
     newData,
     newDataLoading,
+    electData,
+    electDataLoading,
   } = useAppSelector((state) => state.data);
   const [swiper, setSwiper] = useState<SwiperType>();
   const [swiper1, setSwiper1] = useState<SwiperType>();
@@ -44,6 +45,7 @@ const Main = () => {
     dispatch(getPremiumData());
     dispatch(getSearchCar());
     dispatch(getNewCars());
+    dispatch(getElectCars());
   }, [dispatch]);
 
   const handleFilterChange = (
@@ -175,12 +177,12 @@ const Main = () => {
                 onChange={(e) => handleFilterChange(e, "model")}
                 className="font-semibold h-full w-1/6"
                 options={[
-                  { value: "1", label: <SelectLabel>BMW</SelectLabel> },
+                  { value: "BMW", label: <SelectLabel>BMW</SelectLabel> },
                   {
-                    value: "2",
+                    value: "Mers",
                     label: <SelectLabel>Mersedes-Benz</SelectLabel>,
                   },
-                  { value: "3", label: <SelectLabel>Bugatti</SelectLabel> },
+                  { value: "Bugatti", label: <SelectLabel>Bugatti</SelectLabel> },
                 ]}
               />
               <Select
@@ -371,40 +373,44 @@ const Main = () => {
               {searchCar &&
                 searchCar.map((i) => (
                   <SwiperSlide key={i._id}>
-                    <Card
-                      style={{ width: 240, cursor: "pointer" }}
-                      cover={
-                        <div className="overflow-hidden rounded-t-lg relative">
-                          {i.tarif === "premium" && (
+                    <Link to={`/product/${i._id}`}>
+                      <Card
+                        style={{ width: 240, cursor: "pointer" }}
+                        cover={
+                          <div className="overflow-hidden rounded-t-lg relative">
+                            {i.tarif === "premium" && (
+                              <img
+                                src="/premium.svg"
+                                alt="Premium"
+                                className="absolute z-10 -top-[0.4px] -left-[24.4px]"
+                              />
+                            )}
+                            <div className="absolute z-10 right-4 top-4 bg-[#ffffff44] hover:bg-[#ffffff7d] rounded-lg flex items-center justify-center p-[2px]">
+                              <img src="/heart.png" alt="Bookmark" />
+                            </div>
                             <img
-                              src="/premium.svg"
-                              alt="Premium"
-                              className="absolute z-10 -top-[0.4px] -left-[24.4px]"
+                              alt="Car"
+                              src={i.images[0].imageUrl}
+                              className="transition duration-300 hover:scale-110 h-[180px] w-full object-cover"
+                              height={180}
                             />
-                          )}
-                          <div className="absolute z-10 right-4 top-4 bg-[#ffffff44] hover:bg-[#ffffff7d] rounded-lg flex items-center justify-center p-[2px]">
-                            <img src="/heart.png" alt="Bookmark" />
                           </div>
-                          <img
-                            alt="Car"
-                            src={i.images[0].imageUrl}
-                            className="transition duration-300 hover:scale-110 h-[180px] w-full object-cover"
-                            height={180}
-                          />
-                        </div>
-                      }
-                    >
-                      <p className="text-lg font-bold flex items-center justify-between">
-                        <span>{truncate(i.title, 13)}</span>
-                        <span className="text-[#707070] text-sm">{i.year}</span>
-                      </p>
-                      <p className="text-xl font-bold">
-                        {formatNumber(i.price)} сомони
-                      </p>
-                      <p className="text-[#ff8718] mt-1 font-bold h-[22px]">
-                        {!!i.credit && `В кредит от ${i.credit} сом/мес`}
-                      </p>
-                    </Card>
+                        }
+                      >
+                        <p className="text-lg font-bold flex items-center justify-between">
+                          <span>{truncate(i.title, 13)}</span>
+                          <span className="text-[#707070] text-sm">
+                            {i.year}
+                          </span>
+                        </p>
+                        <p className="text-xl font-bold">
+                          {formatNumber(i.price)} сомони
+                        </p>
+                        <p className="text-[#ff8718] mt-1 font-bold h-[22px]">
+                          {!!i.credit && `В кредит от ${i.credit} сом/мес`}
+                        </p>
+                      </Card>
+                    </Link>
                   </SwiperSlide>
                 ))}
             </Swiper>
@@ -457,40 +463,44 @@ const Main = () => {
               {newData &&
                 newData.map((i) => (
                   <SwiperSlide key={i._id}>
-                    <Card
-                      style={{ width: 240, cursor: "pointer" }}
-                      cover={
-                        <div className="overflow-hidden rounded-t-lg relative">
-                          {i.tarif === "premium" && (
+                    <Link to={`/product/${i._id}`}>
+                      <Card
+                        style={{ width: 240, cursor: "pointer" }}
+                        cover={
+                          <div className="overflow-hidden rounded-t-lg relative">
+                            {i.tarif === "premium" && (
+                              <img
+                                src="/premium.svg"
+                                alt="Premium"
+                                className="absolute z-10 -top-[0.4px] -left-[24.4px]"
+                              />
+                            )}
+                            <div className="absolute z-10 right-4 top-4 bg-[#ffffff44] hover:bg-[#ffffff7d] rounded-lg flex items-center justify-center p-[2px]">
+                              <img src="/heart.png" alt="Bookmark" />
+                            </div>
                             <img
-                              src="/premium.svg"
-                              alt="Premium"
-                              className="absolute z-10 -top-[0.4px] -left-[24.4px]"
+                              alt="Car"
+                              src={i.images[0].imageUrl}
+                              className="transition duration-300 hover:scale-110 h-[180px] w-full object-cover"
+                              height={180}
                             />
-                          )}
-                          <div className="absolute z-10 right-4 top-4 bg-[#ffffff44] hover:bg-[#ffffff7d] rounded-lg flex items-center justify-center p-[2px]">
-                            <img src="/heart.png" alt="Bookmark" />
                           </div>
-                          <img
-                            alt="Car"
-                            src={i.images[0].imageUrl}
-                            className="transition duration-300 hover:scale-110 h-[180px] w-full object-cover"
-                            height={180}
-                          />
-                        </div>
-                      }
-                    >
-                      <p className="text-lg font-bold flex items-center justify-between">
-                        <span>{truncate(i.title, 13)}</span>
-                        <span className="text-[#707070] text-sm">{i.year}</span>
-                      </p>
-                      <p className="text-xl font-bold">
-                        {formatNumber(i.price)} сомони
-                      </p>
-                      <p className="text-[#ff8718] mt-1 font-bold h-[22px]">
-                        {!!i.credit && `В кредит от ${i.credit} сом/мес`}
-                      </p>
-                    </Card>
+                        }
+                      >
+                        <p className="text-lg font-bold flex items-center justify-between">
+                          <span>{truncate(i.title, 13)}</span>
+                          <span className="text-[#707070] text-sm">
+                            {i.year}
+                          </span>
+                        </p>
+                        <p className="text-xl font-bold">
+                          {formatNumber(i.price)} сомони
+                        </p>
+                        <p className="text-[#ff8718] mt-1 font-bold h-[22px]">
+                          {!!i.credit && `В кредит от ${i.credit} сом/мес`}
+                        </p>
+                      </Card>
+                    </Link>
                   </SwiperSlide>
                 ))}
             </Swiper>
@@ -519,7 +529,7 @@ const Main = () => {
           <h3 className="font-bold text-xl">
             Электромобили{" "}
             <span className="text-[#707070] text-base font-normal">
-              {data?.length || 0}
+              {electData?.length || 0}
             </span>
           </h3>
           <Link
@@ -529,9 +539,9 @@ const Main = () => {
             ПОСМОТРЕТЬ ВСЕ
           </Link>
         </div>
-        {dataLoading ? (
+        {electDataLoading ? (
           <MainSliderSkeleton />
-        ) : !data.length ? (
+        ) : !electData.length ? (
           <p className="text-center text-xl">Пусто</p>
         ) : (
           <div className="relative mt-4">
@@ -540,43 +550,47 @@ const Main = () => {
               slidesPerView={5}
               onSwiper={(s) => setSwiper3(s)}
             >
-              {data &&
-                data.map((i) => (
+              {electData &&
+                electData.map((i) => (
                   <SwiperSlide key={i._id}>
-                    <Card
-                      style={{ width: 240, cursor: "pointer" }}
-                      cover={
-                        <div className="overflow-hidden rounded-t-lg relative">
-                          {i.tarif === "premium" && (
+                    <Link to={`/product/${i._id}`}>
+                      <Card
+                        style={{ width: 240, cursor: "pointer" }}
+                        cover={
+                          <div className="overflow-hidden rounded-t-lg relative">
+                            {i.tarif === "premium" && (
+                              <img
+                                src="/premium.svg"
+                                alt="Premium"
+                                className="absolute z-10 -top-[0.4px] -left-[24.4px]"
+                              />
+                            )}
+                            <div className="absolute z-10 right-4 top-4 bg-[#ffffff44] hover:bg-[#ffffff7d] rounded-lg flex items-center justify-center p-[2px]">
+                              <img src="/heart.png" alt="Bookmark" />
+                            </div>
                             <img
-                              src="/premium.svg"
-                              alt="Premium"
-                              className="absolute z-10 -top-[0.4px] -left-[24.4px]"
+                              alt="Car"
+                              src={i.images[0].imageUrl}
+                              className="transition duration-300 hover:scale-110 h-[180px] w-full object-cover"
+                              height={180}
                             />
-                          )}
-                          <div className="absolute z-10 right-4 top-4 bg-[#ffffff44] hover:bg-[#ffffff7d] rounded-lg flex items-center justify-center p-[2px]">
-                            <img src="/heart.png" alt="Bookmark" />
                           </div>
-                          <img
-                            alt="Car"
-                            src={i.images[0].imageUrl}
-                            className="transition duration-300 hover:scale-110 h-[180px] w-full object-cover"
-                            height={180}
-                          />
-                        </div>
-                      }
-                    >
-                      <p className="text-lg font-bold flex items-center justify-between">
-                        <span>{truncate(i.title, 13)}</span>
-                        <span className="text-[#707070] text-sm">{i.year}</span>
-                      </p>
-                      <p className="text-xl font-bold">
-                        {formatNumber(i.price)} сомони
-                      </p>
-                      <p className="text-[#ff8718] mt-1 font-bold h-[22px]">
-                        {!!i.credit && `В кредит от ${i.credit} сом/мес`}
-                      </p>
-                    </Card>
+                        }
+                      >
+                        <p className="text-lg font-bold flex items-center justify-between">
+                          <span>{truncate(i.title, 13)}</span>
+                          <span className="text-[#707070] text-sm">
+                            {i.year}
+                          </span>
+                        </p>
+                        <p className="text-xl font-bold">
+                          {formatNumber(i.price)} сомони
+                        </p>
+                        <p className="text-[#ff8718] mt-1 font-bold h-[22px]">
+                          {!!i.credit && `В кредит от ${i.credit} сом/мес`}
+                        </p>
+                      </Card>
+                    </Link>
                   </SwiperSlide>
                 ))}
             </Swiper>

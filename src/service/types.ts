@@ -96,6 +96,8 @@ export interface DataInitType {
   searchCarLoading: boolean;
   newData: ProductType[];
   newDataLoading: boolean;
+  electData: ProductType[];
+  electDataLoading: boolean;
   filteredData: ProductType[];
   filteredDataLoading: boolean;
   metaData: MetaResponseType;

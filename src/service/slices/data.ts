@@ -19,6 +19,8 @@ const initialState: DataInitType = {
   searchCarLoading: false,
   newData: [],
   newDataLoading: false,
+  electData: [],
+  electDataLoading: false,
   filteredData: [],
   filteredDataLoading: false,
   metaData: {
@@ -96,6 +98,19 @@ export const getNewCars = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const uri = `/home-data/news`;
+      const { data } = await axiosInstance.get<ProductType[]>(uri);
+      return data;
+    } catch (err) {
+      return rejectWithValue(err.message);
+    }
+  }
+);
+
+export const getElectCars = createAsyncThunk(
+  "dataApi/getElectCars",
+  async (_, { rejectWithValue }) => {
+    try {
+      const uri = `/home-data/elect`;
       const { data } = await axiosInstance.get<ProductType[]>(uri);
       return data;
     } catch (err) {
@@ -223,6 +238,17 @@ export const dataSlice = createSlice({
     });
     builder.addCase(getNewCars.rejected, (state) => {
       state.newDataLoading = false;
+    });
+
+    builder.addCase(getElectCars.pending, (state) => {
+      state.electDataLoading = true;
+    });
+    builder.addCase(getElectCars.fulfilled, (state, action) => {
+      state.electData = action.payload;
+      state.electDataLoading = false;
+    });
+    builder.addCase(getElectCars.rejected, (state) => {
+      state.electDataLoading = false;
     });
 
     builder.addCase(getFilteredData.pending, (state) => {
