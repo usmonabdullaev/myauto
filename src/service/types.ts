@@ -98,6 +98,8 @@ export interface DataInitType {
   newDataLoading: boolean;
   electData: ProductType[];
   electDataLoading: boolean;
+  similar: ProductType[];
+  similarLoading: boolean;
   filteredData: ProductType[];
   filteredDataLoading: boolean;
   metaData: MetaResponseType;

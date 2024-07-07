@@ -763,7 +763,8 @@ const Search = () => {
                           <hr className="mt-5" />
                           <div className="mt-3 flex items-center justify-between">
                             <p className="font-bold text-[#707070]">
-                              {formatDate(new Date(i.updated))} • {i.city}
+                              {formatDate(new Date(i.updated)).split(" ")[0]} •{" "}
+                              {i.city}
                             </p>
                             <p className="text-[#707070] flex items-center gap-1 font-bold">
                               {i.views}{" "}

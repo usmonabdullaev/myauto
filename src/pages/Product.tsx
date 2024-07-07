@@ -2,8 +2,9 @@ import React, { useEffect, useRef, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { Breadcrumb, Card, Carousel, InputNumber } from "antd";
 import { CarouselRef } from "antd/es/carousel/index";
+import Slider from "react-slick";
 
-import { getFilteredData, getSingleData } from "../service/slices/data.ts";
+import { getSimilar, getSingleData } from "../service/slices/data.ts";
 import { useAppDispatch, useAppSelector } from "../service/hooks.ts";
 import { formatDate, formatNumber, truncate } from "../service/functions.ts";
 import { MainSliderSkeleton } from "../components/Skeletons.tsx";
@@ -11,7 +12,7 @@ import { MainSliderSkeleton } from "../components/Skeletons.tsx";
 const Product = () => {
   const { id } = useParams();
   const dispatch = useAppDispatch();
-  const { filteredData, filteredDataLoading, singleData } = useAppSelector(
+  const { similar, similarLoading, singleData } = useAppSelector(
     (state) => state.data
   );
   const [activeSlider, setActiveSlider] = useState(0);
@@ -19,6 +20,7 @@ const Product = () => {
   const [selectedOption, setSelectedOption] = useState("1");
   const [firstPrice, setFirstPrice] = useState(30000);
   const [showAllCharacteristics, setShowAllCharacteristics] = useState(false);
+  const [slider2, setSlider2] = useState<any>(null);
 
   useEffect(() => {
     if (id) {
@@ -27,8 +29,10 @@ const Product = () => {
   }, [dispatch, id]);
 
   useEffect(() => {
-    dispatch(getFilteredData({ limit: 5, page: 1 }));
-  }, [dispatch]);
+    if (singleData) {
+      dispatch(getSimilar({ limit: 5, price: singleData.price }));
+    }
+  }, [dispatch, singleData]);
 
   const selectOptions = [
     {
@@ -124,9 +128,24 @@ const Product = () => {
     }
   }, [characteristics.length]);
 
+  useEffect(() => {
+    slider2?.slickGoTo?.(activeSlider);
+  }, [activeSlider, slider2]);
+
   if (!singleData) {
     return null;
   }
+
+  const settings = {
+    arrows: false,
+    dots: false,
+    infinite: false,
+    speed: 400,
+    slidesToShow: 4,
+    slidesToScroll: 1,
+    vertical: true,
+    verticalSwiping: true,
+  };
 
   return (
     <div>
@@ -189,25 +208,45 @@ const Product = () => {
       <div className="container mx-auto mt-4">
         <div className="flex items-start justify-between w-100">
           <div className="w-[69%]">
-            <div className="flex items-start justify-start">
-              <div className="w-[10%] h-full flex flex-col items-center gap-y-1 justify-between">
-                {singleData.images.map((i, index) => (
-                  <div
-                    key={i._id}
-                    onClick={() => sliderRef.current?.goTo(index)}
-                    className={`w-[80px] h-[80px] rounded-lg border-[#008eff] cursor-pointer ${
-                      activeSlider === index ? "border-2" : ""
-                    }`}
-                    style={{
-                      backgroundImage: `url(${i.imageUrl})`,
-                      backgroundRepeat: "no-repeat",
-                      backgroundSize: "cover",
-                      backgroundPosition: "center center",
-                    }}
-                  ></div>
-                ))}
+            <div className="grid grid-cols-12 items-start justify-start">
+              <div className="col-span-2 h-full max-h-[100%] overflow-hidden flex flex-col items-center gap-y-1 justify-between">
+                <Slider {...settings} ref={setSlider2}>
+                  {singleData.images.map((i, index) => (
+                    <div key={i._id} className="relative">
+                      {activeSlider === index && (
+                        <div
+                          className="absolute right-[100%] top-1/2"
+                          style={{ transform: "translate(0, -50%)" }}
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="24"
+                            height="24"
+                            fill="#008eff"
+                            className="bi bi-caret-right-fill"
+                            viewBox="0 0 16 16"
+                          >
+                            <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z" />
+                          </svg>
+                        </div>
+                      )}
+                      <div
+                        onClick={() => sliderRef.current?.goTo(index)}
+                        className={`w-[86px] h-[86px] rounded-lg border-[#008eff] cursor-pointer ${
+                          activeSlider === index ? "border-2" : ""
+                        }`}
+                        style={{
+                          backgroundImage: `url(${i.imageUrl})`,
+                          backgroundRepeat: "no-repeat",
+                          backgroundSize: "cover",
+                          backgroundPosition: "center center",
+                        }}
+                      ></div>
+                    </div>
+                  ))}
+                </Slider>
               </div>
-              <div className="w-[89%] select-none">
+              <div className="w-[89%] col-span-10 select-none">
                 <Carousel
                   ref={sliderRef}
                   className="border-2 hidden"
@@ -311,7 +350,7 @@ const Product = () => {
                           <div
                             style={{
                               transform: "translate(-20px, 0)",
-                              backgroundImage: "url(/car-original.png)",
+                              backgroundImage: `url(${singleData.images[0].imageUrl})`,
                               backgroundRepeat: "no-repeat",
                               backgroundSize: "cover",
                               backgroundPosition: "center center",
@@ -446,7 +485,7 @@ const Product = () => {
           <div className="w-[30%]">
             <div className="bg-white rounded-lg p-4">
               <p className="text-[#0a192d] font-semibold">
-                {singleData.title}{" "}
+                {singleData.title} -{" "}
                 <span className="text-[#62676d]">{singleData.year}</span>
               </p>
               <p className="font-bold text-2xl text-[#0a192d]">
@@ -656,52 +695,52 @@ const Product = () => {
 
       <div className="container mx-auto mt-12">
         <h3 className="font-bold text-xl">Похожие объявления</h3>
-        {filteredDataLoading ? (
+        {similarLoading ? (
           <MainSliderSkeleton limit={5} />
-        ) : !filteredData.length ? (
+        ) : !similar.length ? (
           <p className="text-center text-xl font-medium">
             Нет похожих объявлений
           </p>
         ) : (
           <div className="mt-4 flex item-center gap-4 justify-between">
-            {filteredData &&
-              filteredData.map((i) => (
-                <Card
-                  key={i._id}
-                  className="w-[19%]"
-                  style={{ cursor: "pointer" }}
-                  cover={
-                    <div className="overflow-hidden rounded-t-lg relative">
-                      {i.tarif === "premium" && (
+            {similar &&
+              similar.map((i) => (
+                <Link className="w-[19%]" to={`/product/${i._id}`} key={i._id}>
+                  <Card
+                    style={{ cursor: "pointer" }}
+                    cover={
+                      <div className="overflow-hidden rounded-t-lg relative">
+                        {i.tarif === "premium" && (
+                          <img
+                            src="/premium.svg"
+                            alt="Premium"
+                            className="absolute z-10 -top-[0.4px] -left-[24.4px]"
+                          />
+                        )}
+                        <div className="absolute z-10 right-4 top-4 bg-[#ffffff44] hover:bg-[#ffffff7d] rounded-lg flex items-center justify-center p-[2px]">
+                          <img src="/heart.png" alt="Bookmark" />
+                        </div>
                         <img
-                          src="/premium.svg"
-                          alt="Premium"
-                          className="absolute z-10 -top-[0.4px] -left-[24.4px]"
+                          alt="Car"
+                          src={i.images[0].imageUrl}
+                          className="transition duration-300 hover:scale-110 h-[180px] w-full object-cover"
+                          height={180}
                         />
-                      )}
-                      <div className="absolute z-10 right-4 top-4 bg-[#ffffff44] hover:bg-[#ffffff7d] rounded-lg flex items-center justify-center p-[2px]">
-                        <img src="/heart.png" alt="Bookmark" />
                       </div>
-                      <img
-                        alt="Car"
-                        src={i.images[0].imageUrl}
-                        className="transition duration-300 hover:scale-110 h-[180px] w-full object-cover"
-                        height={180}
-                      />
-                    </div>
-                  }
-                >
-                  <p className="text-lg font-bold flex items-center justify-between">
-                    <span>{truncate(i.title, 13)}</span>
-                    <span className="text-[#707070] text-sm">{i.year}</span>
-                  </p>
-                  <p className="text-xl font-bold">
-                    {formatNumber(i.price)} сомони
-                  </p>
-                  <p className="text-[#ff8718] mt-1 font-bold h-[22px]">
-                    {!!i.credit && `В кредит от ${i.credit} сом/мес`}
-                  </p>
-                </Card>
+                    }
+                  >
+                    <p className="text-lg font-bold flex items-center justify-between">
+                      <span>{truncate(i.title, 13)}</span>
+                      <span className="text-[#707070] text-sm">{i.year}</span>
+                    </p>
+                    <p className="text-xl font-bold">
+                      {formatNumber(i.price)} сомони
+                    </p>
+                    <p className="text-[#ff8718] mt-1 font-bold h-[22px]">
+                      {!!i.credit && `В кредит от ${i.credit} сом/мес`}
+                    </p>
+                  </Card>
+                </Link>
               ))}
           </div>
         )}

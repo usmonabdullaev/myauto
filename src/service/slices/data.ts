@@ -21,6 +21,8 @@ const initialState: DataInitType = {
   newDataLoading: false,
   electData: [],
   electDataLoading: false,
+  similar: [],
+  similarLoading: false,
   filteredData: [],
   filteredDataLoading: false,
   metaData: {
@@ -111,6 +113,19 @@ export const getElectCars = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const uri = `/home-data/elect`;
+      const { data } = await axiosInstance.get<ProductType[]>(uri);
+      return data;
+    } catch (err) {
+      return rejectWithValue(err.message);
+    }
+  }
+);
+
+export const getSimilar = createAsyncThunk(
+  "dataApi/getSimilar",
+  async (query: { limit: number; price: number }, { rejectWithValue }) => {
+    try {
+      const uri = `/car/similar?limit=${query.limit}&price=${query.price}`;
       const { data } = await axiosInstance.get<ProductType[]>(uri);
       return data;
     } catch (err) {
@@ -249,6 +264,17 @@ export const dataSlice = createSlice({
     });
     builder.addCase(getElectCars.rejected, (state) => {
       state.electDataLoading = false;
+    });
+
+    builder.addCase(getSimilar.pending, (state) => {
+      state.similarLoading = true;
+    });
+    builder.addCase(getSimilar.fulfilled, (state, action) => {
+      state.similar = action.payload;
+      state.similarLoading = false;
+    });
+    builder.addCase(getSimilar.rejected, (state) => {
+      state.similarLoading = false;
     });
 
     builder.addCase(getFilteredData.pending, (state) => {
