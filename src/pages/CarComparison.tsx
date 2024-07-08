@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import { getComparisonData } from "../service/slices/data.ts";
 import { useAppDispatch, useAppSelector } from "../service/hooks.ts";
 import { formatNumber, truncate } from "../service/functions.ts";
+import { IMAGE_URL } from "../service/env.ts";
 
 const CarComparison = () => {
   const dispatch = useAppDispatch();
@@ -31,8 +32,8 @@ const CarComparison = () => {
               }}
             >
               {comparisonData?.map((i) => (
-                <p key={i._id} className="text-[#0a192d]">
-                  2024
+                <p key={i.id} className="text-[#0a192d]">
+                  {i.year}
                 </p>
               ))}
             </div>
@@ -49,8 +50,8 @@ const CarComparison = () => {
               }}
             >
               {comparisonData?.map((i) => (
-                <p key={i._id} className="text-[#0a192d]">
-                  {formatNumber(160000)}
+                <p key={i.id} className="text-[#0a192d]">
+                  {formatNumber(i.characteristics.mileage)}
                 </p>
               ))}
             </div>
@@ -69,8 +70,8 @@ const CarComparison = () => {
               }}
             >
               {comparisonData?.map((i) => (
-                <p key={i._id} className="text-[#0a192d]">
-                  Автомат
+                <p key={i.id} className="text-[#0a192d]">
+                  {i.characteristics.transmission}
                 </p>
               ))}
             </div>
@@ -89,8 +90,8 @@ const CarComparison = () => {
               }}
             >
               {comparisonData?.map((i) => (
-                <p key={i._id} className="text-[#0a192d]">
-                  1.6
+                <p key={i.id} className="text-[#0a192d]">
+                  {i.characteristics.engineCapacity}
                 </p>
               ))}
             </div>
@@ -109,7 +110,7 @@ const CarComparison = () => {
               }}
             >
               {comparisonData?.map((i) => (
-                <p key={i._id} className="text-[#0a192d]">
+                <p key={i.id} className="text-[#0a192d]">
                   123 л.с.
                 </p>
               ))}
@@ -127,8 +128,8 @@ const CarComparison = () => {
               }}
             >
               {comparisonData?.map((i) => (
-                <p key={i._id} className="text-[#0a192d]">
-                  Передний
+                <p key={i.id} className="text-[#0a192d]">
+                  {i.characteristics.driveUnit}
                 </p>
               ))}
             </div>
@@ -145,7 +146,7 @@ const CarComparison = () => {
               }}
             >
               {comparisonData?.map((i) => (
-                <p key={i._id} className="text-[#0a192d]">
+                <p key={i.id} className="text-[#0a192d]">
                   Седан
                 </p>
               ))}
@@ -163,8 +164,8 @@ const CarComparison = () => {
               }}
             >
               {comparisonData?.map((i) => (
-                <p key={i._id} className="text-[#0a192d]">
-                  Серебристый
+                <p key={i.id} className="text-[#0a192d]">
+                  {i.characteristics.color.name}
                 </p>
               ))}
             </div>
@@ -225,10 +226,11 @@ const CarComparison = () => {
           {comparisonData &&
             comparisonData.map((i) => (
               <Card
-                key={i._id}
+                key={i.id}
                 style={{
                   cursor: "pointer",
                   background: "none",
+                  maxWidth: comparisonData.length === 1 ? "50%" : "100%",
                 }}
                 cover={
                   <div className="overflow-hidden h-[240px] rounded-t-lg relative">
@@ -246,24 +248,22 @@ const CarComparison = () => {
                     </div>
                     <img
                       alt="Car"
-                      src="/car.webp"
-                      className="transition duration-300 hover:scale-110 w-full h-full"
+                      src={`${IMAGE_URL}${i.images[0].image}`}
+                      className="transition duration-300  w-full h-full h-[180px]"
                       style={{ objectPosition: "center", objectFit: "cover" }}
                     />
                   </div>
                 }
               >
                 <p className="text-lg font-bold flex items-center justify-between">
-                  <span title="Mercedes-Benz12345rtefes">
-                    {truncate("Mercedes-Benz12345rtefes", 18)}
-                  </span>
-                  <span className="text-[#707070] text-sm">2025</span>
+                  <span title={i.title}>{truncate(i.title, 18)}</span>
+                  <span className="text-[#707070] text-sm">{i.year}</span>
                 </p>
                 <p className="text-xl font-bold">
-                  {formatNumber(Number(1000000))} сомони
+                  {formatNumber(i.price)} сомони
                 </p>
-                <p className="text-[#ff8718] mt-1 font-bold">
-                  В кредит от 3500 сом/мес
+                <p className="text-[#ff8718] mt-1 font-bold h-[22px]">
+                  {!!i.credit && `В кредит от ${i.credit} сом/мес`}
                 </p>
               </Card>
             ))}

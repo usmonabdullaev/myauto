@@ -1,6 +1,10 @@
-import { Breadcrumb } from "antd";
+import { Breadcrumb, Card } from "antd";
 import React from "react";
 import { Link } from "react-router-dom";
+
+import { formatNumber } from "../service/functions.ts";
+
+const { Meta } = Card;
 
 const BuyOnline = () => {
   return (
@@ -73,13 +77,69 @@ const BuyOnline = () => {
               <h3 className="font-bold text-xl text-[#0a192d]">
                 Выберите марку
               </h3>
-              <div className="grid grid-cols-4 gap-2">
-                <div className="rounded-md"></div>
+              <div className="grid grid-cols-4 gap-2 mt-4 justify-between">
+                <Card
+                  className="bg-[#008eff] ant-card cursor-pointer"
+                  cover={
+                    <div className="p-2">
+                      <img
+                        alt="example"
+                        className="h-[120px] w-full object-cover"
+                        src="https://imgd.aeplcdn.com/370x208/n/cw/ec/156405/xuv-3xo-exterior-right-front-three-quarter-33.jpeg?isig=0&q=80"
+                      />
+                    </div>
+                  }
+                >
+                  <Meta
+                    title={<p className="text-white text-center">Hyundai</p>}
+                  />
+                </Card>
+                <Card
+                  className="bg-[#e1e7ec] ant-card cursor-pointer"
+                  cover={
+                    <div className="p-2">
+                      <img
+                        alt="example"
+                        className="h-[120px] w-full object-cover"
+                        src="https://imgd.aeplcdn.com/370x208/n/cw/ec/156405/xuv-3xo-exterior-right-front-three-quarter-33.jpeg?isig=0&q=80"
+                      />
+                    </div>
+                  }
+                >
+                  <Meta title={<p className="text-center">Hyundai</p>} />
+                </Card>
               </div>
               <h3 className="font-bold text-xl text-[#0a192d] mt-6">
                 Выберите модель
               </h3>
-              <div></div>
+              <div className="grid grid-cols-3 gap-2 mt-4 justify-between">
+                <Card
+                  className="ant-card2 cursor-pointer"
+                  cover={
+                    <div className="bg-[#e1e7ec] p-2">
+                      <img
+                        alt="example"
+                        className="h-[160px] w-full object-cover"
+                        src="https://imgd.aeplcdn.com/370x208/n/cw/ec/156405/xuv-3xo-exterior-right-front-three-quarter-33.jpeg?isig=0&q=80"
+                      />
+                    </div>
+                  }
+                >
+                  <Meta
+                    title={
+                      <div>
+                        <small className="font-semibold">Hyundai Tucson</small>
+                        <h3 className="text-xl font-semibold">
+                          {formatNumber(133000)} сом.
+                        </h3>
+                        <p className="text-[#ff8718] mt-1 font-bold mt-0">
+                          В кредит от 2000 сом/мес
+                        </p>
+                      </div>
+                    }
+                  />
+                </Card>
+              </div>
             </div>
           </div>
           <div>AA</div>

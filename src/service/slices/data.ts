@@ -174,9 +174,9 @@ export const getComparisonData = createAsyncThunk(
   "dataApi/getComparisonData",
   async (_, { rejectWithValue }) => {
     try {
-      const uri = "/data?limit=4&page=1";
-      const { data } = await axiosInstance.get(uri);
-      return data.items;
+      const uri = "/test";
+      const { data } = await axiosInstance.get<ProductType[]>(uri);
+      return data;
     } catch (err) {
       return rejectWithValue(err.message);
     }
