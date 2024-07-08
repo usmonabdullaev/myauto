@@ -4,8 +4,9 @@ import { Breadcrumb, Card } from "antd";
 
 import { getUserInfo } from "../service/slices/data.ts";
 import { MainSliderSkeleton } from "../components/Skeletons.tsx";
-import { formatNumber, truncate } from "../service/functions.ts";
+import { formatDate, formatNumber, truncate } from "../service/functions.ts";
 import { useAppDispatch, useAppSelector } from "../service/hooks.ts";
+import { IMAGE_URL } from "../service/env.ts";
 
 const UserInfo = () => {
   const { id } = useParams();
@@ -17,8 +18,6 @@ const UserInfo = () => {
       dispatch(getUserInfo(id));
     }
   }, [dispatch, id]);
-
-  console.log(userInfo);
 
   return (
     <div>
@@ -48,9 +47,9 @@ const UserInfo = () => {
         <div className="flex items-start justify-between w-100">
           <div className="w-[29%]">
             <div className="rounded-lg p-4 bg-[#e4e9ef]">
-              {userInfo?.avatarUrl ? (
+              {userInfo?.user.avatar ? (
                 <img
-                  src="/car.webp"
+                  src={`${IMAGE_URL}${userInfo.user.avatar}`}
                   alt="Avatar"
                   width={48}
                   height={48}
@@ -73,10 +72,10 @@ const UserInfo = () => {
                 </svg>
               )}
               <h2 className="mt-2 font-bold text-[#0a192d] text-2xl">
-                Пользователь {userInfo?.fullName}
+                Пользователь {userInfo?.user.user_name}
               </h2>
               <p className="text-[#77818d] mt-2">
-                {userInfo?.ads.length} объявления
+                {userInfo?.cars.length} объявления
               </p>
               <div className="flex items-center justify-between mt-6">
                 <div className="flex items-center gap-3">
@@ -98,11 +97,11 @@ const UserInfo = () => {
                       Номер телефона
                     </span>
                     <span className="font-semibold text-[#2d3744]">
-                      {userInfo?.phoneNumber}
+                      {userInfo?.user.phone}
                     </span>
                   </p>
                 </div>
-                <div>
+                {/* <div>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="14"
@@ -113,24 +112,24 @@ const UserInfo = () => {
                   >
                     <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z" />
                   </svg>
-                </div>
+                </div> */}
               </div>
             </div>
           </div>
           <div className="w-[69%]">
-            <div className="">
+            <div>
               {userInfoLoading ? (
                 <MainSliderSkeleton
                   limit={3}
                   className="flex flex-wrap"
                   itemWidth="w-[33%]"
                 />
-              ) : !userInfo?.ads?.length ? (
+              ) : !userInfo?.cars?.length ? (
                 <p className="text-center text-xl">Пусто</p>
               ) : (
                 <div className="flex flex-wrap justify-start gap-x-3 gap-y-6">
-                  {userInfo.ads &&
-                    userInfo.ads.map((i) => (
+                  {userInfo.cars &&
+                    userInfo.cars.map((i) => (
                       <Link
                         key={i.id}
                         to={`/product/${i.id}`}
@@ -140,44 +139,53 @@ const UserInfo = () => {
                           style={{ cursor: "pointer" }}
                           cover={
                             <div className="overflow-hidden rounded-t-lg relative">
+                              {i.tarif === "premium" && (
+                                <img
+                                  src="/premium.svg"
+                                  alt="Premium"
+                                  className="absolute z-10 -top-[0.4px] -left-[24.4px]"
+                                />
+                              )}
                               <div className="absolute z-10 right-4 top-4 bg-[#ffffff44] hover:bg-[#ffffff7d] rounded-lg flex items-center justify-center p-[2px]">
                                 <img src="/heart.png" alt="Bookmark" />
                               </div>
                               <img
-                                alt="Car"
-                                src="/car.webp"
-                                className="transition duration-300 hover:scale-110"
+                                alt={i.title}
+                                src={`${IMAGE_URL}${i.images[0].image}`}
+                                className="transition duration-300 hover:scale-110 h-[180px] w-full object-cover"
+                                height={180}
                               />
                             </div>
                           }
                         >
                           <p className="text-lg font-bold flex items-center justify-between">
-                            <span title={"Mercedes-Benz GLS K-1200"}>
-                              {truncate("Mercedes-Benz GLS K-1200", 15)}
+                            <span title={i.title}>{truncate(i.title, 15)}</span>
+                            <span className="text-[#707070] text-md">
+                              {i.year}
                             </span>
-                            <span className="text-[#707070] text-md">2025</span>
                           </p>
                           <p className="text-xl font-bold">
-                            {formatNumber(Number(1000000))} сомони
+                            {formatNumber(i.price)} сомони
                           </p>
-                          <p className="text-[#ff8718] mt-1 font-bold">
-                            В кредит от 3500 сом/мес
+                          <p className="text-[#ff8718] mt-1 font-bold h-[22px]">
+                            {!!i.credit && `В кредит от ${i.credit} сом/мес`}
                           </p>
                           <div className="font-semibold text-[#707070] flex flex-wrap gap-x-4 mt-2">
                             <p>Кроссовер</p>
-                            <p>Полный</p>
-                            <p>Автомат</p>
-                            <p>Бензиновый</p>
-                            <p>2.0 л</p>
-                            <p>{formatNumber(18100)} км</p>
+                            <p>{i.characteristics.driveUnit}</p>
+                            <p>{i.characteristics.transmission}</p>
+                            <p>{i.characteristics.fuelType}</p>
+                            <p>{i.characteristics.engineCapacity} л</p>
+                            <p>{formatNumber(i.characteristics.mileage)} км</p>
                           </div>
                           <hr className="mt-5" />
                           <div className="mt-3 flex items-center justify-between">
                             <p className="font-bold text-[#707070]">
-                              Вчера • Душанбе
+                              {formatDate(new Date(i.updated)).split(" ")[0]} •{" "}
+                              {i.city}
                             </p>
                             <p className="text-[#707070] flex items-center gap-1 font-bold">
-                              33{" "}
+                              {i.views}{" "}
                               <svg
                                 xmlns="http://www.w3.org/2000/svg"
                                 width="16"

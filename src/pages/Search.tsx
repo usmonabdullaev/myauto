@@ -16,6 +16,7 @@ import { useAppDispatch, useAppSelector } from "../service/hooks.ts";
 import { getFilteredData, setFilterQueries } from "../service/slices/data.ts";
 import SelectLabel from "../components/SelectLabel.tsx";
 import DebouncedInput from "../components/DebouncedInput.tsx";
+import { IMAGE_URL } from "../service/env.ts";
 
 const Search = () => {
   const { filteredDataLoading, filteredData, metaData, filterQueries } =
@@ -101,6 +102,8 @@ const Search = () => {
       label: "BMW",
     },
   ];
+
+  console.log(filterQueries);
 
   return (
     <div>
@@ -383,7 +386,7 @@ const Search = () => {
               </div>
               <div className="mt-2 bg-[#e8eaee] rounded-md p-2.5">
                 <h5 className="font-bold text-[#5c6774]">КОРОБКА ПЕРЕДАЧ</h5>
-                <div className="flex flex-col items-start gap-2 mt-3 select-none">
+                <div className="flex flex-col items-start gap-2 mt-3">
                   <Checkbox
                     value="Автомат"
                     className="font-semibold text-[#5c6774]"
@@ -713,8 +716,8 @@ const Search = () => {
                   {filteredData &&
                     filteredData.map((i) => (
                       <Link
-                        key={i._id}
-                        to={`/product/${i._id}`}
+                        key={i.id}
+                        to={`/product/${i.id}`}
                         className="w-[32%]"
                       >
                         <Card
@@ -733,7 +736,7 @@ const Search = () => {
                               </div>
                               <img
                                 alt="Car"
-                                src={i.images[0].imageUrl}
+                                src={`${IMAGE_URL}${i.images[0].image}`}
                                 className="transition duration-300 hover:scale-110 w-full h-[180px] object-cover"
                                 height={180}
                               />
@@ -790,11 +793,11 @@ const Search = () => {
                   {filteredData &&
                     filteredData.map((i) => (
                       <Link
-                        key={i._id}
-                        to={`/product/${i._id}`}
+                        key={i.id}
+                        to={`/product/${i.id}`}
                         className="w-full"
                       >
-                        <div className="cursor-pointer bg-white rounded-l-lg grid grid-cols-3 w-full">
+                        <div className="cursor-pointer bg-white rounded-l-lg grid grid-cols-3 w-full h-[200px] overflow-hidden">
                           <div className="overflow-hidden rounded-l-lg relative w-full h-full col-span-1">
                             {i.tarif === "premium" && (
                               <img
@@ -808,7 +811,7 @@ const Search = () => {
                             </div>
                             <img
                               alt="Car"
-                              src={i.images[0].imageUrl}
+                              src={`${IMAGE_URL}${i.images[0].image}`}
                               className="transition duration-300 hover:scale-110 h-full w-full object-cover"
                             />
                           </div>

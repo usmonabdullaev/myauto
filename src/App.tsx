@@ -47,7 +47,7 @@ function App() {
           }
         />
         <Route
-          path="user-info/:id"
+          path="user/:id"
           element={
             <Suspense>
               <UserInfo />

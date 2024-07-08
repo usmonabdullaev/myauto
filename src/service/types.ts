@@ -1,38 +1,39 @@
 export interface ProductType {
-  _id: string;
+  id: number;
   tarif: "free" | "premium";
+  views: number;
+  city: string;
   title: string;
-  description: string;
-  price: number;
   year: number;
-  phone: string;
-  probeg: number;
-  obyom: number;
-  korobka: string;
-  privod: string;
-  rastamojen: string;
-  images: { imageUrl: string; _id: string }[];
+  price: number;
   credit: number;
   characteristics: {
-    mileage: number;
     color: {
       hex: string;
       name: string;
     };
-    transmission: string;
-    driveUnit: string;
-    engineCapacity: number;
+    bargain: boolean;
+    mileage: number;
+    exchange: boolean;
     fuelType: string;
+    saddened: boolean;
+    driveUnit: string;
+    gasEquipment: boolean;
+    transmission: string;
+    engineCapacity: number;
   };
-  city: string;
-  views: number;
+  description: string;
+  model: string;
   created: string;
   updated: string;
-  createdAt: string;
-  updatedAt: string;
-  authorPhone: string;
-  authorName: string;
-  model: string;
+  user_id: number;
+  user: {
+    id: number;
+    user_name: string;
+    phone: string;
+    avatar: string;
+  };
+  images: { image: string; id: string; main: boolean; car_id: number }[];
 }
 
 export interface MetaResponseType {
@@ -81,10 +82,14 @@ export interface FilterQueriesToUrlType {
 }
 
 export type UserInfoType = {
-  ads: ProductType[];
-  avatarUrl?: string;
-  fullName: string;
-  phoneNumber: string;
+  cars: ProductType[];
+  user: {
+    id: number;
+    user_name: string;
+    phone: string;
+    balance: number;
+    avatar: string;
+  };
 };
 
 export interface DataInitType {

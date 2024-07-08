@@ -8,6 +8,7 @@ import { getSimilar, getSingleData } from "../service/slices/data.ts";
 import { useAppDispatch, useAppSelector } from "../service/hooks.ts";
 import { formatDate, formatNumber, truncate } from "../service/functions.ts";
 import { MainSliderSkeleton } from "../components/Skeletons.tsx";
+import { IMAGE_URL } from "../service/env.ts";
 
 const Product = () => {
   const { id } = useParams();
@@ -140,11 +141,12 @@ const Product = () => {
     arrows: false,
     dots: false,
     infinite: false,
-    speed: 400,
-    slidesToShow: 4,
+    speed: 300,
+    slidesToShow: 1,
     slidesToScroll: 1,
     vertical: true,
     verticalSwiping: true,
+    draggable: false,
   };
 
   return (
@@ -209,10 +211,10 @@ const Product = () => {
         <div className="flex items-start justify-between w-100">
           <div className="w-[69%]">
             <div className="grid grid-cols-12 items-start justify-start">
-              <div className="col-span-2 h-full max-h-[100%] overflow-hidden flex flex-col items-center gap-y-1 justify-between">
+              <div className="col-span-2 h-full max-h-[100%] overflow-hidden flex flex-col items-center gap-y-1 justify-center">
                 <Slider {...settings} ref={setSlider2}>
                   {singleData.images.map((i, index) => (
-                    <div key={i._id} className="relative">
+                    <div key={i.id} className="relative">
                       {activeSlider === index && (
                         <div
                           className="absolute right-[100%] top-1/2"
@@ -236,7 +238,7 @@ const Product = () => {
                           activeSlider === index ? "border-2" : ""
                         }`}
                         style={{
-                          backgroundImage: `url(${i.imageUrl})`,
+                          backgroundImage: `url(${IMAGE_URL}${i.image})`,
                           backgroundRepeat: "no-repeat",
                           backgroundSize: "cover",
                           backgroundPosition: "center center",
@@ -296,11 +298,11 @@ const Product = () => {
                   arrows
                 >
                   {singleData.images.map((i) => (
-                    <div key={i._id} className="h-[400px] w-full">
+                    <div key={i.id} className="h-[400px] w-full">
                       <div
                         className="h-full w-full"
                         style={{
-                          backgroundImage: `url(${i.imageUrl})`,
+                          backgroundImage: `url(${IMAGE_URL}${i.image})`,
                           backgroundRepeat: "no-repeat",
                           backgroundSize: "cover",
                           backgroundPosition: "center center",
@@ -349,8 +351,8 @@ const Product = () => {
                         >
                           <div
                             style={{
-                              transform: "translate(-20px, 0)",
-                              backgroundImage: `url(${singleData.images[0].imageUrl})`,
+                              transform: "translate(-18.5px, 0)",
+                              backgroundImage: `url(${IMAGE_URL}${singleData.images[0].image})`,
                               backgroundRepeat: "no-repeat",
                               backgroundSize: "cover",
                               backgroundPosition: "center center",
@@ -496,7 +498,10 @@ const Product = () => {
                   В кредит от {singleData.credit} сом/мес
                 </p>
               )}
-              <div className="bg-[#07a8cb] text-white py-1 px-2 inline-block mt-4 rounded-lg font-normal">
+              <Link
+                to={`/user/${singleData.user_id}`}
+                className="bg-[#07a8cb] text-white py-1 px-2 inline-block mt-4 rounded-lg font-normal"
+              >
                 <p className="flex items-center gap-2">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -510,7 +515,7 @@ const Product = () => {
                   </svg>
                   <span>От владельца</span>
                 </p>
-              </div>
+              </Link>
               <br />
               <p className="inline-block bg-[#f0f1f2] text-[#0a192d] rounded-lg py-1 px-2 mt-4">
                 В наличии
@@ -521,8 +526,8 @@ const Product = () => {
                     КУПИТЬ В КРЕДИТ
                   </p>
                 )}
-                <a
-                  href={`tel:${singleData.authorPhone}`}
+                <Link
+                  to={`tel:${singleData.user.phone}`}
                   className="bg-[#008eff] text-white w-full rounded-lg font-bold h-12 flex items-center justify-center gap-2 cursor-pointer"
                 >
                   <span>ПОЗВОНИТЬ</span>
@@ -539,7 +544,7 @@ const Product = () => {
                       d="M1.885.511a1.745 1.745 0 0 1 2.61.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.68.68 0 0 0 .178.643l2.457 2.457a.68.68 0 0 0 .644.178l2.189-.547a1.75 1.75 0 0 1 1.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.6 18.6 0 0 1-7.01-4.42 18.6 18.6 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877z"
                     />
                   </svg>
-                </a>
+                </Link>
               </div>
             </div>
             <div className="bg-white rounded-lg p-4 mt-4">
@@ -611,20 +616,34 @@ const Product = () => {
             <div className="bg-white rounded-lg p-4 mt-4">
               <p className="text-[#7d8288] font-semibold">АВТОР ОБЪЯВЛЕНИЯ</p>
               <div className="mt-4 grid grid-cols-1 gap-y-4">
-                <div className="flex items-center justify-between">
+                <Link
+                  to={`/user/${singleData.user_id}`}
+                  className="flex items-center justify-between"
+                >
                   <div className="flex items-center gap-3">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="24"
-                      height="24"
-                      fill="#77818d"
-                      className="bi bi-person-fill"
-                      viewBox="0 0 16 16"
-                    >
-                      <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6" />
-                    </svg>
+                    {singleData.user.avatar ? (
+                      <img
+                        src={`${IMAGE_URL}${singleData.user.avatar}`}
+                        alt="Avatar"
+                        width={24}
+                        height={24}
+                        className="rounded-[50%]"
+                      />
+                    ) : (
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="24"
+                        height="24"
+                        fill="#77818d"
+                        className="bi bi-person-fill"
+                        viewBox="0 0 16 16"
+                      >
+                        <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6" />
+                      </svg>
+                    )}
+
                     <p className="text-[#0a192d]">
-                      Пользователь {singleData.authorName}
+                      Пользователь {singleData.user.user_name}
                     </p>
                   </div>
                   <div>
@@ -642,7 +661,7 @@ const Product = () => {
                       />
                     </svg>
                   </div>
-                </div>
+                </Link>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <svg
@@ -663,7 +682,7 @@ const Product = () => {
                         Номер телефона
                       </span>
                       <span className="font-semibold text-[#2d3744]">
-                        {singleData.authorPhone}
+                        {singleData.user.phone}
                       </span>
                     </p>
                   </div>
@@ -702,10 +721,10 @@ const Product = () => {
             Нет похожих объявлений
           </p>
         ) : (
-          <div className="mt-4 flex item-center gap-4 justify-between">
+          <div className="mt-4 flex item-center gap-4 justify-start">
             {similar &&
               similar.map((i) => (
-                <Link className="w-[19%]" to={`/product/${i._id}`} key={i._id}>
+                <Link className="w-[19%]" to={`/product/${i.id}`} key={i.id}>
                   <Card
                     style={{ cursor: "pointer" }}
                     cover={
@@ -722,7 +741,7 @@ const Product = () => {
                         </div>
                         <img
                           alt="Car"
-                          src={i.images[0].imageUrl}
+                          src={`${IMAGE_URL}${i.images[0].image}`}
                           className="transition duration-300 hover:scale-110 h-[180px] w-full object-cover"
                           height={180}
                         />

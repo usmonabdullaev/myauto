@@ -7,6 +7,7 @@ import {
   FilterQueriesType,
   MetaResponseType,
   ProductType,
+  UserInfoType,
 } from "../types.ts";
 import { filterObject } from "../functions.ts";
 
@@ -73,7 +74,7 @@ export const getPremiumData = createAsyncThunk(
   "dataApi/getPremiumData",
   async (_, { rejectWithValue }) => {
     try {
-      const uri = `/home-data/premium`;
+      const uri = `/car/home/premium`;
       const { data } = await axiosInstance.get<ProductType[]>(uri);
       return data;
     } catch (err) {
@@ -86,7 +87,7 @@ export const getSearchCar = createAsyncThunk(
   "dataApi/getSearchCar",
   async (_, { rejectWithValue }) => {
     try {
-      const uri = `/home-data/search?city=Душанбе`;
+      const uri = `/car/home/search?city=Душанбе`;
       const { data } = await axiosInstance.get<ProductType[]>(uri);
       return data;
     } catch (err) {
@@ -99,7 +100,7 @@ export const getNewCars = createAsyncThunk(
   "dataApi/getNewCars",
   async (_, { rejectWithValue }) => {
     try {
-      const uri = `/home-data/news`;
+      const uri = `car/home/new`;
       const { data } = await axiosInstance.get<ProductType[]>(uri);
       return data;
     } catch (err) {
@@ -112,7 +113,7 @@ export const getElectCars = createAsyncThunk(
   "dataApi/getElectCars",
   async (_, { rejectWithValue }) => {
     try {
-      const uri = `/home-data/elect`;
+      const uri = `car/home/elect`;
       const { data } = await axiosInstance.get<ProductType[]>(uri);
       return data;
     } catch (err) {
@@ -186,13 +187,9 @@ export const getUserInfo = createAsyncThunk(
   "dataApi/getUserInfo",
   async (id: string, { rejectWithValue }) => {
     try {
-      const uri = `/data/${id}`;
-      const { data } = await axiosInstance.get(uri);
-      return {
-        ads: [data, data, data, data, data, data],
-        fullName: "Usmon",
-        phoneNumber: "887422929",
-      };
+      const uri = `car/user/${id}`;
+      const { data } = await axiosInstance.get<UserInfoType>(uri);
+      return data;
     } catch (err) {
       return rejectWithValue(err.message);
     }

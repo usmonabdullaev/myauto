@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Badge, Select, Card, InputNumber } from "antd";
 import { Swiper as SwiperType } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -15,9 +15,10 @@ import {
 } from "../service/slices/data.ts";
 import { formatNumber, truncate } from "../service/functions.ts";
 import { MainSliderSkeleton } from "../components/Skeletons.tsx";
+import SelectLabel from "../components/SelectLabel.tsx";
+import { IMAGE_URL } from "../service/env.ts";
 
 import "swiper/css";
-import SelectLabel from "../components/SelectLabel.tsx";
 
 const Main = () => {
   const dispatch = useAppDispatch();
@@ -40,6 +41,7 @@ const Main = () => {
   const [selectedOption, setSelectedOption] = useState("1");
   const [carPrice, setCarPrice] = useState(120000);
   const [firstPrice, setFirstPrice] = useState(20000);
+  const navigate = useNavigate();
 
   useEffect(() => {
     dispatch(getPremiumData());
@@ -182,7 +184,10 @@ const Main = () => {
                     value: "Mers",
                     label: <SelectLabel>Mersedes-Benz</SelectLabel>,
                   },
-                  { value: "Bugatti", label: <SelectLabel>Bugatti</SelectLabel> },
+                  {
+                    value: "Bugatti",
+                    label: <SelectLabel>Bugatti</SelectLabel>,
+                  },
                 ]}
               />
               <Select
@@ -264,7 +269,7 @@ const Main = () => {
             </span>
           </h3>
           <Link
-            to="/"
+            to="/search"
             className="text-[#008eff] font-semibold border-[1px] border-[#008eff] border-solid p-2 hover:text-white hover:bg-[#008eff] transition"
           >
             ПОСМОТРЕТЬ ВСЕ
@@ -283,8 +288,8 @@ const Main = () => {
             >
               {premiumData &&
                 premiumData.map((i) => (
-                  <SwiperSlide key={i._id}>
-                    <Link to={`/product/${i._id}`}>
+                  <SwiperSlide key={i.id}>
+                    <Link to={`/product/${i.id}`}>
                       <Card
                         style={{ width: 240, cursor: "pointer" }}
                         cover={
@@ -300,7 +305,7 @@ const Main = () => {
 
                             <img
                               alt="Car"
-                              src={i.images[0].imageUrl}
+                              src={`${IMAGE_URL}${i.images[0].image}`}
                               className="transition duration-300 hover:scale-110 h-[180px] w-full object-cover"
                               height={180}
                             />
@@ -352,12 +357,35 @@ const Main = () => {
               {searchCar?.length}
             </span>
           </h3>
-          <Link
-            to="/"
-            className="text-[#008eff] font-semibold border-[1px] border-[#008eff] border-solid p-2 hover:text-white hover:bg-[#008eff] transition"
+          <span
+            onClick={() => {
+              dispatch(
+                setFilterQueries({
+                  page: 1,
+                  sortBy: "price",
+                  city: "Душанбе",
+                  model: "",
+                  minPrice: undefined,
+                  maxPrice: undefined,
+                  credit: false,
+                  minYear: undefined,
+                  maxYear: undefined,
+                  mileage: undefined,
+                  saddened: true,
+                  transmission: [],
+                  gasEquipment: false,
+                  fuelType: [],
+                  bargain: false,
+                  exchange: false,
+                  colors: [],
+                })
+              );
+              navigate("/search");
+            }}
+            className="cursor-pointer text-[#008eff] font-semibold border-[1px] border-[#008eff] border-solid p-2 hover:text-white hover:bg-[#008eff] transition"
           >
             ПОСМОТРЕТЬ ВСЕ
-          </Link>
+          </span>
         </div>
         {searchCarLoading ? (
           <MainSliderSkeleton />
@@ -372,8 +400,8 @@ const Main = () => {
             >
               {searchCar &&
                 searchCar.map((i) => (
-                  <SwiperSlide key={i._id}>
-                    <Link to={`/product/${i._id}`}>
+                  <SwiperSlide key={i.id}>
+                    <Link to={`/product/${i.id}`}>
                       <Card
                         style={{ width: 240, cursor: "pointer" }}
                         cover={
@@ -390,7 +418,7 @@ const Main = () => {
                             </div>
                             <img
                               alt="Car"
-                              src={i.images[0].imageUrl}
+                              src={`${IMAGE_URL}${i.images[0].image}`}
                               className="transition duration-300 hover:scale-110 h-[180px] w-full object-cover"
                               height={180}
                             />
@@ -442,12 +470,35 @@ const Main = () => {
               {newData?.length || 0}
             </span>
           </h3>
-          <Link
-            to="/"
-            className="text-[#008eff] font-semibold border-[1px] border-[#008eff] border-solid p-2 hover:text-white hover:bg-[#008eff] transition"
+          <span
+            onClick={() => {
+              dispatch(
+                setFilterQueries({
+                  page: 1,
+                  sortBy: "date",
+                  city: "",
+                  model: "",
+                  minPrice: undefined,
+                  maxPrice: undefined,
+                  credit: false,
+                  minYear: undefined,
+                  maxYear: undefined,
+                  mileage: undefined,
+                  saddened: true,
+                  transmission: [],
+                  gasEquipment: false,
+                  fuelType: [],
+                  bargain: false,
+                  exchange: false,
+                  colors: [],
+                })
+              );
+              navigate("/search");
+            }}
+            className="cursor-pointer text-[#008eff] font-semibold border-[1px] border-[#008eff] border-solid p-2 hover:text-white hover:bg-[#008eff] transition"
           >
             ПОСМОТРЕТЬ ВСЕ
-          </Link>
+          </span>
         </div>
         {newDataLoading ? (
           <MainSliderSkeleton />
@@ -462,8 +513,8 @@ const Main = () => {
             >
               {newData &&
                 newData.map((i) => (
-                  <SwiperSlide key={i._id}>
-                    <Link to={`/product/${i._id}`}>
+                  <SwiperSlide key={i.id}>
+                    <Link to={`/product/${i.id}`}>
                       <Card
                         style={{ width: 240, cursor: "pointer" }}
                         cover={
@@ -480,7 +531,7 @@ const Main = () => {
                             </div>
                             <img
                               alt="Car"
-                              src={i.images[0].imageUrl}
+                              src={`${IMAGE_URL}${i.images[0].image}`}
                               className="transition duration-300 hover:scale-110 h-[180px] w-full object-cover"
                               height={180}
                             />
@@ -532,12 +583,35 @@ const Main = () => {
               {electData?.length || 0}
             </span>
           </h3>
-          <Link
-            to="/"
-            className="text-[#008eff] font-semibold border-[1px] border-[#008eff] border-solid p-2 hover:text-white hover:bg-[#008eff] transition"
+          <span
+            onClick={() => {
+              dispatch(
+                setFilterQueries({
+                  page: 1,
+                  sortBy: "price",
+                  city: "",
+                  model: "",
+                  minPrice: undefined,
+                  maxPrice: undefined,
+                  credit: false,
+                  minYear: undefined,
+                  maxYear: undefined,
+                  mileage: undefined,
+                  saddened: true,
+                  transmission: [],
+                  gasEquipment: false,
+                  fuelType: ["Электрический"],
+                  bargain: false,
+                  exchange: false,
+                  colors: [],
+                })
+              );
+              navigate("/search");
+            }}
+            className="cursor-pointer text-[#008eff] font-semibold border-[1px] border-[#008eff] border-solid p-2 hover:text-white hover:bg-[#008eff] transition"
           >
             ПОСМОТРЕТЬ ВСЕ
-          </Link>
+          </span>
         </div>
         {electDataLoading ? (
           <MainSliderSkeleton />
@@ -552,8 +626,8 @@ const Main = () => {
             >
               {electData &&
                 electData.map((i) => (
-                  <SwiperSlide key={i._id}>
-                    <Link to={`/product/${i._id}`}>
+                  <SwiperSlide key={i.id}>
+                    <Link to={`/product/${i.id}`}>
                       <Card
                         style={{ width: 240, cursor: "pointer" }}
                         cover={
@@ -570,7 +644,7 @@ const Main = () => {
                             </div>
                             <img
                               alt="Car"
-                              src={i.images[0].imageUrl}
+                              src={`${IMAGE_URL}${i.images[0].image}`}
                               className="transition duration-300 hover:scale-110 h-[180px] w-full object-cover"
                               height={180}
                             />

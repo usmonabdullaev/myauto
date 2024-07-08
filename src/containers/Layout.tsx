@@ -54,7 +54,7 @@ const Layout = () => {
             </div>
           </div>
           <div className="flex items-center gap-6">
-            <div>
+            <div className="cursor-pointer">
               <img src="/dark-mode.png" alt="Theme" width={24} />
               {/* <svg
                 xmlns="http://www.w3.org/2000/svg"
