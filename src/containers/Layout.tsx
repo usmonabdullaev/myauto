@@ -1,39 +1,39 @@
-import { Dropdown, Space } from "antd";
+// import { Dropdown, Space } from "antd";
 import {
-  DownOutlined,
+  // DownOutlined,
   TikTokOutlined,
   InstagramOutlined,
   YoutubeFilled,
   WhatsAppOutlined,
 } from "@ant-design/icons";
-import React, { useState } from "react";
+import React from "react";
 import { Link, Outlet } from "react-router-dom";
-import type { MenuProps } from "antd";
+// import type { MenuProps } from "antd";
 
 const Layout = () => {
-  const [selectedLang, setSelectedLang] = useState("russian");
-  const handleMenuClick: MenuProps["onClick"] = (e) => {
-    setSelectedLang(e.key);
-  };
-  const items = [
-    {
-      label: "Русский",
-      key: "russian",
-    },
-    {
-      label: "English",
-      key: "english",
-    },
-    {
-      label: "Тоҷикӣ",
-      key: "tajik",
-    },
-  ];
+  // const [selectedLang, setSelectedLang] = useState("russian");
+  // const handleMenuClick: MenuProps["onClick"] = (e) => {
+  //   setSelectedLang(e.key);
+  // };
+  // const items = [
+  //   {
+  //     label: "Русский",
+  //     key: "russian",
+  //   },
+  //   {
+  //     label: "English",
+  //     key: "english",
+  //   },
+  //   {
+  //     label: "Тоҷикӣ",
+  //     key: "tajik",
+  //   },
+  // ];
 
-  const menuProps = {
-    items,
-    onClick: handleMenuClick,
-  };
+  // const menuProps = {
+  //   items,
+  //   onClick: handleMenuClick,
+  // };
 
   return (
     <div>
@@ -106,7 +106,7 @@ const Layout = () => {
             <a href="#1" className="text-[#6b747f]">
               Войти
             </a>
-            <Dropdown menu={menuProps}>
+            {/* <Dropdown menu={menuProps}>
               <Link to="/">
                 <Space className="text-[#6b747f]">
                   <p className="text-[#6b747f] font-medium">
@@ -117,7 +117,7 @@ const Layout = () => {
                   <DownOutlined />
                 </Space>
               </Link>
-            </Dropdown>
+            </Dropdown> */}
           </div>
         </div>
       </div>

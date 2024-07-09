@@ -21,6 +21,7 @@ export interface ProductType {
     gasEquipment: boolean;
     transmission: string;
     engineCapacity: number;
+    power: number;
   };
   description: string;
   model: string;
@@ -92,6 +93,13 @@ export type UserInfoType = {
   };
 };
 
+export type FavoriteT = {
+  id: number;
+  user_id: number;
+  car_id: number;
+  unique_key: string;
+};
+
 export interface DataInitType {
   data: ProductType[];
   dataLoading: boolean;
@@ -115,4 +123,7 @@ export interface DataInitType {
   userInfoLoading: boolean;
   comparisonData: ProductType[] | null;
   comparisonDataLoading: boolean;
+  showrooms: any;
+  showroomsLoading: boolean;
+  favorites: FavoriteT[];
 }

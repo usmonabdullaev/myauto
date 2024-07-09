@@ -111,7 +111,7 @@ const CarComparison = () => {
             >
               {comparisonData?.map((i) => (
                 <p key={i.id} className="text-[#0a192d]">
-                  123 л.с.
+                  {i.characteristics.power} л.с.
                 </p>
               ))}
             </div>

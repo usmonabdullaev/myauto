@@ -1,12 +1,23 @@
 import { Breadcrumb, Card } from "antd";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Swiper as SwiperType } from "swiper";
 
-import { formatNumber } from "../service/functions.ts";
-
-const { Meta } = Card;
+import { formatNumber, truncate } from "../service/functions.ts";
+import { IMAGE_URL } from "../service/env.ts";
+import { getShowrooms } from "../service/slices/data.ts";
+import { useAppDispatch, useAppSelector } from "../service/hooks.ts";
 
 const BuyOnline = () => {
+  const [swiper, setSwiper] = useState<SwiperType>();
+  const dispatch = useAppDispatch();
+  const { showrooms } = useAppSelector((state) => state.data);
+
+  useEffect(() => {
+    dispatch(getShowrooms());
+  }, [dispatch]);
+
   return (
     <div>
       <div className="container mx-auto mt-7">
@@ -90,7 +101,7 @@ const BuyOnline = () => {
                     </div>
                   }
                 >
-                  <Meta
+                  <Card.Meta
                     title={<p className="text-white text-center">Hyundai</p>}
                   />
                 </Card>
@@ -106,7 +117,7 @@ const BuyOnline = () => {
                     </div>
                   }
                 >
-                  <Meta title={<p className="text-center">Hyundai</p>} />
+                  <Card.Meta title={<p className="text-center">Hyundai</p>} />
                 </Card>
               </div>
               <h3 className="font-bold text-xl text-[#0a192d] mt-6">
@@ -125,7 +136,7 @@ const BuyOnline = () => {
                     </div>
                   }
                 >
-                  <Meta
+                  <Card.Meta
                     title={
                       <div>
                         <small className="font-semibold">Hyundai Tucson</small>
@@ -139,6 +150,74 @@ const BuyOnline = () => {
                     }
                   />
                 </Card>
+              </div>
+            </div>
+            <div className="rounded-xl bg-white px-4 py-7 mt-6">
+              <div className="relative mt-4">
+                <Swiper
+                  spaceBetween={20}
+                  slidesPerView={5}
+                  onSwiper={(s) => setSwiper(s)}
+                >
+                  {showrooms &&
+                    showrooms.map((i) => (
+                      <SwiperSlide key={i.id}>
+                        <Link to={`/product/${i.id}`}>
+                          <Card
+                            style={{ width: 240, cursor: "pointer" }}
+                            cover={
+                              <div className="overflow-hidden rounded-t-lg relative">
+                                <img
+                                  src="/premium.svg"
+                                  alt="Premium"
+                                  className="absolute z-10 -top-[0.4px] -left-[24.4px]"
+                                />
+                                <div className="absolute z-10 right-4 top-4 bg-[#ffffff44] hover:bg-[#ffffff7d] rounded-lg flex items-center justify-center p-[2px]">
+                                  <img src="/heart.png" alt="Bookmark" />
+                                </div>
+
+                                <img
+                                  alt="Car"
+                                  src={`${IMAGE_URL}${i.images[0].image}`}
+                                  className="transition duration-300 hover:scale-110 h-[180px] w-full object-cover"
+                                  height={180}
+                                />
+                              </div>
+                            }
+                          >
+                            <p className="text-lg font-bold flex items-center justify-between">
+                              <span>{truncate(i.title, 13)}</span>
+                              <span className="text-[#707070] text-sm">
+                                {i.year}
+                              </span>
+                            </p>
+                            <p className="text-xl font-bold">
+                              {formatNumber(i.price)} сомони
+                            </p>
+                            <p className="text-[#ff8718] mt-1 font-bold h-[22px]">
+                              {!!i.credit && `В кредит от ${i.credit} сом/мес`}
+                            </p>
+                          </Card>
+                        </Link>
+                      </SwiperSlide>
+                    ))}
+                </Swiper>
+                <div>
+                  <img
+                    src="/prev-arr.svg"
+                    alt="Prev"
+                    onClick={() => swiper?.slidePrev()}
+                    className="absolute top-1/4 left-0 z-10 bg-white rounded border-[1px] border-[#707070] p-3 cursor-pointer"
+                    style={{ transform: "translateX(-50%)" }}
+                  />
+                  <img
+                    src="/next-arr.svg"
+                    alt="Next"
+                    onClick={() => swiper?.slideNext()}
+                    className="absolute top-1/4 right-0 z-10 bg-white rounded border-[1px] border-[#707070] p-3 cursor-pointer"
+                    style={{ transform: "translateX(50%)" }}
+                  />
+                </div>
               </div>
             </div>
           </div>

@@ -12,6 +12,9 @@ import {
   getSearchCar,
   getNewCars,
   getElectCars,
+  getFavorites,
+  addFavorite,
+  deleteFavorite,
 } from "../service/slices/data.ts";
 import { formatNumber, truncate } from "../service/functions.ts";
 import { MainSliderSkeleton } from "../components/Skeletons.tsx";
@@ -33,6 +36,7 @@ const Main = () => {
     newDataLoading,
     electData,
     electDataLoading,
+    favorites,
   } = useAppSelector((state) => state.data);
   const [swiper, setSwiper] = useState<SwiperType>();
   const [swiper1, setSwiper1] = useState<SwiperType>();
@@ -48,6 +52,7 @@ const Main = () => {
     dispatch(getSearchCar());
     dispatch(getNewCars());
     dispatch(getElectCars());
+    dispatch(getFavorites());
   }, [dispatch]);
 
   const handleFilterChange = (
@@ -111,6 +116,8 @@ const Main = () => {
       id: "7",
     },
   ];
+
+  const favoritesKeys = favorites.map((i) => i.car_id);
 
   return (
     <div>
@@ -300,7 +307,27 @@ const Main = () => {
                               className="absolute z-10 -top-[0.4px] -left-[24.4px]"
                             />
                             <div className="absolute z-10 right-4 top-4 bg-[#ffffff44] hover:bg-[#ffffff7d] rounded-lg flex items-center justify-center p-[2px]">
-                              <img src="/heart.png" alt="Bookmark" />
+                              {favoritesKeys.includes(i.id) ? (
+                                <img
+                                  src="/heart-active.png"
+                                  width={32}
+                                  alt="Bookmark"
+                                  className="p-0.5"
+                                  onClick={(e) => {
+                                    e.preventDefault();
+                                    dispatch(deleteFavorite(i.id));
+                                  }}
+                                />
+                              ) : (
+                                <img
+                                  src="/heart.png"
+                                  alt="Bookmark"
+                                  onClick={(e) => {
+                                    e.preventDefault();
+                                    dispatch(addFavorite(i.id));
+                                  }}
+                                />
+                              )}
                             </div>
 
                             <img

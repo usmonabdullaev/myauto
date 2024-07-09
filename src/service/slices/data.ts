@@ -3,6 +3,7 @@ import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { axiosInstance } from "../axios.ts";
 import {
   DataInitType,
+  FavoriteT,
   FilterQueriesToUrlType,
   FilterQueriesType,
   MetaResponseType,
@@ -10,6 +11,7 @@ import {
   UserInfoType,
 } from "../types.ts";
 import { filterObject } from "../functions.ts";
+import { message } from "antd";
 
 const initialState: DataInitType = {
   data: [],
@@ -55,6 +57,9 @@ const initialState: DataInitType = {
   userInfoLoading: false,
   comparisonData: null,
   comparisonDataLoading: false,
+  showrooms: [],
+  showroomsLoading: false,
+  favorites: [],
 };
 
 export const getData = createAsyncThunk(
@@ -65,6 +70,82 @@ export const getData = createAsyncThunk(
       const { data } = await axiosInstance.get<ProductType[]>(uri);
       return data;
     } catch (err) {
+      return rejectWithValue(err.message);
+    }
+  }
+);
+
+export const getFavorites = createAsyncThunk(
+  "dataApi/getFavorites",
+  async (_, { rejectWithValue }) => {
+    try {
+      const uri = `/user/favorites`;
+      const { data } = await axiosInstance.get<FavoriteT[]>(uri, {
+        headers: {
+          Authorization:
+            "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTAsImlhdCI6MTcyMDQ0ODE2OCwiZXhwIjoxNzIzMDQwMTY4fQ.l7Ysi7nG76UerqoRIEsEWFPukdDU261MjgHBWFQH_rg",
+        },
+      });
+      return data;
+    } catch (err) {
+      return rejectWithValue(err.message);
+    }
+  }
+);
+
+export const addFavorite = createAsyncThunk(
+  "dataApi/addFavorite",
+  async (id: number, { rejectWithValue, dispatch }) => {
+    try {
+      const uri = `/user/favorite/${id}`;
+      const { data } = await axiosInstance.post(uri, null, {
+        headers: {
+          Authorization:
+            "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTAsImlhdCI6MTcyMDQ0ODE2OCwiZXhwIjoxNzIzMDQwMTY4fQ.l7Ysi7nG76UerqoRIEsEWFPukdDU261MjgHBWFQH_rg",
+        },
+      });
+
+      if (data.success) {
+        dispatch(getFavorites());
+        message.success(data.message);
+      } else {
+      }
+
+      return data;
+    } catch (err) {
+      if (err.response.status === 401) {
+        message.warning("Вы не авторизованы!");
+      }
+
+      return rejectWithValue(err.message);
+    }
+  }
+);
+
+export const deleteFavorite = createAsyncThunk(
+  "dataApi/deleteFavorite",
+  async (id: number, { rejectWithValue, dispatch }) => {
+    try {
+      const uri = `/user/favorite/${id}`;
+      const { data } = await axiosInstance.delete(uri, {
+        headers: {
+          Authorization:
+            "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTAsImlhdCI6MTcyMDQ0ODE2OCwiZXhwIjoxNzIzMDQwMTY4fQ.l7Ysi7nG76UerqoRIEsEWFPukdDU261MjgHBWFQH_rg",
+        },
+      });
+
+      if (data.success) {
+        dispatch(getFavorites());
+        message.success(data.message);
+      } else {
+      }
+
+      return data;
+    } catch (err) {
+      if (err.response.status === 401) {
+        message.warning("Вы не авторизованы!");
+      }
+
       return rejectWithValue(err.message);
     }
   }
@@ -187,8 +268,21 @@ export const getUserInfo = createAsyncThunk(
   "dataApi/getUserInfo",
   async (id: string, { rejectWithValue }) => {
     try {
-      const uri = `car/user/${id}`;
+      const uri = `/car/user/${id}`;
       const { data } = await axiosInstance.get<UserInfoType>(uri);
+      return data;
+    } catch (err) {
+      return rejectWithValue(err.message);
+    }
+  }
+);
+
+export const getShowrooms = createAsyncThunk(
+  "dataApi/getShowrooms",
+  async (_, { rejectWithValue }) => {
+    try {
+      const uri = `/showrooms`;
+      const { data } = await axiosInstance.get(uri);
       return data;
     } catch (err) {
       return rejectWithValue(err.message);
@@ -217,6 +311,10 @@ export const dataSlice = createSlice({
     });
     builder.addCase(getData.rejected, (state) => {
       state.dataLoading = false;
+    });
+
+    builder.addCase(getFavorites.fulfilled, (state, action) => {
+      state.favorites = action.payload;
     });
 
     builder.addCase(getPremiumData.pending, (state) => {
@@ -305,6 +403,17 @@ export const dataSlice = createSlice({
     });
     builder.addCase(getUserInfo.rejected, (state) => {
       state.userInfoLoading = false;
+    });
+
+    builder.addCase(getShowrooms.pending, (state) => {
+      state.showroomsLoading = true;
+    });
+    builder.addCase(getShowrooms.fulfilled, (state, action) => {
+      state.showroomsLoading = false;
+      state.showrooms = action.payload;
+    });
+    builder.addCase(getShowrooms.rejected, (state) => {
+      state.showroomsLoading = false;
     });
 
     builder.addCase(getComparisonData.pending, (state) => {
