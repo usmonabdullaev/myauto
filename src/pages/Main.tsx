@@ -83,7 +83,7 @@ const Main = () => {
   };
 
   useEffect(() => {
-    dispatch(getFilteredData({ limit: 10, ...filterQueries }));
+    dispatch(getFilteredData({ ...filterQueries, limit: 10 }));
   }, [filterQueries, dispatch]);
 
   const selectOptions = [
@@ -441,7 +441,27 @@ const Main = () => {
                               />
                             )}
                             <div className="absolute z-10 right-4 top-4 bg-[#ffffff44] hover:bg-[#ffffff7d] rounded-lg flex items-center justify-center p-[2px]">
-                              <img src="/heart.png" alt="Bookmark" />
+                              {favoritesKeys.includes(i.id) ? (
+                                <img
+                                  src="/heart-active.png"
+                                  width={32}
+                                  alt="Bookmark"
+                                  className="p-0.5"
+                                  onClick={(e) => {
+                                    e.preventDefault();
+                                    dispatch(deleteFavorite(i.id));
+                                  }}
+                                />
+                              ) : (
+                                <img
+                                  src="/heart.png"
+                                  alt="Bookmark"
+                                  onClick={(e) => {
+                                    e.preventDefault();
+                                    dispatch(addFavorite(i.id));
+                                  }}
+                                />
+                              )}
                             </div>
                             <img
                               alt="Car"
@@ -554,7 +574,27 @@ const Main = () => {
                               />
                             )}
                             <div className="absolute z-10 right-4 top-4 bg-[#ffffff44] hover:bg-[#ffffff7d] rounded-lg flex items-center justify-center p-[2px]">
-                              <img src="/heart.png" alt="Bookmark" />
+                              {favoritesKeys.includes(i.id) ? (
+                                <img
+                                  src="/heart-active.png"
+                                  width={32}
+                                  alt="Bookmark"
+                                  className="p-0.5"
+                                  onClick={(e) => {
+                                    e.preventDefault();
+                                    dispatch(deleteFavorite(i.id));
+                                  }}
+                                />
+                              ) : (
+                                <img
+                                  src="/heart.png"
+                                  alt="Bookmark"
+                                  onClick={(e) => {
+                                    e.preventDefault();
+                                    dispatch(addFavorite(i.id));
+                                  }}
+                                />
+                              )}
                             </div>
                             <img
                               alt="Car"
@@ -667,7 +707,27 @@ const Main = () => {
                               />
                             )}
                             <div className="absolute z-10 right-4 top-4 bg-[#ffffff44] hover:bg-[#ffffff7d] rounded-lg flex items-center justify-center p-[2px]">
-                              <img src="/heart.png" alt="Bookmark" />
+                              {favoritesKeys.includes(i.id) ? (
+                                <img
+                                  src="/heart-active.png"
+                                  width={32}
+                                  alt="Bookmark"
+                                  className="p-0.5"
+                                  onClick={(e) => {
+                                    e.preventDefault();
+                                    dispatch(deleteFavorite(i.id));
+                                  }}
+                                />
+                              ) : (
+                                <img
+                                  src="/heart.png"
+                                  alt="Bookmark"
+                                  onClick={(e) => {
+                                    e.preventDefault();
+                                    dispatch(addFavorite(i.id));
+                                  }}
+                                />
+                              )}
                             </div>
                             <img
                               alt="Car"

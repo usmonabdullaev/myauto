@@ -193,19 +193,19 @@ const Layout = () => {
             <div className="flex flex-col items-center gap-2">
               <p>Мобильное приложение</p>
               <div className="flex flex-col items-center gap-2">
-                <a href="/">
+                <Link to="https://www.apple.com" target="_blank">
                   <img src="/app-store.png" alt="App store" width={180} />
-                </a>
-                <a href="/">
+                </Link>
+                <Link to="https://play.google.com" target="_blank">
                   <img src="/google-play-1.png" alt="Google play" width={180} />
-                </a>
+                </Link>
               </div>
             </div>
           </div>
         </div>
         <div className="flex items-center justify-between text-[#6b747f] py-5">
           <p className="flex items-center gap-2">
-            © 2020-2023 - Все права защищены{" "}
+            © 2020-2024 - Все права защищены{" "}
             <Link to="mailto:info@myauto.tj">info@myauto.tj</Link>
           </p>
           <p className="flex items-center gap-2">
@@ -218,18 +218,6 @@ const Layout = () => {
             </Link>
           </p>
         </div>
-        {/* <div className="flex items-center justify-between text-[#6b747f] py-5">
-          <p></p>
-          <p className="flex items-center gap-2">
-            <Link
-              to="https://gravity.tj"
-              target="_blank"
-              className="font-medium"
-            >
-              Разработано в <span className="text-[blue]">Gravity Studio</span>
-            </Link>
-          </p>
-        </div> */}
       </div>
     </div>
   );

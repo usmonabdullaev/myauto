@@ -1,9 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit";
-import dataReducer from "./slices/data.ts";
+import data from "./slices/data.ts";
+import dealer from "./slices/dealer.ts";
 
 export const store = configureStore({
   reducer: {
-    data: dataReducer,
+    data,
+    dealer,
   },
 });
 

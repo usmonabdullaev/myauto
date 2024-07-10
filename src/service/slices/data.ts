@@ -39,7 +39,7 @@ const initialState: DataInitType = {
     model: "",
     minPrice: undefined,
     maxPrice: undefined,
-    credit: false,
+    credit: undefined,
     minYear: undefined,
     maxYear: undefined,
     mileage: undefined,
@@ -47,8 +47,8 @@ const initialState: DataInitType = {
     transmission: [],
     gasEquipment: false,
     fuelType: [],
-    bargain: false,
-    exchange: false,
+    bargain: undefined,
+    exchange: undefined,
     colors: [],
   },
   singleData: null,
@@ -60,32 +60,15 @@ const initialState: DataInitType = {
   showrooms: [],
   showroomsLoading: false,
   favorites: [],
+  gridType: "grid",
 };
-
-export const getData = createAsyncThunk(
-  "dataApi/getData",
-  async (_, { rejectWithValue }) => {
-    try {
-      const uri = `/data`;
-      const { data } = await axiosInstance.get<ProductType[]>(uri);
-      return data;
-    } catch (err) {
-      return rejectWithValue(err.message);
-    }
-  }
-);
 
 export const getFavorites = createAsyncThunk(
   "dataApi/getFavorites",
   async (_, { rejectWithValue }) => {
     try {
       const uri = `/user/favorites`;
-      const { data } = await axiosInstance.get<FavoriteT[]>(uri, {
-        headers: {
-          Authorization:
-            "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTAsImlhdCI6MTcyMDQ0ODE2OCwiZXhwIjoxNzIzMDQwMTY4fQ.l7Ysi7nG76UerqoRIEsEWFPukdDU261MjgHBWFQH_rg",
-        },
-      });
+      const { data } = await axiosInstance.get<FavoriteT[]>(uri);
       return data;
     } catch (err) {
       return rejectWithValue(err.message);
@@ -98,12 +81,7 @@ export const addFavorite = createAsyncThunk(
   async (id: number, { rejectWithValue, dispatch }) => {
     try {
       const uri = `/user/favorite/${id}`;
-      const { data } = await axiosInstance.post(uri, null, {
-        headers: {
-          Authorization:
-            "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTAsImlhdCI6MTcyMDQ0ODE2OCwiZXhwIjoxNzIzMDQwMTY4fQ.l7Ysi7nG76UerqoRIEsEWFPukdDU261MjgHBWFQH_rg",
-        },
-      });
+      const { data } = await axiosInstance.post(uri);
 
       if (data.success) {
         dispatch(getFavorites());
@@ -127,12 +105,7 @@ export const deleteFavorite = createAsyncThunk(
   async (id: number, { rejectWithValue, dispatch }) => {
     try {
       const uri = `/user/favorite/${id}`;
-      const { data } = await axiosInstance.delete(uri, {
-        headers: {
-          Authorization:
-            "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTAsImlhdCI6MTcyMDQ0ODE2OCwiZXhwIjoxNzIzMDQwMTY4fQ.l7Ysi7nG76UerqoRIEsEWFPukdDU261MjgHBWFQH_rg",
-        },
-      });
+      const { data } = await axiosInstance.delete(uri);
 
       if (data.success) {
         dispatch(getFavorites());
@@ -300,19 +273,11 @@ export const dataSlice = createSlice({
     setFilterQueries: (state, action: PayloadAction<FilterQueriesType>) => {
       state.filterQueries = { ...state.filterQueries, ...action.payload };
     },
+    setGridType: (state, action: PayloadAction<"grid" | "line">) => {
+      state.gridType = action.payload;
+    },
   },
   extraReducers(builder) {
-    builder.addCase(getData.pending, (state) => {
-      state.dataLoading = true;
-    });
-    builder.addCase(getData.fulfilled, (state, action) => {
-      state.dataLoading = false;
-      state.data = action.payload;
-    });
-    builder.addCase(getData.rejected, (state) => {
-      state.dataLoading = false;
-    });
-
     builder.addCase(getFavorites.fulfilled, (state, action) => {
       state.favorites = action.payload;
     });
@@ -429,6 +394,7 @@ export const dataSlice = createSlice({
   },
 });
 
-export const { setMetaQuery, setFilterQueries } = dataSlice.actions;
+export const { setMetaQuery, setFilterQueries, setGridType } =
+  dataSlice.actions;
 
 export default dataSlice.reducer;

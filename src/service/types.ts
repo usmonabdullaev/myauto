@@ -49,7 +49,7 @@ export interface FilterQueriesType {
   model: string;
   minPrice: number | undefined;
   maxPrice: number | undefined;
-  credit: boolean;
+  credit: boolean | undefined;
   minYear: number | undefined;
   maxYear: number | undefined;
   mileage: number | undefined;
@@ -57,8 +57,8 @@ export interface FilterQueriesType {
   transmission: string[];
   gasEquipment: boolean;
   fuelType: string[];
-  bargain: boolean;
-  exchange: boolean;
+  bargain: boolean | undefined;
+  exchange: boolean | undefined;
   colors: string[];
 }
 
@@ -126,4 +126,16 @@ export interface DataInitType {
   showrooms: any;
   showroomsLoading: boolean;
   favorites: FavoriteT[];
+  gridType: "grid" | "line";
+}
+
+export interface DealerInitT {
+  data: ProductType[];
+  dataLoading: boolean;
+  metaData: MetaResponseType;
+  gridType: "grid" | "line";
+  filter: {
+    sortBy: "date" | "price";
+    page: number;
+  };
 }

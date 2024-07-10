@@ -13,22 +13,38 @@ import { Link } from "react-router-dom";
 import { MainSliderSkeleton } from "../components/Skeletons.tsx";
 import { formatDate, formatNumber, truncate } from "../service/functions.ts";
 import { useAppDispatch, useAppSelector } from "../service/hooks.ts";
-import { getFilteredData, setFilterQueries } from "../service/slices/data.ts";
+import {
+  getFilteredData,
+  setFilterQueries,
+  setGridType,
+  addFavorite,
+  deleteFavorite,
+  getFavorites,
+} from "../service/slices/data.ts";
 import SelectLabel from "../components/SelectLabel.tsx";
 import DebouncedInput from "../components/DebouncedInput.tsx";
 import { IMAGE_URL } from "../service/env.ts";
 
 const Search = () => {
-  const { filteredDataLoading, filteredData, metaData, filterQueries } =
-    useAppSelector((state) => state.data);
+  const {
+    filteredDataLoading,
+    filteredData,
+    metaData,
+    filterQueries,
+    gridType,
+    favorites,
+  } = useAppSelector((state) => state.data);
   const dispatch = useAppDispatch();
   const [showAllColors, setShowAllColors] = useState(false);
-  const [gridType, setGridType] = useState<"grid" | "line">("grid");
   const [selectedColors, setSelectedColors] = useState<string[]>([]);
 
   const onPageChange = (p: number) => {
     dispatch(setFilterQueries({ ...filterQueries, page: p }));
   };
+
+  useEffect(() => {
+    dispatch(getFavorites());
+  }, [dispatch]);
 
   useEffect(() => {
     dispatch(
@@ -45,25 +61,25 @@ const Search = () => {
   }, [selectedColors, dispatch]);
 
   const onGridTypeChange = (value: "grid" | "line") => {
-    setGridType(value);
+    dispatch(setGridType(value));
   };
 
   const colorsOptions = [
     {
-      label: "Белый",
-      hex: "white",
+      label: "Красный",
+      hex: "red",
       id: 1,
     },
     {
-      label: "Серебристый",
-      hex: "#c0c0c0",
+      label: "Белый",
+      hex: "white",
       id: 2,
     },
     {
-      label: "Черный",
-      hex: "black",
+      label: "Зеленый",
+      hex: "#24d800",
       id: 3,
-    },
+    }
   ];
 
   const sortByOptions: { key: "date" | "price"; label: string }[] = [
@@ -103,7 +119,7 @@ const Search = () => {
     },
   ];
 
-  console.log(filterQueries);
+  const favoritesKeys = favorites.map((i) => i.car_id);
 
   return (
     <div>
@@ -702,7 +718,7 @@ const Search = () => {
             </div>
           </div>
           <div className="w-[69%]">
-            <div className="">
+            <div>
               {filteredDataLoading ? (
                 <MainSliderSkeleton
                   limit={9}
@@ -732,7 +748,27 @@ const Search = () => {
                                 />
                               )}
                               <div className="absolute z-10 right-4 top-4 bg-[#ffffff44] hover:bg-[#ffffff7d] rounded-lg flex items-center justify-center p-[2px]">
-                                <img src="/heart.png" alt="Bookmark" />
+                                {favoritesKeys.includes(i.id) ? (
+                                  <img
+                                    src="/heart-active.png"
+                                    width={32}
+                                    alt="Bookmark"
+                                    className="p-0.5"
+                                    onClick={(e) => {
+                                      e.preventDefault();
+                                      dispatch(deleteFavorite(i.id));
+                                    }}
+                                  />
+                                ) : (
+                                  <img
+                                    src="/heart.png"
+                                    alt="Bookmark"
+                                    onClick={(e) => {
+                                      e.preventDefault();
+                                      dispatch(addFavorite(i.id));
+                                    }}
+                                  />
+                                )}
                               </div>
                               <img
                                 alt="Car"
