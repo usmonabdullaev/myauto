@@ -137,5 +137,7 @@ export interface DealerInitT {
   filter: {
     sortBy: "date" | "price";
     page: number;
+    limit: number;
   };
+  singleData: ProductType | null;
 }

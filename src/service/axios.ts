@@ -7,7 +7,7 @@ const axiosInstance = axios.create({
   baseURL: BASE_URL,
   headers: {
     Authorization:
-      "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTAsImlhdCI6MTcyMDQ5ODUxNywiZXhwIjoxNzIzMDkwNTE3fQ.XzGRc6QW4TdMkatriMLHfpnBXoeb_7-uR9dG5wg46_0",
+      "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjIsImlhdCI6MTcyMDYxNDkxNCwiZXhwIjoxNzIzMjA2OTE0fQ.WH8Bk5Q1EiwxgW9IXg5LwTZFkp8NfmopJ_BmsRGx3sc",
   },
 });
 

@@ -2,7 +2,12 @@ import React, { useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import { Breadcrumb, Card } from "antd";
 
-import { getUserInfo } from "../service/slices/data.ts";
+import {
+  getUserInfo,
+  getFavorites,
+  deleteFavorite,
+  addFavorite,
+} from "../service/slices/data.ts";
 import { MainSliderSkeleton } from "../components/Skeletons.tsx";
 import { formatDate, formatNumber, truncate } from "../service/functions.ts";
 import { useAppDispatch, useAppSelector } from "../service/hooks.ts";
@@ -11,13 +16,21 @@ import { IMAGE_URL } from "../service/env.ts";
 const UserInfo = () => {
   const { id } = useParams();
   const dispatch = useAppDispatch();
-  const { userInfo, userInfoLoading } = useAppSelector((state) => state.data);
+  const { userInfo, userInfoLoading, favorites } = useAppSelector(
+    (state) => state.data
+  );
 
   useEffect(() => {
     if (id) {
       dispatch(getUserInfo(id));
     }
   }, [dispatch, id]);
+
+  useEffect(() => {
+    dispatch(getFavorites());
+  }, [dispatch]);
+
+  const favoritesKeys = favorites.map((i) => i.car_id);
 
   return (
     <div>
@@ -101,18 +114,6 @@ const UserInfo = () => {
                     </span>
                   </p>
                 </div>
-                {/* <div>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="14"
-                    height="14"
-                    fill="#77818d"
-                    className="bi bi-caret-down-fill"
-                    viewBox="0 0 16 16"
-                  >
-                    <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z" />
-                  </svg>
-                </div> */}
               </div>
             </div>
           </div>
@@ -147,7 +148,27 @@ const UserInfo = () => {
                                 />
                               )}
                               <div className="absolute z-10 right-4 top-4 bg-[#ffffff44] hover:bg-[#ffffff7d] rounded-lg flex items-center justify-center p-[2px]">
-                                <img src="/heart.png" alt="Bookmark" />
+                                {favoritesKeys.includes(i.id) ? (
+                                  <img
+                                    src="/heart-active.png"
+                                    width={32}
+                                    alt="Bookmark"
+                                    className="p-0.5"
+                                    onClick={(e) => {
+                                      e.preventDefault();
+                                      dispatch(deleteFavorite(i.id));
+                                    }}
+                                  />
+                                ) : (
+                                  <img
+                                    src="/heart.png"
+                                    alt="Bookmark"
+                                    onClick={(e) => {
+                                      e.preventDefault();
+                                      dispatch(addFavorite(i.id));
+                                    }}
+                                  />
+                                )}
                               </div>
                               <img
                                 alt={i.title}

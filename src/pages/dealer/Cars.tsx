@@ -38,8 +38,8 @@ const DealersCars = () => {
   ];
 
   useEffect(() => {
-    dispatch(getData());
-  }, [dispatch]);
+    dispatch(getData(filter));
+  }, [dispatch, filter]);
 
   return (
     <div className="container mx-auto">
@@ -49,9 +49,9 @@ const DealersCars = () => {
         </h1>
       </div>
 
-      <div className="flex items-center justify-between">
+      <div className="flex items-center gap-6 mt-5">
         <div className="flex items-center gap-2">
-          <p>Сортироват</p>
+          <p>{metaData.total_items || 0} объявлений</p>
           <div className="flex items-center gap-1 cursor-pointer">
             <Dropdown
               menu={{
@@ -156,7 +156,11 @@ const DealersCars = () => {
             <div className="flex flex-wrap justify-start gap-x-3 gap-y-6">
               {data &&
                 data.map((i) => (
-                  <Link key={i.id} to={`/product/${i.id}`} className="w-[32%]">
+                  <Link
+                    key={i.id}
+                    to={`/dealers/car/${i.id}`}
+                    className="w-[24%]"
+                  >
                     <Card
                       style={{ cursor: "pointer" }}
                       cover={
@@ -217,19 +221,13 @@ const DealersCars = () => {
             <div className="flex flex-col justify-start gap-y-5">
               {data &&
                 data.map((i) => (
-                  <Link key={i.id} to={`/product/${i.id}`} className="w-full">
+                  <Link
+                    key={i.id}
+                    to={`/dealers/car/${i.id}`}
+                    className="w-full"
+                  >
                     <div className="cursor-pointer bg-white rounded-l-lg grid grid-cols-3 w-full h-[200px] overflow-hidden">
                       <div className="overflow-hidden rounded-l-lg relative w-full h-full col-span-1">
-                        {i.tarif === "premium" && (
-                          <img
-                            src="/premium.svg"
-                            alt="Premium"
-                            className="absolute z-10 -top-[0.4px] -left-[24.4px]"
-                          />
-                        )}
-                        <div className="absolute z-10 right-4 top-4 bg-[#ffffff44] hover:bg-[#ffffff7d] rounded-lg flex items-center justify-center p-[2px]">
-                          <img src="/heart.png" alt="Bookmark" />
-                        </div>
                         <img
                           alt="Car"
                           src={`${IMAGE_URL}${i.images[0].image}`}

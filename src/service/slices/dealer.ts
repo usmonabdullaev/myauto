@@ -11,24 +11,39 @@ const initialState: DealerInitT = {
   filter: {
     sortBy: "date",
     page: 1,
+    limit: 12,
   },
+  singleData: null,
 };
 
 export const getData = createAsyncThunk(
-  "dataApi/getData",
-  async (_, { rejectWithValue, dispatch }) => {
+  "dealerApi/getData",
+  async (body: any, { rejectWithValue, dispatch }) => {
     try {
       const uri = `/car/filter`;
-      const { data } = await axiosInstance.get<{
+      const { data } = await axiosInstance.post<{
         data: ProductType[];
         meta: { total_items: number; total_pages: number };
-      }>(uri);
+      }>(uri, body);
 
       if (data.meta) {
         dispatch(setMetaQuery(data.meta));
       }
 
       return data.data;
+    } catch (err) {
+      return rejectWithValue(err.message);
+    }
+  }
+);
+
+export const getSingleData = createAsyncThunk(
+  "dealerApi/getSingleData",
+  async (id: string, { rejectWithValue }) => {
+    try {
+      const uri = `/car/${id}`;
+      const { data } = await axiosInstance.get<ProductType>(uri);
+      return data;
     } catch (err) {
       return rejectWithValue(err.message);
     }
@@ -47,7 +62,11 @@ export const dealerSlice = createSlice({
     },
     setFilter: (
       state,
-      action: PayloadAction<{ sortBy: "date" | "price"; page: number }>
+      action: PayloadAction<{
+        sortBy: "date" | "price";
+        page: number;
+        limit: number;
+      }>
     ) => {
       state.filter = action.payload;
     },
@@ -63,6 +82,19 @@ export const dealerSlice = createSlice({
     builder.addCase(getData.rejected, (state) => {
       state.dataLoading = false;
     });
+
+    // builder.addCase(getSingleData.pending, (state) => {
+    //   state.dataLoading = true;
+    // });
+    builder.addCase(
+      getSingleData.fulfilled,
+      (state, action: PayloadAction<ProductType | null>) => {
+        state.singleData = action.payload;
+      }
+    );
+    // builder.addCase(getSingleData.rejected, (state) => {
+    //   state.dataLoading = false;
+    // });
   },
 });
 
