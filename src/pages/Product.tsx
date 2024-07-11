@@ -8,7 +8,7 @@ import { getSimilar, getSingleData } from "../service/slices/data.ts";
 import { useAppDispatch, useAppSelector } from "../service/hooks.ts";
 import { formatDate, formatNumber, truncate } from "../service/functions.ts";
 import { MainSliderSkeleton } from "../components/Skeletons.tsx";
-import { IMAGE_URL } from "../service/env.ts";
+import { IMAGE_URL } from "../service/env.tsx";
 
 const Product = () => {
   const { id } = useParams();

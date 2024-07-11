@@ -19,7 +19,7 @@ import {
 import { formatNumber, truncate } from "../service/functions.ts";
 import { MainSliderSkeleton } from "../components/Skeletons.tsx";
 import SelectLabel from "../components/SelectLabel.tsx";
-import { IMAGE_URL } from "../service/env.ts";
+import { IMAGE_URL } from "../service/env.tsx";
 
 import "swiper/css";
 

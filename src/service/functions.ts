@@ -46,3 +46,24 @@ export const formatDate = (date: Date) => {
     .replace(/\//g, ".")
     .replace(", ", " ");
 };
+
+export const fileToBase64 = (file: File): Promise<string> => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      if (reader.result) {
+        resolve(reader.result.toString());
+      } else {
+        reject(new Error("Failed to convert file to base64"));
+      }
+    };
+    reader.onerror = () => {
+      reject(new Error("Error reading file"));
+    };
+    reader.readAsDataURL(file);
+  });
+};
+
+export const filesToBase64 = (files: File[]): Promise<string[]> => {
+  return Promise.all(files.map((file) => fileToBase64(file)));
+};

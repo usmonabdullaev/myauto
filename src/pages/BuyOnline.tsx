@@ -6,7 +6,7 @@ import { Swiper as SwiperType } from "swiper";
 import { RightOutlined } from "@ant-design/icons";
 
 import { formatNumber, truncate } from "../service/functions.ts";
-import { IMAGE_URL } from "../service/env.ts";
+import { IMAGE_URL } from "../service/env.tsx";
 import { getShowrooms } from "../service/slices/data.ts";
 import { useAppDispatch, useAppSelector } from "../service/hooks.ts";
 

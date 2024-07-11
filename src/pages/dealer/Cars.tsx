@@ -3,7 +3,7 @@ import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 
 import { MainSliderSkeleton } from "../../components/Skeletons.tsx";
-import { IMAGE_URL } from "../../service/env.ts";
+import { IMAGE_URL } from "../../service/env.tsx";
 import { formatDate, formatNumber, truncate } from "../../service/functions.ts";
 import { useAppDispatch, useAppSelector } from "../../service/hooks.ts";
 import {

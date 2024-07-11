@@ -4,7 +4,7 @@ import { Link, useParams } from "react-router-dom";
 import Slider from "react-slick";
 import { CarouselRef } from "antd/es/carousel/index";
 
-import { IMAGE_URL } from "../../service/env.ts";
+import { IMAGE_URL } from "../../service/env.tsx";
 import { formatDate, formatNumber } from "../../service/functions.ts";
 import { getSingleData } from "../../service/slices/dealer.ts";
 import { useAppDispatch, useAppSelector } from "../../service/hooks.ts";

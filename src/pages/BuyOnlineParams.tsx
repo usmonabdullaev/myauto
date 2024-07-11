@@ -5,7 +5,7 @@ import React, { useRef, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { CheckOutlined, RightOutlined } from "@ant-design/icons";
 
-import { IMAGE_URL } from "../service/env.ts";
+import { IMAGE_URL } from "../service/env.tsx";
 import { formatNumber } from "../service/functions.ts";
 import { ButtonGradient } from "../components/UI/Buttons.tsx";
 

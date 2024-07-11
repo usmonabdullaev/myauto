@@ -9,6 +9,7 @@ export const ButtonGradient = ({
   type = "primary",
   size = "large",
   group = "1",
+  block = true,
 }: {
   children: ReactNode;
   className?: string;
@@ -16,6 +17,7 @@ export const ButtonGradient = ({
   type?: "link" | "text" | "primary" | "default" | "dashed";
   size?: "large" | "middle" | "small";
   group: "1" | "2";
+  block?: boolean;
 }) => {
   const getHoverColors = (colors: string[]) =>
     colors.map((color) => new TinyColor(color).lighten(5).toString());
@@ -67,7 +69,7 @@ export const ButtonGradient = ({
         type={type}
         size={size}
         className={className}
-        block
+        block={block}
       >
         {children}
       </Button>

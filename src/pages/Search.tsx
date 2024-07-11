@@ -23,7 +23,7 @@ import {
 } from "../service/slices/data.ts";
 import SelectLabel from "../components/SelectLabel.tsx";
 import DebouncedInput from "../components/DebouncedInput.tsx";
-import { IMAGE_URL } from "../service/env.ts";
+import { IMAGE_URL } from "../service/env.tsx";
 
 const Search = () => {
   const {
@@ -79,7 +79,7 @@ const Search = () => {
       label: "Зеленый",
       hex: "#24d800",
       id: 3,
-    }
+    },
   ];
 
   const sortByOptions: { key: "date" | "price"; label: string }[] = [

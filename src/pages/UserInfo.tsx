@@ -11,7 +11,7 @@ import {
 import { MainSliderSkeleton } from "../components/Skeletons.tsx";
 import { formatDate, formatNumber, truncate } from "../service/functions.ts";
 import { useAppDispatch, useAppSelector } from "../service/hooks.ts";
-import { IMAGE_URL } from "../service/env.ts";
+import { IMAGE_URL } from "../service/env.tsx";
 
 const UserInfo = () => {
   const { id } = useParams();

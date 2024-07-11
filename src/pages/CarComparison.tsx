@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import { getComparisonData } from "../service/slices/data.ts";
 import { useAppDispatch, useAppSelector } from "../service/hooks.ts";
 import { formatNumber, truncate } from "../service/functions.ts";
-import { IMAGE_URL } from "../service/env.ts";
+import { IMAGE_URL } from "../service/env.tsx";
 
 const CarComparison = () => {
   const dispatch = useAppDispatch();

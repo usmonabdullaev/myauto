@@ -27,3 +27,7 @@
   padding-top: 5px !important;
   padding-bottom: 14px !important;
 }
+.ant-upload {
+  width: 140px !important;
+  height: 140px !important;
+}
