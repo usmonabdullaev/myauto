@@ -141,3 +141,20 @@ export interface DealerInitT {
   };
   singleData: ProductType | null;
 }
+
+export interface UserT {
+  _id: string;
+  name: string;
+  phone: string;
+  balance: number;
+  avatar: string;
+  created: string;
+  updated: string;
+}
+
+export interface UserInitT {
+  showAuthModal: boolean;
+  user: UserT | null;
+  userLoading: boolean;
+  authorized: boolean;
+}

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   Button,
   Input,
@@ -84,10 +84,6 @@ const CarLoans = () => {
   const handleCancel2 = () => {
     setIsModalOpen2(false);
   };
-
-  useEffect(() => {
-    document.documentElement.style.setProperty("--num", finance.toString());
-  }, [finance]);
 
   return (
     <div className="container mx-auto">

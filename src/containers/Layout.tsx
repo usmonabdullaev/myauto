@@ -6,11 +6,18 @@ import {
   YoutubeFilled,
   WhatsAppOutlined,
 } from "@ant-design/icons";
-import React from "react";
+import React, { useEffect } from "react";
 import { Link, Outlet } from "react-router-dom";
+import { useAppDispatch, useAppSelector } from "../service/hooks.ts";
+import { getMe, setShowAuthModal, logout } from "../service/slices/user.ts";
 // import type { MenuProps } from "antd";
 
+import AuthModal from "../components/modal/Auth.tsx";
+import { Button, Popover } from "antd";
+
 const Layout = () => {
+  const dispatch = useAppDispatch();
+  const { authorized, user } = useAppSelector((data) => data.user);
   // const [selectedLang, setSelectedLang] = useState("russian");
   // const handleMenuClick: MenuProps["onClick"] = (e) => {
   //   setSelectedLang(e.key);
@@ -35,8 +42,18 @@ const Layout = () => {
   //   onClick: handleMenuClick,
   // };
 
+  useEffect(() => {
+    dispatch(getMe());
+  }, [dispatch]);
+
+  const onLogout = () => {
+    dispatch(logout());
+  };
+
   return (
     <div>
+      <AuthModal />
+
       <div className="bg-white shadow-lg">
         <div className="container mx-auto flex items-center justify-between">
           <div className="flex items-center gap-16">
@@ -103,9 +120,104 @@ const Layout = () => {
               <img src="/car.png" alt="Add auto" width={24} />
               Создать объявление
             </a>
-            <a href="#1" className="text-[#6b747f]">
-              Войти
-            </a>
+            {authorized ? (
+              <Popover
+                placement="bottomRight"
+                content={
+                  <div className="p-2">
+                    <div className="border-b flex items-center gap-2 pb-3">
+                      {user?.avatar ? (
+                        <div className="w-[36px] h-[36px] cursor-pointer">
+                          <img
+                            src={user.avatar}
+                            alt="Avatar"
+                            className="size-full object-cover"
+                          />
+                        </div>
+                      ) : (
+                        <div className="cursor-pointer">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="36"
+                            height="36"
+                            fill="#424b55"
+                            className="bi bi-person-circle"
+                            viewBox="0 0 16 16"
+                          >
+                            <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
+                            <path
+                              fill-rule="evenodd"
+                              d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"
+                            />
+                          </svg>
+                        </div>
+                      )}
+                      <div>
+                        <p className="text-lg font-[600]">{user?.name}</p>
+                        <p className="text-xs text-gray-500">ID: {user?._id}</p>
+                      </div>
+                    </div>
+
+                    <div className="mt-3 flex flex-col items-start gap-2 pl-4">
+                      <Link to="#" className="text-[16px] font-[600]">
+                        Мои объявления
+                      </Link>
+                      <Link to="#" className="text-[16px] font-[600]">
+                        Настройки
+                      </Link>
+                      <Link to="#" className="text-[16px] font-[600]">
+                        Избранное
+                      </Link>
+                      <Button
+                        type="link"
+                        className="pl-0 text-[16px] font-[600] mt-2"
+                        onClick={onLogout}
+                        danger
+                      >
+                        Выйти
+                      </Button>
+                    </div>
+                  </div>
+                }
+              >
+                {user?.avatar ? (
+                  <div className="w-[36px] h-[36px] cursor-pointer">
+                    <img
+                      src={user.avatar}
+                      alt="Avatar"
+                      className="size-full object-cover"
+                    />
+                  </div>
+                ) : (
+                  <div className="cursor-pointer">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="36"
+                      height="36"
+                      fill="#424b55"
+                      className="bi bi-person-circle"
+                      viewBox="0 0 16 16"
+                    >
+                      <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
+                      <path
+                        fill-rule="evenodd"
+                        d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"
+                      />
+                    </svg>
+                  </div>
+                )}
+              </Popover>
+            ) : (
+              <span
+                className="text-[#6b747f] cursor-pointer"
+                onClick={() => {
+                  dispatch(setShowAuthModal(true));
+                }}
+              >
+                Войти
+              </span>
+            )}
+
             {/* <Dropdown menu={menuProps}>
               <Link to="/">
                 <Space className="text-[#6b747f]">
