@@ -1,7 +1,12 @@
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 import { axiosInstance } from "../axios.ts";
-import { MetaResponseType, ProductType, DealerInitT } from "../types.ts";
+import {
+  MetaResponseType,
+  ProductType,
+  DealerInitT,
+  SingleDataT,
+} from "../types.ts";
 
 const initialState: DealerInitT = {
   data: [],
@@ -18,12 +23,18 @@ const initialState: DealerInitT = {
 
 export const getData = createAsyncThunk(
   "dealerApi/getData",
-  async (body: any, { rejectWithValue, dispatch }) => {
+  async (
+    body: { limit: number; page: number; sortBy: "date" | "price" },
+    { rejectWithValue, dispatch }
+  ) => {
     try {
-      const uri = `/car/filter`;
+      const uri = `/cars/filter`;
       const { data } = await axiosInstance.post<{
         data: ProductType[];
         meta: { total_items: number; total_pages: number };
+        success: boolean;
+        status: number;
+        message: string;
       }>(uri, body);
 
       if (data.meta) {
@@ -32,7 +43,7 @@ export const getData = createAsyncThunk(
 
       return data.data;
     } catch (err) {
-      return rejectWithValue(err.message);
+      return rejectWithValue(err);
     }
   }
 );
@@ -41,11 +52,17 @@ export const getSingleData = createAsyncThunk(
   "dealerApi/getSingleData",
   async (id: string, { rejectWithValue }) => {
     try {
-      const uri = `/car/${id}`;
-      const { data } = await axiosInstance.get<ProductType>(uri);
-      return data;
+      const uri = `/cars/${id}`;
+      const { data } = await axiosInstance.get<{
+        data: SingleDataT;
+        status: number;
+        success: boolean;
+        message: string;
+      }>(uri);
+
+      return data.data;
     } catch (err) {
-      return rejectWithValue(err.message);
+      return rejectWithValue(err);
     }
   }
 );
@@ -83,18 +100,15 @@ export const dealerSlice = createSlice({
       state.dataLoading = false;
     });
 
-    // builder.addCase(getSingleData.pending, (state) => {
-    //   state.dataLoading = true;
-    // });
-    builder.addCase(
-      getSingleData.fulfilled,
-      (state, action: PayloadAction<ProductType | null>) => {
-        state.singleData = action.payload;
-      }
-    );
-    // builder.addCase(getSingleData.rejected, (state) => {
-    //   state.dataLoading = false;
-    // });
+    builder.addCase(getSingleData.pending, (state) => {
+      state.dataLoading = true;
+    });
+    builder.addCase(getSingleData.fulfilled, (state, action) => {
+      state.singleData = action.payload;
+    });
+    builder.addCase(getSingleData.rejected, (state) => {
+      state.dataLoading = false;
+    });
   },
 });
 

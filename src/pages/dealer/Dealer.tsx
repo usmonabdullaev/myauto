@@ -32,6 +32,8 @@ const Dealer = () => {
 
   const favoritesKeys = favorites.map((i) => i.car_id);
 
+  if (!userInfo) return null;
+
   return (
     <div>
       <div className="container mx-auto mt-7">
@@ -60,7 +62,7 @@ const Dealer = () => {
         <div className="flex items-start justify-between w-100">
           <div className="w-[29%]">
             <div className="rounded-lg p-4 bg-[#e4e9ef]">
-              {userInfo?.user.avatar ? (
+              {userInfo.user.avatar ? (
                 <img
                   src={`${IMAGE_URL}${userInfo.user.avatar}`}
                   alt="Avatar"
@@ -85,7 +87,7 @@ const Dealer = () => {
                 </svg>
               )}
               <h2 className="mt-2 font-bold text-[#0a192d] text-2xl">
-                Пользователь {userInfo?.user.user_name}
+                Пользователь {userInfo.user.name}
               </h2>
               <p className="text-[#77818d] mt-2">
                 {userInfo?.cars.length} объявления
@@ -154,7 +156,7 @@ const Dealer = () => {
                       Номер телефона
                     </span>
                     <span className="font-semibold text-[#2d3744]">
-                      {userInfo?.user.phone}
+                      {userInfo.user.phone}
                     </span>
                   </p>
                 </div>
@@ -169,15 +171,15 @@ const Dealer = () => {
                   className="flex flex-wrap"
                   itemWidth="w-[33%]"
                 />
-              ) : !userInfo?.cars?.length ? (
+              ) : !userInfo.cars.length ? (
                 <p className="text-center text-xl">Пусто</p>
               ) : (
                 <div className="flex flex-wrap justify-start gap-x-3 gap-y-6">
                   {userInfo.cars &&
                     userInfo.cars.map((i) => (
                       <Link
-                        key={i.id}
-                        to={`/product/${i.id}`}
+                        key={i._id}
+                        to={`/dealers/car/${i._id}`}
                         className="w-[32%]"
                       >
                         <Card
@@ -192,7 +194,7 @@ const Dealer = () => {
                                 />
                               )}
                               <div className="absolute z-10 right-4 top-4 bg-[#ffffff44] hover:bg-[#ffffff7d] rounded-lg flex items-center justify-center p-[2px]">
-                                {favoritesKeys.includes(i.id) ? (
+                                {favoritesKeys.includes(i._id) ? (
                                   <img
                                     src="/heart-active.png"
                                     width={32}
@@ -200,7 +202,7 @@ const Dealer = () => {
                                     className="p-0.5"
                                     onClick={(e) => {
                                       e.preventDefault();
-                                      dispatch(deleteFavorite(i.id));
+                                      dispatch(deleteFavorite(i._id));
                                     }}
                                   />
                                 ) : (
@@ -209,7 +211,7 @@ const Dealer = () => {
                                     alt="Bookmark"
                                     onClick={(e) => {
                                       e.preventDefault();
-                                      dispatch(addFavorite(i.id));
+                                      dispatch(addFavorite(i._id));
                                     }}
                                   />
                                 )}

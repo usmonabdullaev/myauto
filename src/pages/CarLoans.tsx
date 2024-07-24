@@ -51,7 +51,7 @@ const CarLoans = () => {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isModalOpen2, setIsModalOpen2] = useState(false);
-  const [currency, setCurrency] = useState(2);
+  const [currency, setCurrency] = useState<"c" | "$">("c");
   const [price, setPrice] = useState(100000);
   const [prepayment, setPrepayment] = useState(20000);
   const [finance, setFinance] = useState(80000);
@@ -250,13 +250,15 @@ const CarLoans = () => {
                 value={currency}
                 size="large"
               >
-                <Radio value={1}>Доллар США</Radio>
-                <Radio value={2}>Сомони</Radio>
+                <Radio value="$">Доллар США</Radio>
+                <Radio value="c">Сомони</Radio>
               </Radio.Group>
             </div>
 
             <p className="text-gray-500">Стоимость авто</p>
-            <p className="text-2xl font-bold">{formatNumber(price)} c.</p>
+            <p className="text-2xl font-bold">
+              {formatNumber(price)} {currency}.
+            </p>
             <Slider
               min={50000}
               max={1000000}
@@ -267,7 +269,7 @@ const CarLoans = () => {
             />
 
             <p className="text-gray-500">Предоплата</p>
-            <p className="text-2xl font-bold">{formatNumber(prepayment)} c.</p>
+            <p className="text-2xl font-bold">{formatNumber(prepayment)} {currency}.</p>
             <Slider
               min={20000}
               max={100000}
@@ -278,7 +280,7 @@ const CarLoans = () => {
             />
 
             <p className="text-gray-500">Сумма финансирования</p>
-            <p className="text-2xl font-bold">{formatNumber(finance)} c.</p>
+            <p className="text-2xl font-bold">{formatNumber(finance)} {currency}.</p>
             <Slider
               min={80000}
               max={160000}
@@ -307,11 +309,11 @@ const CarLoans = () => {
           <div className="col-span-5">
             <div className="rounded-lg bg-[#F7F8F9] p-4 mt-10">
               <p className="text-gray-500">Фактическая переплата</p>
-              <p className="text-2xl font-bold">{formatNumber(10400)} c.</p>
+              <p className="text-2xl font-bold">{formatNumber(10400)} {currency}.</p>
 
               <p className="text-gray-500">Ежемесячный платёж</p>
               <p className="text-2xl font-bold">
-                {formatNumber(7533.333).replace(",", ".")} c.
+                {formatNumber(7533.333).replace(",", ".")} {currency}.
               </p>
 
               <p className="text-gray-500">Общая сумма комиссии</p>

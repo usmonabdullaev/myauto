@@ -295,8 +295,8 @@ const Main = () => {
             >
               {premiumData &&
                 premiumData.map((i) => (
-                  <SwiperSlide key={i.id}>
-                    <Link to={`/product/${i.id}`}>
+                  <SwiperSlide key={i._id}>
+                    <Link to={`/product/${i._id}`}>
                       <Card
                         style={{ width: 240, cursor: "pointer" }}
                         cover={
@@ -307,7 +307,7 @@ const Main = () => {
                               className="absolute z-10 -top-[0.4px] -left-[24.4px]"
                             />
                             <div className="absolute z-10 right-4 top-4 bg-[#ffffff44] hover:bg-[#ffffff7d] rounded-lg flex items-center justify-center p-[2px]">
-                              {favoritesKeys.includes(i.id) ? (
+                              {favoritesKeys.includes(i._id) ? (
                                 <img
                                   src="/heart-active.png"
                                   width={32}
@@ -315,7 +315,7 @@ const Main = () => {
                                   className="p-0.5"
                                   onClick={(e) => {
                                     e.preventDefault();
-                                    dispatch(deleteFavorite(i.id));
+                                    dispatch(deleteFavorite(i._id));
                                   }}
                                 />
                               ) : (
@@ -324,7 +324,7 @@ const Main = () => {
                                   alt="Bookmark"
                                   onClick={(e) => {
                                     e.preventDefault();
-                                    dispatch(addFavorite(i.id));
+                                    dispatch(addFavorite(i._id));
                                   }}
                                 />
                               )}
@@ -427,8 +427,8 @@ const Main = () => {
             >
               {searchCar &&
                 searchCar.map((i) => (
-                  <SwiperSlide key={i.id}>
-                    <Link to={`/product/${i.id}`}>
+                  <SwiperSlide key={i._id}>
+                    <Link to={`/product/${i._id}`}>
                       <Card
                         style={{ width: 240, cursor: "pointer" }}
                         cover={
@@ -441,7 +441,7 @@ const Main = () => {
                               />
                             )}
                             <div className="absolute z-10 right-4 top-4 bg-[#ffffff44] hover:bg-[#ffffff7d] rounded-lg flex items-center justify-center p-[2px]">
-                              {favoritesKeys.includes(i.id) ? (
+                              {favoritesKeys.includes(i._id) ? (
                                 <img
                                   src="/heart-active.png"
                                   width={32}
@@ -449,7 +449,7 @@ const Main = () => {
                                   className="p-0.5"
                                   onClick={(e) => {
                                     e.preventDefault();
-                                    dispatch(deleteFavorite(i.id));
+                                    dispatch(deleteFavorite(i._id));
                                   }}
                                 />
                               ) : (
@@ -458,7 +458,7 @@ const Main = () => {
                                   alt="Bookmark"
                                   onClick={(e) => {
                                     e.preventDefault();
-                                    dispatch(addFavorite(i.id));
+                                    dispatch(addFavorite(i._id));
                                   }}
                                 />
                               )}
@@ -560,8 +560,8 @@ const Main = () => {
             >
               {newData &&
                 newData.map((i) => (
-                  <SwiperSlide key={i.id}>
-                    <Link to={`/product/${i.id}`}>
+                  <SwiperSlide key={i._id}>
+                    <Link to={`/product/${i._id}`}>
                       <Card
                         style={{ width: 240, cursor: "pointer" }}
                         cover={
@@ -574,7 +574,7 @@ const Main = () => {
                               />
                             )}
                             <div className="absolute z-10 right-4 top-4 bg-[#ffffff44] hover:bg-[#ffffff7d] rounded-lg flex items-center justify-center p-[2px]">
-                              {favoritesKeys.includes(i.id) ? (
+                              {favoritesKeys.includes(i._id) ? (
                                 <img
                                   src="/heart-active.png"
                                   width={32}
@@ -582,7 +582,7 @@ const Main = () => {
                                   className="p-0.5"
                                   onClick={(e) => {
                                     e.preventDefault();
-                                    dispatch(deleteFavorite(i.id));
+                                    dispatch(deleteFavorite(i._id));
                                   }}
                                 />
                               ) : (
@@ -591,7 +591,7 @@ const Main = () => {
                                   alt="Bookmark"
                                   onClick={(e) => {
                                     e.preventDefault();
-                                    dispatch(addFavorite(i.id));
+                                    dispatch(addFavorite(i._id));
                                   }}
                                 />
                               )}
@@ -693,8 +693,8 @@ const Main = () => {
             >
               {electData &&
                 electData.map((i) => (
-                  <SwiperSlide key={i.id}>
-                    <Link to={`/product/${i.id}`}>
+                  <SwiperSlide key={i._id}>
+                    <Link to={`/product/${i._id}`}>
                       <Card
                         style={{ width: 240, cursor: "pointer" }}
                         cover={
@@ -707,7 +707,7 @@ const Main = () => {
                               />
                             )}
                             <div className="absolute z-10 right-4 top-4 bg-[#ffffff44] hover:bg-[#ffffff7d] rounded-lg flex items-center justify-center p-[2px]">
-                              {favoritesKeys.includes(i.id) ? (
+                              {favoritesKeys.includes(i._id) ? (
                                 <img
                                   src="/heart-active.png"
                                   width={32}
@@ -715,7 +715,7 @@ const Main = () => {
                                   className="p-0.5"
                                   onClick={(e) => {
                                     e.preventDefault();
-                                    dispatch(deleteFavorite(i.id));
+                                    dispatch(deleteFavorite(i._id));
                                   }}
                                 />
                               ) : (
@@ -724,7 +724,7 @@ const Main = () => {
                                   alt="Bookmark"
                                   onClick={(e) => {
                                     e.preventDefault();
-                                    dispatch(addFavorite(i.id));
+                                    dispatch(addFavorite(i._id));
                                   }}
                                 />
                               )}

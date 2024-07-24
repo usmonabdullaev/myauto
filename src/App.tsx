@@ -19,6 +19,7 @@ import {
   CheckingFines,
   OnlineOrdering,
   WeBuyCars,
+  Rental,
 } from "./router/index.ts";
 
 function App() {
@@ -157,6 +158,14 @@ function App() {
           element={
             <Suspense>
               <WeBuyCars />
+            </Suspense>
+          }
+        />
+        <Route
+          path="rental"
+          element={
+            <Suspense>
+              <Rental />
             </Suspense>
           }
         />

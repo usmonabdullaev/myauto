@@ -196,7 +196,7 @@ const DealersCar = () => {
               <div className="col-span-2 h-full max-h-[100%] overflow-hidden flex flex-col items-center gap-y-1 justify-center">
                 <Slider {...settings} ref={setSlider2}>
                   {singleData.images.map((i, index) => (
-                    <div key={i.id} className="relative">
+                    <div key={i._id} className="relative">
                       {activeSlider === index && (
                         <div
                           className="absolute right-[100%] top-1/2"
@@ -280,7 +280,7 @@ const DealersCar = () => {
                   arrows
                 >
                   {singleData.images.map((i) => (
-                    <div key={i.id} className="h-[400px] w-full">
+                    <div key={i._id} className="h-[400px] w-full">
                       <div
                         className="h-full w-full"
                         style={{
@@ -483,7 +483,7 @@ const DealersCar = () => {
               <div className="bg-[#18bb4f] text-white py-1 px-2 inline-block mt-4 rounded-lg font-normal">
                 <p className="flex items-center gap-2">
                   <img src="/check-2.png" alt="Checked" width={32} />
-                  <span>Проверено</span>
+                  <span>Гарантия</span>
                 </p>
               </div>
               <br />
@@ -613,7 +613,7 @@ const DealersCar = () => {
                     )}
 
                     <p className="text-[#0a192d]">
-                      Пользователь {singleData.user.user_name}
+                      Пользователь {singleData.user.name}
                     </p>
                   </div>
                   <div>

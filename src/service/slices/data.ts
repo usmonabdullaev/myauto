@@ -1,6 +1,6 @@
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
-import { axiosInstance } from "../axios.ts";
+import { axiosInstance, axiosToken } from "../axios.ts";
 import {
   DataInitType,
   FavoriteT,
@@ -8,6 +8,7 @@ import {
   FilterQueriesType,
   MetaResponseType,
   ProductType,
+  SingleDataT,
   UserInfoType,
 } from "../types.ts";
 import { filterObject } from "../functions.ts";
@@ -68,50 +69,59 @@ export const getFavorites = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const uri = `/user/favorites`;
-      const { data } = await axiosInstance.get<FavoriteT[]>(uri);
-      return data;
+      const { data } = await axiosToken.get<{
+        data: FavoriteT[];
+        status: number;
+        success: boolean;
+        message: string;
+      }>(uri);
+      return data.data;
     } catch (err) {
-      return rejectWithValue(err.message);
+      return rejectWithValue(err);
     }
   }
 );
 
 export const addFavorite = createAsyncThunk(
   "dataApi/addFavorite",
-  async (id: number, { rejectWithValue, dispatch }) => {
+  async (id: string, { rejectWithValue, dispatch }) => {
     try {
-      const uri = `/user/favorite/${id}`;
-      const { data } = await axiosInstance.post(uri);
+      const uri = `/user/favorites/${id}`;
+      const { data } = await axiosToken.post<{
+        data: FavoriteT[];
+        status: number;
+        success: boolean;
+        message: string;
+      }>(uri);
 
-      if (data.success) {
-        dispatch(getFavorites());
-        message.success(data.message);
-      } else {
-      }
+      dispatch(getFavorites());
+      message.success(data.message);
 
-      return data;
+      return data.data;
     } catch (err) {
-      if (err.response.status === 401) {
+      if (err.response.status === 403) {
         message.warning("Вы не авторизованы!");
       }
 
-      return rejectWithValue(err.message);
+      return rejectWithValue(err);
     }
   }
 );
 
 export const deleteFavorite = createAsyncThunk(
   "dataApi/deleteFavorite",
-  async (id: number, { rejectWithValue, dispatch }) => {
+  async (id: string, { rejectWithValue, dispatch }) => {
     try {
-      const uri = `/user/favorite/${id}`;
-      const { data } = await axiosInstance.delete(uri);
+      const uri = `/user/favorites/${id}`;
+      const { data } = await axiosToken.delete<{
+        data: FavoriteT[];
+        status: number;
+        success: boolean;
+        message: string;
+      }>(uri);
 
-      if (data.success) {
-        dispatch(getFavorites());
-        message.success(data.message);
-      } else {
-      }
+      dispatch(getFavorites());
+      message.success(data.message);
 
       return data;
     } catch (err) {
@@ -119,7 +129,7 @@ export const deleteFavorite = createAsyncThunk(
         message.warning("Вы не авторизованы!");
       }
 
-      return rejectWithValue(err.message);
+      return rejectWithValue(err);
     }
   }
 );
@@ -128,11 +138,17 @@ export const getPremiumData = createAsyncThunk(
   "dataApi/getPremiumData",
   async (_, { rejectWithValue }) => {
     try {
-      const uri = `/car/home/premium`;
-      const { data } = await axiosInstance.get<ProductType[]>(uri);
-      return data;
+      const uri = `/cars/filter/premium`;
+      const { data } = await axiosInstance.get<{
+        data: ProductType[];
+        message: string;
+        status: number;
+        success: boolean;
+      }>(uri);
+
+      return data.data;
     } catch (err) {
-      return rejectWithValue(err.message);
+      return rejectWithValue(err);
     }
   }
 );
@@ -145,7 +161,7 @@ export const getSearchCar = createAsyncThunk(
       const { data } = await axiosInstance.get<ProductType[]>(uri);
       return data;
     } catch (err) {
-      return rejectWithValue(err.message);
+      return rejectWithValue(err);
     }
   }
 );
@@ -158,7 +174,7 @@ export const getNewCars = createAsyncThunk(
       const { data } = await axiosInstance.get<ProductType[]>(uri);
       return data;
     } catch (err) {
-      return rejectWithValue(err.message);
+      return rejectWithValue(err);
     }
   }
 );
@@ -171,7 +187,7 @@ export const getElectCars = createAsyncThunk(
       const { data } = await axiosInstance.get<ProductType[]>(uri);
       return data;
     } catch (err) {
-      return rejectWithValue(err.message);
+      return rejectWithValue(err);
     }
   }
 );
@@ -184,7 +200,7 @@ export const getSimilar = createAsyncThunk(
       const { data } = await axiosInstance.get<ProductType[]>(uri);
       return data;
     } catch (err) {
-      return rejectWithValue(err.message);
+      return rejectWithValue(err);
     }
   }
 );
@@ -194,7 +210,7 @@ export const getFilteredData = createAsyncThunk(
   async (filter: FilterQueriesToUrlType, { rejectWithValue, dispatch }) => {
     const filtered = filterObject(filter);
     try {
-      const uri = `/car/filter`;
+      const uri = `/cars/filter`;
       const { data } = await axiosInstance.post<{
         data: ProductType[];
         meta: MetaResponseType;
@@ -206,7 +222,7 @@ export const getFilteredData = createAsyncThunk(
 
       return data.data;
     } catch (err) {
-      return rejectWithValue(err.message);
+      return rejectWithValue(err);
     }
   }
 );
@@ -215,11 +231,17 @@ export const getSingleData = createAsyncThunk(
   "dataApi/getSingleData",
   async (id: string, { rejectWithValue }) => {
     try {
-      const uri = `/car/${id}`;
-      const { data } = await axiosInstance.get<ProductType>(uri);
-      return data;
+      const uri = `/cars/car/${id}`;
+      const { data } = await axiosInstance.get<{
+        data: SingleDataT;
+        success: boolean;
+        status: number;
+        message: string;
+      }>(uri);
+
+      return data.data;
     } catch (err) {
-      return rejectWithValue(err.message);
+      return rejectWithValue(err);
     }
   }
 );
@@ -232,7 +254,7 @@ export const getComparisonData = createAsyncThunk(
       const { data } = await axiosInstance.get<ProductType[]>(uri);
       return data;
     } catch (err) {
-      return rejectWithValue(err.message);
+      return rejectWithValue(err);
     }
   }
 );
@@ -241,11 +263,16 @@ export const getUserInfo = createAsyncThunk(
   "dataApi/getUserInfo",
   async (id: string, { rejectWithValue }) => {
     try {
-      const uri = `/car/user/${id}`;
-      const { data } = await axiosInstance.get<UserInfoType>(uri);
-      return data;
+      const uri = `/cars/user/${id}`;
+      const { data } = await axiosInstance.get<{
+        data: UserInfoType;
+        status: number;
+        success: boolean;
+        message: string;
+      }>(uri);
+      return data.data;
     } catch (err) {
-      return rejectWithValue(err.message);
+      return rejectWithValue(err);
     }
   }
 );
@@ -258,7 +285,7 @@ export const getShowrooms = createAsyncThunk(
       const { data } = await axiosInstance.get(uri);
       return data;
     } catch (err) {
-      return rejectWithValue(err.message);
+      return rejectWithValue(err);
     }
   }
 );
@@ -280,6 +307,9 @@ export const dataSlice = createSlice({
   extraReducers(builder) {
     builder.addCase(getFavorites.fulfilled, (state, action) => {
       state.favorites = action.payload;
+    });
+    builder.addCase(getFavorites.rejected, (state) => {
+      state.favorites = [];
     });
 
     builder.addCase(getPremiumData.pending, (state) => {

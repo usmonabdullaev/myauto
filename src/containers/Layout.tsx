@@ -14,6 +14,7 @@ import { getMe, setShowAuthModal, logout } from "../service/slices/user.ts";
 
 import AuthModal from "../components/modal/Auth.tsx";
 import { Button, Popover } from "antd";
+import { IMAGE_URL } from "../service/env.tsx";
 
 const Layout = () => {
   const dispatch = useAppDispatch();
@@ -127,11 +128,11 @@ const Layout = () => {
                   <div className="p-2">
                     <div className="border-b flex items-center gap-2 pb-3">
                       {user?.avatar ? (
-                        <div className="w-[36px] h-[36px] cursor-pointer">
+                        <div className="w-[40px] h-[40px] cursor-pointer">
                           <img
-                            src={user.avatar}
+                            src={`${IMAGE_URL}${user.avatar}`}
                             alt="Avatar"
-                            className="size-full object-cover"
+                            className="size-full object-cover rounded-[50%]"
                           />
                         </div>
                       ) : (
@@ -181,11 +182,11 @@ const Layout = () => {
                 }
               >
                 {user?.avatar ? (
-                  <div className="w-[36px] h-[36px] cursor-pointer">
+                  <div className="w-[40px] h-[40px] cursor-pointer">
                     <img
-                      src={user.avatar}
+                      src={`${IMAGE_URL}${user.avatar}`}
                       alt="Avatar"
-                      className="size-full object-cover"
+                      className="size-full object-cover rounded-[50%]"
                     />
                   </div>
                 ) : (

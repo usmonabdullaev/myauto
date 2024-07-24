@@ -118,12 +118,12 @@ const BuyOnlineParams = () => {
                       {
                         id: 1,
                         image:
-                          "/uploads/image/3cc22f30-c2fe-42be-afc7-3317887811c4.jpeg",
+                          "/uploads/image/6214016e-aa06-43d1-a29b-616129438715_1721110592721.png",
                       },
                       {
                         id: 1,
                         image:
-                          "/uploads/image/3cc22f30-c2fe-42be-afc7-3317887811c4.jpeg",
+                          "/uploads/image/5948ab79-3af9-4a91-bc32-ab2780ff0ba7_1721110592723.png",
                       },
                     ],
                   }.images.map((i) => (
@@ -312,24 +312,26 @@ const BuyOnlineParams = () => {
             <h3 className="mt-4 font-bold text-xl text-[#1f2937]">Стоимость</h3>
             <div className={`bg-white rounded-lg p-4 mt-1`}>
               <p className="text-[#0a192d] font-normal flex items-center justify-between border-b pb-3">
-                <p className="text-[#808080]">Комлектация</p>
-                <p>{options.value}</p>
+                <span className="text-[#808080]">Комлектация</span>
+                <span>{options.value}</span>
               </p>
               <p className="text-[#0a192d] font-normal flex items-center justify-between border-b py-3">
-                <p className="text-[#808080]">Цвет кузова</p>
-                <p>{color.title}</p>
+                <span className="text-[#808080]">Цвет кузова</span>
+                <span>{color.title}</span>
               </p>
               <p className="text-[#0a192d] font-normal flex items-center justify-between border-b py-3">
-                <p className="text-[#808080]">Стоимость без скидки</p>
-                <p>{formatNumber(490000)} сом.</p>
+                <span className="text-[#808080]">Стоимость без скидки</span>
+                <span>{formatNumber(490000)} сом.</span>
               </p>
               <p className="text-[#0a192d] flex items-center justify-between pt-3 pb-1">
-                <p className="font-bold text-xl">Итого</p>
-                <p className="font-bold text-xl">{formatNumber(440000)} сом.</p>
+                <span className="font-bold text-xl">Итого</span>
+                <span className="font-bold text-xl">
+                  {formatNumber(440000)} сом.
+                </span>
               </p>
               <p className="text-[#ff8718] font-bold flex items-center justify-between mb-7">
-                <p className="">В кредит</p>
-                <p>от 3600 с./мес</p>
+                <span>В кредит</span>
+                <span>от 3600 с./мес</span>
               </p>
               <ButtonGradient group="1" className="font-bold mb-2">
                 КУПИТЬ СЕЙЧАС

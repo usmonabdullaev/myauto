@@ -732,8 +732,8 @@ const Search = () => {
                   {filteredData &&
                     filteredData.map((i) => (
                       <Link
-                        key={i.id}
-                        to={`/product/${i.id}`}
+                        key={i._id}
+                        to={`/product/${i._id}`}
                         className="w-[32%]"
                       >
                         <Card
@@ -748,7 +748,7 @@ const Search = () => {
                                 />
                               )}
                               <div className="absolute z-10 right-4 top-4 bg-[#ffffff44] hover:bg-[#ffffff7d] rounded-lg flex items-center justify-center p-[2px]">
-                                {favoritesKeys.includes(i.id) ? (
+                                {favoritesKeys.includes(i._id) ? (
                                   <img
                                     src="/heart-active.png"
                                     width={32}
@@ -756,7 +756,7 @@ const Search = () => {
                                     className="p-0.5"
                                     onClick={(e) => {
                                       e.preventDefault();
-                                      dispatch(deleteFavorite(i.id));
+                                      dispatch(deleteFavorite(i._id));
                                     }}
                                   />
                                 ) : (
@@ -765,7 +765,7 @@ const Search = () => {
                                     alt="Bookmark"
                                     onClick={(e) => {
                                       e.preventDefault();
-                                      dispatch(addFavorite(i.id));
+                                      dispatch(addFavorite(i._id));
                                     }}
                                   />
                                 )}
@@ -829,8 +829,8 @@ const Search = () => {
                   {filteredData &&
                     filteredData.map((i) => (
                       <Link
-                        key={i.id}
-                        to={`/product/${i.id}`}
+                        key={i._id}
+                        to={`/product/${i._id}`}
                         className="w-full"
                       >
                         <div className="cursor-pointer bg-white rounded-l-lg grid grid-cols-3 w-full h-[200px] overflow-hidden">
@@ -843,7 +843,27 @@ const Search = () => {
                               />
                             )}
                             <div className="absolute z-10 right-4 top-4 bg-[#ffffff44] hover:bg-[#ffffff7d] rounded-lg flex items-center justify-center p-[2px]">
-                              <img src="/heart.png" alt="Bookmark" />
+                              {favoritesKeys.includes(i._id) ? (
+                                <img
+                                  src="/heart-active.png"
+                                  width={32}
+                                  alt="Bookmark"
+                                  className="p-0.5"
+                                  onClick={(e) => {
+                                    e.preventDefault();
+                                    dispatch(deleteFavorite(i._id));
+                                  }}
+                                />
+                              ) : (
+                                <img
+                                  src="/heart.png"
+                                  alt="Bookmark"
+                                  onClick={(e) => {
+                                    e.preventDefault();
+                                    dispatch(addFavorite(i._id));
+                                  }}
+                                />
+                              )}
                             </div>
                             <img
                               alt="Car"

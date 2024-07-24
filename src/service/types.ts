@@ -1,5 +1,15 @@
+export interface UserT {
+  _id: string;
+  name: string;
+  phone: string;
+  balance: number;
+  avatar: string;
+  created: string;
+  updated: string;
+}
+
 export interface ProductType {
-  id: number;
+  _id: string;
   tarif: "free" | "premium";
   views: number;
   city: string;
@@ -27,14 +37,8 @@ export interface ProductType {
   model: string;
   created: string;
   updated: string;
-  user_id: number;
-  user: {
-    id: number;
-    user_name: string;
-    phone: string;
-    avatar: string;
-  };
-  images: { image: string; id: string; main: boolean; car_id: number }[];
+  user_id: string;
+  images: { image: string; _id: string; main?: boolean }[];
 }
 
 export interface MetaResponseType {
@@ -84,21 +88,18 @@ export interface FilterQueriesToUrlType {
 
 export type UserInfoType = {
   cars: ProductType[];
-  user: {
-    id: number;
-    user_name: string;
-    phone: string;
-    balance: number;
-    avatar: string;
-  };
+  user: UserT;
 };
 
 export type FavoriteT = {
-  id: number;
-  user_id: number;
-  car_id: number;
-  unique_key: string;
+  _id: string;
+  user_id: string;
+  car_id: string;
 };
+
+export interface SingleDataT extends ProductType {
+  user: UserT;
+}
 
 export interface DataInitType {
   data: ProductType[];
@@ -117,7 +118,7 @@ export interface DataInitType {
   filteredDataLoading: boolean;
   metaData: MetaResponseType;
   filterQueries: FilterQueriesType;
-  singleData: ProductType | null;
+  singleData: SingleDataT | null;
   singleDataLoading: boolean;
   userInfo: UserInfoType | null;
   userInfoLoading: boolean;
@@ -139,17 +140,7 @@ export interface DealerInitT {
     page: number;
     limit: number;
   };
-  singleData: ProductType | null;
-}
-
-export interface UserT {
-  _id: string;
-  name: string;
-  phone: string;
-  balance: number;
-  avatar: string;
-  created: string;
-  updated: string;
+  singleData: SingleDataT | null;
 }
 
 export interface UserInitT {
