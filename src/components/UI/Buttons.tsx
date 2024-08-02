@@ -2,7 +2,17 @@ import React, { MouseEvent, ReactNode } from "react";
 import { Button, ConfigProvider } from "antd";
 import { TinyColor } from "@ctrl/tinycolor";
 
-export const ButtonGradient = ({
+interface Props {
+  children: ReactNode;
+  className?: string;
+  onClick?: (e: MouseEvent<HTMLElement>) => void;
+  type?: "link" | "text" | "primary" | "default" | "dashed";
+  size?: "large" | "middle" | "small";
+  group?: "1" | "2";
+  block?: boolean;
+}
+
+export const ButtonGradient: React.FC<Props> = ({
   children,
   className = "",
   onClick = () => {},
@@ -10,14 +20,6 @@ export const ButtonGradient = ({
   size = "large",
   group = "1",
   block = true,
-}: {
-  children: ReactNode;
-  className?: string;
-  onClick?: (e: MouseEvent<HTMLElement>) => void;
-  type?: "link" | "text" | "primary" | "default" | "dashed";
-  size?: "large" | "middle" | "small";
-  group: "1" | "2";
-  block?: boolean;
 }) => {
   const getHoverColors = (colors: string[]) =>
     colors.map((color) => new TinyColor(color).lighten(5).toString());

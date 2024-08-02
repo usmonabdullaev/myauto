@@ -196,7 +196,7 @@ const DealersCar = () => {
               <div className="col-span-2 h-full max-h-[100%] overflow-hidden flex flex-col items-center gap-y-1 justify-center">
                 <Slider {...settings} ref={setSlider2}>
                   {singleData.images.map((i, index) => (
-                    <div key={i._id} className="relative">
+                    <div key={i.id} className="relative">
                       {activeSlider === index && (
                         <div
                           className="absolute right-[100%] top-1/2"
@@ -280,7 +280,7 @@ const DealersCar = () => {
                   arrows
                 >
                   {singleData.images.map((i) => (
-                    <div key={i._id} className="h-[400px] w-full">
+                    <div key={i.id} className="h-[400px] w-full">
                       <div
                         className="h-full w-full"
                         style={{
@@ -421,7 +421,7 @@ const DealersCar = () => {
                       size="large"
                       max={Number.MAX_SAFE_INTEGER}
                       controls={false}
-                      className="border-0 text-xl w-full text-[#565656] rounded-b-lg rounded-t-[0] focus:shadow-[none] opacity-[1] bg-[#ffffff] focus:shadow-[0]"
+                      className="border-0 text-xl w-full text-[#565656] rounded-b-lg rounded-t-[0] focus:shadow-none opacity-[1] bg-[#ffffff] focus:shadow-[0]"
                     />
                   </div>
                   <p className="text-sm font-semibold mt-3 text-[#132435]">
@@ -543,9 +543,9 @@ const DealersCar = () => {
                       <p className="text-[#62676d] col-span-8">{i.label}:</p>
                       <p className="text-[#3c5069] col-span-4">
                         {(i.type === "string" || i.type === "number") &&
-                          singleData.characteristics[i.slug]}
+                          (singleData.characteristics as any)[i.slug]}
                         {i.type === "bool"
-                          ? singleData.characteristics[i.slug]
+                          ? (singleData.characteristics as any)[i.slug]
                             ? "Да"
                             : "Нет"
                           : null}{" "}

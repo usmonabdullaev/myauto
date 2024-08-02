@@ -157,8 +157,8 @@ const DealersCars = () => {
               {data &&
                 data.map((i) => (
                   <Link
-                    key={i._id}
-                    to={`/dealers/car/${i._id}`}
+                    key={i.id}
+                    to={`/dealers/car/${i.id}`}
                     className="w-[24%]"
                   >
                     <Card
@@ -222,8 +222,8 @@ const DealersCars = () => {
               {data &&
                 data.map((i) => (
                   <Link
-                    key={i._id}
-                    to={`/dealers/car/${i._id}`}
+                    key={i.id}
+                    to={`/dealers/car/${i.id}`}
                     className="w-full"
                   >
                     <div className="cursor-pointer bg-white rounded-l-lg grid grid-cols-3 w-full h-[200px] overflow-hidden">

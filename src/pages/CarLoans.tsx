@@ -165,15 +165,15 @@ const CarLoans = () => {
             </div>
             <div className="col-span-7 flex flex-col justify-between gap-8">
               <div className="w-full flex items-start justify-between">
-                <div className="flex flex flex-col items-start gap-4">
+                <div className="flex flex-col items-start gap-4">
                   <p className="font-normal text-lg">Годовая ставка в TJS</p>
                   <p className="text-2xl font-semibold">{i.bidTJS}%</p>
                 </div>
-                <div className="flex flex flex-col items-start gap-4">
+                <div className="flex flex-col items-start gap-4">
                   <p className="font-normal text-lg">Годовая ставка в USD</p>
                   <p className="text-2xl font-semibold">{i.bidUSD}%</p>
                 </div>
-                <div className="flex flex flex-col items-start gap-4">
+                <div className="flex flex-col items-start gap-4">
                   <p className="font-normal text-lg">Срок</p>
                   <p className="text-2xl font-semibold">до {i.term} лет</p>
                 </div>
@@ -269,7 +269,9 @@ const CarLoans = () => {
             />
 
             <p className="text-gray-500">Предоплата</p>
-            <p className="text-2xl font-bold">{formatNumber(prepayment)} {currency}.</p>
+            <p className="text-2xl font-bold">
+              {formatNumber(prepayment)} {currency}.
+            </p>
             <Slider
               min={20000}
               max={100000}
@@ -280,7 +282,9 @@ const CarLoans = () => {
             />
 
             <p className="text-gray-500">Сумма финансирования</p>
-            <p className="text-2xl font-bold">{formatNumber(finance)} {currency}.</p>
+            <p className="text-2xl font-bold">
+              {formatNumber(finance)} {currency}.
+            </p>
             <Slider
               min={80000}
               max={160000}
@@ -309,7 +313,9 @@ const CarLoans = () => {
           <div className="col-span-5">
             <div className="rounded-lg bg-[#F7F8F9] p-4 mt-10">
               <p className="text-gray-500">Фактическая переплата</p>
-              <p className="text-2xl font-bold">{formatNumber(10400)} {currency}.</p>
+              <p className="text-2xl font-bold">
+                {formatNumber(10400)} {currency}.
+              </p>
 
               <p className="text-gray-500">Ежемесячный платёж</p>
               <p className="text-2xl font-bold">

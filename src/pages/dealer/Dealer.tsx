@@ -178,8 +178,8 @@ const Dealer = () => {
                   {userInfo.cars &&
                     userInfo.cars.map((i) => (
                       <Link
-                        key={i._id}
-                        to={`/dealers/car/${i._id}`}
+                        key={i.id}
+                        to={`/dealers/car/${i.id}`}
                         className="w-[32%]"
                       >
                         <Card
@@ -194,7 +194,7 @@ const Dealer = () => {
                                 />
                               )}
                               <div className="absolute z-10 right-4 top-4 bg-[#ffffff44] hover:bg-[#ffffff7d] rounded-lg flex items-center justify-center p-[2px]">
-                                {favoritesKeys.includes(i._id) ? (
+                                {favoritesKeys.includes(i.id) ? (
                                   <img
                                     src="/heart-active.png"
                                     width={32}
@@ -202,7 +202,7 @@ const Dealer = () => {
                                     className="p-0.5"
                                     onClick={(e) => {
                                       e.preventDefault();
-                                      dispatch(deleteFavorite(i._id));
+                                      dispatch(deleteFavorite(i.id));
                                     }}
                                   />
                                 ) : (
@@ -211,7 +211,7 @@ const Dealer = () => {
                                     alt="Bookmark"
                                     onClick={(e) => {
                                       e.preventDefault();
-                                      dispatch(addFavorite(i._id));
+                                      dispatch(addFavorite(i.id));
                                     }}
                                   />
                                 )}

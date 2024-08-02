@@ -8,7 +8,7 @@ import {
   login,
   login1,
   register,
-  checkPhone,
+  register1,
 } from "../../service/slices/user.ts";
 import { useAppDispatch, useAppSelector } from "../../service/hooks.ts";
 
@@ -65,13 +65,13 @@ const AuthModal = ({ title = "" }: { title?: ReactNode }) => {
     );
   };
 
-  const onCheckPhone = () => {
+  const onRegister1 = () => {
     if (phone.length !== 9) {
       return message.warning("Номер должен содержать 9 цифр!");
     }
     dispatch(
-      checkPhone({
-        phone: phone,
+      register1({
+        body: { phone, name },
         onSuccess: () => setRegisterStep(1),
       })
     );
@@ -88,6 +88,7 @@ const AuthModal = ({ title = "" }: { title?: ReactNode }) => {
 
   const onChange: OTPProps["onChange"] = (text) => {
     setSms(text);
+    console.log(text);
   };
 
   const sharedProps: OTPProps = {
@@ -218,7 +219,7 @@ const AuthModal = ({ title = "" }: { title?: ReactNode }) => {
                 <Form
                   name="check"
                   className="mt-6 mb-5 flex flex-col items-center w-full gap-2"
-                  onFinish={onCheckPhone}
+                  onFinish={onRegister1}
                 >
                   <Form.Item
                     rules={[
@@ -276,11 +277,7 @@ const AuthModal = ({ title = "" }: { title?: ReactNode }) => {
                     rules={[{ required: true, message: "Введите SMS" }]}
                     name="name"
                   >
-                    <Input.OTP
-                      length={4}
-                      {...sharedProps}
-                      onInput={(e) => console.log(e)}
-                    />
+                    <Input.OTP length={4} {...sharedProps} />
                   </Form.Item>
                   <Button
                     type="primary"

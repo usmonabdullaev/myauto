@@ -1,8 +1,8 @@
 import { PayloadAction, createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { message } from "antd";
 
 import { axiosInstance, axiosToken } from "../axios.ts";
 import { UserInitT, UserT } from "../types.ts";
-import { message } from "antd";
 import { getFavorites } from "./data.ts";
 
 const initialState: UserInitT = {
@@ -26,7 +26,7 @@ export const getMe = createAsyncThunk(
 
       return data.data;
     } catch (err) {
-      return rejectWithValue(err);
+      return rejectWithValue(err.response.data.message);
     }
   }
 );
@@ -99,19 +99,22 @@ export const login = createAsyncThunk(
   }
 );
 
-export const checkPhone = createAsyncThunk(
+export const register1 = createAsyncThunk(
   "userApi/checkPhone",
   async (
-    { phone, onSuccess }: { phone: string; onSuccess: () => void },
+    {
+      body,
+      onSuccess,
+    }: { body: { phone: string; name: string }; onSuccess: () => void },
     { rejectWithValue }
   ) => {
     try {
-      const uri = `/auth/check-phone/${phone}`;
-      const { data } = await axiosInstance.get<{
+      const uri = `/auth/register1`;
+      const { data } = await axiosInstance.post<{
         success: boolean;
         status: number;
         message: string;
-      }>(uri);
+      }>(uri, body);
 
       onSuccess();
       message.success(data.message);
@@ -224,13 +227,13 @@ export const userSlice = createSlice({
       state.authorized = true;
     });
 
-    builder.addCase(checkPhone.pending, (state) => {
+    builder.addCase(register1.pending, (state) => {
       state.userLoading = true;
     });
-    builder.addCase(checkPhone.fulfilled, (state) => {
+    builder.addCase(register1.fulfilled, (state) => {
       state.userLoading = false;
     });
-    builder.addCase(checkPhone.rejected, (state) => {
+    builder.addCase(register1.rejected, (state) => {
       state.userLoading = false;
     });
 

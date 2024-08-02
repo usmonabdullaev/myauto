@@ -1,5 +1,5 @@
 export interface UserT {
-  _id: string;
+  id: number;
   name: string;
   phone: string;
   balance: number;
@@ -9,7 +9,7 @@ export interface UserT {
 }
 
 export interface ProductType {
-  _id: string;
+  id: number;
   tarif: "free" | "premium";
   views: number;
   city: string;
@@ -38,7 +38,7 @@ export interface ProductType {
   created: string;
   updated: string;
   user_id: string;
-  images: { image: string; _id: string; main?: boolean }[];
+  images: { image: string; id: number; main?: boolean }[];
 }
 
 export interface MetaResponseType {
@@ -92,13 +92,25 @@ export type UserInfoType = {
 };
 
 export type FavoriteT = {
-  _id: string;
-  user_id: string;
-  car_id: string;
+  id: number;
+  user_id: number;
+  car_id: number;
 };
 
 export interface SingleDataT extends ProductType {
   user: UserT;
+}
+
+export interface ModelT {
+  id: number;
+  image: string;
+  name: string;
+  models: {
+    id: number;
+    name: string;
+    image: string;
+    brand_id: number;
+  }[];
 }
 
 export interface DataInitType {
@@ -128,6 +140,7 @@ export interface DataInitType {
   showroomsLoading: boolean;
   favorites: FavoriteT[];
   gridType: "grid" | "line";
+  models: ModelT[];
 }
 
 export interface DealerInitT {

@@ -1,3 +1,6 @@
+import { type ClassValue, clsx } from "clsx";
+import { twMerge } from "tailwind-merge";
+
 export const truncate = (str: string, length: number) => {
   return str.length > length ? `${str.slice(0, length)}...` : str;
 };
@@ -66,4 +69,8 @@ export const fileToBase64 = (file: File): Promise<string> => {
 
 export const filesToBase64 = (files: File[]): Promise<string[]> => {
   return Promise.all(files.map((file) => fileToBase64(file)));
+};
+
+export const cn = (...inputs: ClassValue[]) => {
+  return twMerge(clsx(inputs));
 };

@@ -180,7 +180,7 @@ const BuyOnline = () => {
                             {formatNumber(133000)} сом.
                           </h3>
                           <p
-                            className={`mt-1 font-bold mt-0 ${
+                            className={`font-bold mt-0 ${
                               i === model ? "text-[#ffbd87]" : "text-[#ff8718]"
                             }`}
                           >
@@ -201,7 +201,7 @@ const BuyOnline = () => {
                   onSwiper={(s) => setSwiper(s)}
                 >
                   {showrooms &&
-                    showrooms.map((i) => (
+                    showrooms.map((i: any) => (
                       <SwiperSlide key={i.id}>
                         <Link to={`/product/${i.id}`}>
                           <Card

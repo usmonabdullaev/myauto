@@ -1,16 +1,8 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { InputNumber } from "antd";
 import React, { useEffect } from "react";
-const DebouncedInput = ({
-  onChange = () => {},
-  placeholder,
-  variant,
-  min,
-  max,
-  className,
-  value,
-  disabled = false,
-}: {
+
+interface Props {
   onChange: (value: number) => void;
   placeholder?: string;
   variant?: "outlined" | "borderless" | "filled";
@@ -19,6 +11,17 @@ const DebouncedInput = ({
   className?: string;
   value?: number;
   disabled?: boolean;
+}
+
+const DebouncedInput: React.FC<Props> = ({
+  onChange = () => {},
+  placeholder,
+  variant,
+  min,
+  max,
+  className,
+  value,
+  disabled = false,
 }) => {
   const [inputValue, setInputValue] = React.useState(0);
   const [debouncedValue, setDebouncedValue] = React.useState(0);

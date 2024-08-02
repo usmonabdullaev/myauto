@@ -7,6 +7,7 @@ import {
   Pagination,
   Select,
   Switch,
+  TreeSelect,
 } from "antd";
 import { Link } from "react-router-dom";
 
@@ -20,6 +21,7 @@ import {
   addFavorite,
   deleteFavorite,
   getFavorites,
+  getModels,
 } from "../service/slices/data.ts";
 import SelectLabel from "../components/SelectLabel.tsx";
 import DebouncedInput from "../components/DebouncedInput.tsx";
@@ -33,6 +35,7 @@ const Search = () => {
     filterQueries,
     gridType,
     favorites,
+    models,
   } = useAppSelector((state) => state.data);
   const dispatch = useAppDispatch();
   const [showAllColors, setShowAllColors] = useState(false);
@@ -44,6 +47,7 @@ const Search = () => {
 
   useEffect(() => {
     dispatch(getFavorites());
+    dispatch(getModels());
   }, [dispatch]);
 
   useEffect(() => {
@@ -107,19 +111,20 @@ const Search = () => {
     },
   ];
 
-  const modelOptions = [
-    { value: "Toyota", label: "Toyota" },
-    {
-      value: "Mers",
-      label: "Mersedes-Benz",
-    },
-    {
-      value: "BMW",
-      label: "BMW",
-    },
-  ];
-
   const favoritesKeys = favorites.map((i) => i.car_id);
+
+  const modelsOptions = models.map((brand) => {
+    return {
+      title: brand.name,
+      value: brand.id,
+      children: brand.models.map((model) => {
+        return {
+          title: model.name,
+          value: `${model.brand_id}-${model.id}`,
+        };
+      }),
+    };
+  });
 
   return (
     <div>
@@ -262,19 +267,47 @@ const Search = () => {
                 defaultValue={filterQueries.city || undefined}
                 disabled={filteredDataLoading}
               />
-              <Select
+              <TreeSelect
+                className="w-full h-12 font-semibold mt-2 custom-select"
+                popupClassName="font-semibold"
+                dropdownStyle={{ maxHeight: 400, overflow: "auto" }}
                 placeholder="Марка и модель"
-                onChange={(model) =>
-                  dispatch(setFilterQueries({ ...filterQueries, model }))
-                }
-                className="custom-select font-semibold w-full h-12 mt-2"
-                options={modelOptions.map((i) => ({
-                  value: i.value,
-                  label: <SelectLabel>{i.label}</SelectLabel>,
-                }))}
+                onSelect={(...props) => {
+                  // console.log(props);
+                }}
+                onChange={(value, name) => {
+                  console.log(value);
+                  if (typeof value === "string") {
+                    const brand_id = +value.split("-")[0];
+                    const model_id = +value.split("-")[1];
+                    const brand =
+                      models.find((i) => i.id === brand_id)?.name || "";
+                    const model =
+                      models
+                        .find((i) => i.id === brand_id)
+                        ?.models.find((i) => i.id === model_id)?.name || "";
+                    return dispatch(
+                      setFilterQueries({
+                        ...filterQueries,
+                        model: `${brand} - ${model}`,
+                      })
+                    );
+                  }
+
+                  dispatch(
+                    setFilterQueries({
+                      ...filterQueries,
+                      model: models.find((i) => i.id === value)?.name || "",
+                    })
+                  );
+                }}
+                treeData={modelsOptions}
                 variant="filled"
-                defaultValue={filterQueries.model || undefined}
+                value={filterQueries.model || undefined}
                 disabled={filteredDataLoading}
+                treeDefaultExpandAll={false}
+                showSearch={false}
+                allowClear
               />
               <div className="mt-2">
                 <DebouncedInput
@@ -732,8 +765,8 @@ const Search = () => {
                   {filteredData &&
                     filteredData.map((i) => (
                       <Link
-                        key={i._id}
-                        to={`/product/${i._id}`}
+                        key={i.id}
+                        to={`/product/${i.id}`}
                         className="w-[32%]"
                       >
                         <Card
@@ -748,7 +781,7 @@ const Search = () => {
                                 />
                               )}
                               <div className="absolute z-10 right-4 top-4 bg-[#ffffff44] hover:bg-[#ffffff7d] rounded-lg flex items-center justify-center p-[2px]">
-                                {favoritesKeys.includes(i._id) ? (
+                                {favoritesKeys.includes(i.id) ? (
                                   <img
                                     src="/heart-active.png"
                                     width={32}
@@ -756,7 +789,7 @@ const Search = () => {
                                     className="p-0.5"
                                     onClick={(e) => {
                                       e.preventDefault();
-                                      dispatch(deleteFavorite(i._id));
+                                      dispatch(deleteFavorite(i.id));
                                     }}
                                   />
                                 ) : (
@@ -765,7 +798,7 @@ const Search = () => {
                                     alt="Bookmark"
                                     onClick={(e) => {
                                       e.preventDefault();
-                                      dispatch(addFavorite(i._id));
+                                      dispatch(addFavorite(i.id));
                                     }}
                                   />
                                 )}
@@ -829,8 +862,8 @@ const Search = () => {
                   {filteredData &&
                     filteredData.map((i) => (
                       <Link
-                        key={i._id}
-                        to={`/product/${i._id}`}
+                        key={i.id}
+                        to={`/product/${i.id}`}
                         className="w-full"
                       >
                         <div className="cursor-pointer bg-white rounded-l-lg grid grid-cols-3 w-full h-[200px] overflow-hidden">
@@ -843,7 +876,7 @@ const Search = () => {
                               />
                             )}
                             <div className="absolute z-10 right-4 top-4 bg-[#ffffff44] hover:bg-[#ffffff7d] rounded-lg flex items-center justify-center p-[2px]">
-                              {favoritesKeys.includes(i._id) ? (
+                              {favoritesKeys.includes(i.id) ? (
                                 <img
                                   src="/heart-active.png"
                                   width={32}
@@ -851,7 +884,7 @@ const Search = () => {
                                   className="p-0.5"
                                   onClick={(e) => {
                                     e.preventDefault();
-                                    dispatch(deleteFavorite(i._id));
+                                    dispatch(deleteFavorite(i.id));
                                   }}
                                 />
                               ) : (
@@ -860,7 +893,7 @@ const Search = () => {
                                   alt="Bookmark"
                                   onClick={(e) => {
                                     e.preventDefault();
-                                    dispatch(addFavorite(i._id));
+                                    dispatch(addFavorite(i.id));
                                   }}
                                 />
                               )}

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Badge, Select, Card, InputNumber } from "antd";
+import { Badge, Select, Card, InputNumber, TreeSelect } from "antd";
 import { Swiper as SwiperType } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
 
@@ -15,6 +15,7 @@ import {
   getFavorites,
   addFavorite,
   deleteFavorite,
+  getModels,
 } from "../service/slices/data.ts";
 import { formatNumber, truncate } from "../service/functions.ts";
 import { MainSliderSkeleton } from "../components/Skeletons.tsx";
@@ -37,6 +38,7 @@ const Main = () => {
     electData,
     electDataLoading,
     favorites,
+    models,
   } = useAppSelector((state) => state.data);
   const [swiper, setSwiper] = useState<SwiperType>();
   const [swiper1, setSwiper1] = useState<SwiperType>();
@@ -53,6 +55,7 @@ const Main = () => {
     dispatch(getNewCars());
     dispatch(getElectCars());
     dispatch(getFavorites());
+    dispatch(getModels());
   }, [dispatch]);
 
   const handleFilterChange = (
@@ -119,6 +122,19 @@ const Main = () => {
 
   const favoritesKeys = favorites.map((i) => i.car_id);
 
+  const modelsOptions = models.map((brand) => {
+    return {
+      title: brand.name,
+      value: brand.id,
+      children: brand.models.map((model) => {
+        return {
+          title: model.name,
+          value: `${model.brand_id}-${model.id}`,
+        };
+      }),
+    };
+  });
+
   return (
     <div>
       <div className="container mx-auto mt-10">
@@ -181,21 +197,16 @@ const Main = () => {
           <h3 className="text-2xl font-medium">Найти автомобиль</h3>
           <div className="mt-4">
             <div className="h-12 flex items-center justify-start">
-              <Select
+              <TreeSelect
+                className="w-1/6 h-full font-semibold"
+                popupClassName="font-semibold"
+                dropdownStyle={{ maxHeight: 400, overflow: "auto" }}
                 placeholder="Марка и модель"
-                onChange={(e) => handleFilterChange(e, "model")}
-                className="font-semibold h-full w-1/6"
-                options={[
-                  { value: "BMW", label: <SelectLabel>BMW</SelectLabel> },
-                  {
-                    value: "Mers",
-                    label: <SelectLabel>Mersedes-Benz</SelectLabel>,
-                  },
-                  {
-                    value: "Bugatti",
-                    label: <SelectLabel>Bugatti</SelectLabel>,
-                  },
-                ]}
+                onChange={(value) => handleFilterChange(value, "model")}
+                treeData={modelsOptions}
+                treeDefaultExpandAll={false}
+                showSearch={false}
+                allowClear
               />
               <Select
                 placeholder="Цена"
@@ -203,16 +214,24 @@ const Main = () => {
                 className="font-semibold h-full w-1/6"
                 options={[
                   {
+                    value: "10000-50000",
+                    label: <SelectLabel>10 000 - 50 000 сом.</SelectLabel>,
+                  },
+                  {
                     value: "50000-100000",
-                    label: <SelectLabel>50000 - 100000 сом.</SelectLabel>,
+                    label: <SelectLabel>50 000 - 100 000 сом.</SelectLabel>,
                   },
                   {
                     value: "100000-200000",
-                    label: <SelectLabel>100000 - 200000 сом.</SelectLabel>,
+                    label: <SelectLabel>100 000 - 200 000 сом.</SelectLabel>,
                   },
                   {
                     value: "200000-500000",
-                    label: <SelectLabel>200000 - 500000 сом.</SelectLabel>,
+                    label: <SelectLabel>200 000 - 500 000 сом.</SelectLabel>,
+                  },
+                  {
+                    value: "500000-1000000",
+                    label: <SelectLabel>500 000 - 1 000 000 сом.</SelectLabel>,
                   },
                 ]}
               />
@@ -232,6 +251,14 @@ const Main = () => {
                   {
                     value: "2022",
                     label: <SelectLabel>2022</SelectLabel>,
+                  },
+                  {
+                    value: "2021",
+                    label: <SelectLabel>2021</SelectLabel>,
+                  },
+                  {
+                    value: "2020",
+                    label: <SelectLabel>2020</SelectLabel>,
                   },
                 ]}
               />
@@ -272,7 +299,7 @@ const Main = () => {
           <h3 className="font-bold text-xl">
             Премиум объявление{" "}
             <span className="text-[#707070] text-base font-normal">
-              {premiumData?.length}
+              {premiumData?.length || 0}
             </span>
           </h3>
           <Link
@@ -284,7 +311,7 @@ const Main = () => {
         </div>
         {premiumDataLoading ? (
           <MainSliderSkeleton />
-        ) : !premiumData.length ? (
+        ) : !premiumData?.length ? (
           <p className="text-center text-xl">Пусто</p>
         ) : (
           <div className="relative mt-4">
@@ -295,8 +322,8 @@ const Main = () => {
             >
               {premiumData &&
                 premiumData.map((i) => (
-                  <SwiperSlide key={i._id}>
-                    <Link to={`/product/${i._id}`}>
+                  <SwiperSlide key={i.id}>
+                    <Link to={`/product/${i.id}`}>
                       <Card
                         style={{ width: 240, cursor: "pointer" }}
                         cover={
@@ -307,7 +334,7 @@ const Main = () => {
                               className="absolute z-10 -top-[0.4px] -left-[24.4px]"
                             />
                             <div className="absolute z-10 right-4 top-4 bg-[#ffffff44] hover:bg-[#ffffff7d] rounded-lg flex items-center justify-center p-[2px]">
-                              {favoritesKeys.includes(i._id) ? (
+                              {favoritesKeys.includes(i.id) ? (
                                 <img
                                   src="/heart-active.png"
                                   width={32}
@@ -315,7 +342,7 @@ const Main = () => {
                                   className="p-0.5"
                                   onClick={(e) => {
                                     e.preventDefault();
-                                    dispatch(deleteFavorite(i._id));
+                                    dispatch(deleteFavorite(i.id));
                                   }}
                                 />
                               ) : (
@@ -324,7 +351,7 @@ const Main = () => {
                                   alt="Bookmark"
                                   onClick={(e) => {
                                     e.preventDefault();
-                                    dispatch(addFavorite(i._id));
+                                    dispatch(addFavorite(i.id));
                                   }}
                                 />
                               )}
@@ -381,7 +408,7 @@ const Main = () => {
           <h3 className="font-bold text-xl">
             Ищу авто{" "}
             <span className="text-[#707070] text-base font-normal">
-              {searchCar?.length}
+              {searchCar?.length || 0}
             </span>
           </h3>
           <span
@@ -416,7 +443,7 @@ const Main = () => {
         </div>
         {searchCarLoading ? (
           <MainSliderSkeleton />
-        ) : !searchCar.length ? (
+        ) : !searchCar?.length ? (
           <p className="text-center text-xl">Пусто</p>
         ) : (
           <div className="relative mt-4">
@@ -427,8 +454,8 @@ const Main = () => {
             >
               {searchCar &&
                 searchCar.map((i) => (
-                  <SwiperSlide key={i._id}>
-                    <Link to={`/product/${i._id}`}>
+                  <SwiperSlide key={i.id}>
+                    <Link to={`/product/${i.id}`}>
                       <Card
                         style={{ width: 240, cursor: "pointer" }}
                         cover={
@@ -441,7 +468,7 @@ const Main = () => {
                               />
                             )}
                             <div className="absolute z-10 right-4 top-4 bg-[#ffffff44] hover:bg-[#ffffff7d] rounded-lg flex items-center justify-center p-[2px]">
-                              {favoritesKeys.includes(i._id) ? (
+                              {favoritesKeys.includes(i.id) ? (
                                 <img
                                   src="/heart-active.png"
                                   width={32}
@@ -449,7 +476,7 @@ const Main = () => {
                                   className="p-0.5"
                                   onClick={(e) => {
                                     e.preventDefault();
-                                    dispatch(deleteFavorite(i._id));
+                                    dispatch(deleteFavorite(i.id));
                                   }}
                                 />
                               ) : (
@@ -458,7 +485,7 @@ const Main = () => {
                                   alt="Bookmark"
                                   onClick={(e) => {
                                     e.preventDefault();
-                                    dispatch(addFavorite(i._id));
+                                    dispatch(addFavorite(i.id));
                                   }}
                                 />
                               )}
@@ -549,7 +576,7 @@ const Main = () => {
         </div>
         {newDataLoading ? (
           <MainSliderSkeleton />
-        ) : !newData.length ? (
+        ) : !newData?.length ? (
           <p className="text-center text-xl">Пусто</p>
         ) : (
           <div className="relative mt-4">
@@ -560,8 +587,8 @@ const Main = () => {
             >
               {newData &&
                 newData.map((i) => (
-                  <SwiperSlide key={i._id}>
-                    <Link to={`/product/${i._id}`}>
+                  <SwiperSlide key={i.id}>
+                    <Link to={`/product/${i.id}`}>
                       <Card
                         style={{ width: 240, cursor: "pointer" }}
                         cover={
@@ -574,7 +601,7 @@ const Main = () => {
                               />
                             )}
                             <div className="absolute z-10 right-4 top-4 bg-[#ffffff44] hover:bg-[#ffffff7d] rounded-lg flex items-center justify-center p-[2px]">
-                              {favoritesKeys.includes(i._id) ? (
+                              {favoritesKeys.includes(i.id) ? (
                                 <img
                                   src="/heart-active.png"
                                   width={32}
@@ -582,7 +609,7 @@ const Main = () => {
                                   className="p-0.5"
                                   onClick={(e) => {
                                     e.preventDefault();
-                                    dispatch(deleteFavorite(i._id));
+                                    dispatch(deleteFavorite(i.id));
                                   }}
                                 />
                               ) : (
@@ -591,7 +618,7 @@ const Main = () => {
                                   alt="Bookmark"
                                   onClick={(e) => {
                                     e.preventDefault();
-                                    dispatch(addFavorite(i._id));
+                                    dispatch(addFavorite(i.id));
                                   }}
                                 />
                               )}
@@ -682,7 +709,7 @@ const Main = () => {
         </div>
         {electDataLoading ? (
           <MainSliderSkeleton />
-        ) : !electData.length ? (
+        ) : !electData?.length ? (
           <p className="text-center text-xl">Пусто</p>
         ) : (
           <div className="relative mt-4">
@@ -693,8 +720,8 @@ const Main = () => {
             >
               {electData &&
                 electData.map((i) => (
-                  <SwiperSlide key={i._id}>
-                    <Link to={`/product/${i._id}`}>
+                  <SwiperSlide key={i.id}>
+                    <Link to={`/product/${i.id}`}>
                       <Card
                         style={{ width: 240, cursor: "pointer" }}
                         cover={
@@ -707,7 +734,7 @@ const Main = () => {
                               />
                             )}
                             <div className="absolute z-10 right-4 top-4 bg-[#ffffff44] hover:bg-[#ffffff7d] rounded-lg flex items-center justify-center p-[2px]">
-                              {favoritesKeys.includes(i._id) ? (
+                              {favoritesKeys.includes(i.id) ? (
                                 <img
                                   src="/heart-active.png"
                                   width={32}
@@ -715,7 +742,7 @@ const Main = () => {
                                   className="p-0.5"
                                   onClick={(e) => {
                                     e.preventDefault();
-                                    dispatch(deleteFavorite(i._id));
+                                    dispatch(deleteFavorite(i.id));
                                   }}
                                 />
                               ) : (
@@ -724,7 +751,7 @@ const Main = () => {
                                   alt="Bookmark"
                                   onClick={(e) => {
                                     e.preventDefault();
-                                    dispatch(addFavorite(i._id));
+                                    dispatch(addFavorite(i.id));
                                   }}
                                 />
                               )}
@@ -892,7 +919,7 @@ const Main = () => {
                   value={carPrice}
                   min={0}
                   controls={false}
-                  className="border-0 text-xl w-full mb-2 text-[#565656] rounded-b-xl focus:shadow-[none] bg-[#edf1f4] hover:bg-[#edf1f4] focus:shadow-[0] !focus:bg-[#edf1f4] rounded-[0]"
+                  className="border-0 text-xl w-full mb-2 text-[#565656] rounded-b-xl focus:shadow-none bg-[#edf1f4] hover:bg-[#edf1f4] focus:shadow-[0] !focus:bg-[#edf1f4] rounded-[0]"
                 />
               </label>
               <label
@@ -909,7 +936,7 @@ const Main = () => {
                   value={firstPrice}
                   controls={false}
                   min={0}
-                  className="border-0 text-xl w-full text-[#565656] rounded-b-xl focus:shadow-[none] bg-[#edf1f4] hover:bg-[#edf1f4] focus:shadow-[0] !focus:bg-[#edf1f4] rounded-[0]"
+                  className="border-0 text-xl w-full text-[#565656] rounded-b-xl focus:shadow-none bg-[#edf1f4] hover:bg-[#edf1f4] !focus:bg-[#edf1f4] rounded-[0]"
                 />
               </label>
               <p className="text-sm font-medium mt-3 text-[#132435]">

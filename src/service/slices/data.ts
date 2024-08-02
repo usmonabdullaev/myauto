@@ -1,4 +1,5 @@
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { message } from "antd";
 
 import { axiosInstance, axiosToken } from "../axios.ts";
 import {
@@ -7,12 +8,12 @@ import {
   FilterQueriesToUrlType,
   FilterQueriesType,
   MetaResponseType,
+  ModelT,
   ProductType,
   SingleDataT,
   UserInfoType,
 } from "../types.ts";
 import { filterObject } from "../functions.ts";
-import { message } from "antd";
 
 const initialState: DataInitType = {
   data: [],
@@ -62,6 +63,7 @@ const initialState: DataInitType = {
   showroomsLoading: false,
   favorites: [],
   gridType: "grid",
+  models: [],
 };
 
 export const getFavorites = createAsyncThunk(
@@ -77,14 +79,14 @@ export const getFavorites = createAsyncThunk(
       }>(uri);
       return data.data;
     } catch (err) {
-      return rejectWithValue(err);
+      return rejectWithValue(err.response.data.message);
     }
   }
 );
 
 export const addFavorite = createAsyncThunk(
   "dataApi/addFavorite",
-  async (id: string, { rejectWithValue, dispatch }) => {
+  async (id: number, { rejectWithValue, dispatch }) => {
     try {
       const uri = `/user/favorites/${id}`;
       const { data } = await axiosToken.post<{
@@ -110,7 +112,7 @@ export const addFavorite = createAsyncThunk(
 
 export const deleteFavorite = createAsyncThunk(
   "dataApi/deleteFavorite",
-  async (id: string, { rejectWithValue, dispatch }) => {
+  async (id: number, { rejectWithValue, dispatch }) => {
     try {
       const uri = `/user/favorites/${id}`;
       const { data } = await axiosToken.delete<{
@@ -157,7 +159,7 @@ export const getSearchCar = createAsyncThunk(
   "dataApi/getSearchCar",
   async (_, { rejectWithValue }) => {
     try {
-      const uri = `/car/home/search?city=Душанбе`;
+      const uri = `/cars/searched?city=Душанбе`;
       const { data } = await axiosInstance.get<ProductType[]>(uri);
       return data;
     } catch (err) {
@@ -170,7 +172,7 @@ export const getNewCars = createAsyncThunk(
   "dataApi/getNewCars",
   async (_, { rejectWithValue }) => {
     try {
-      const uri = `car/home/new`;
+      const uri = `cars/new`;
       const { data } = await axiosInstance.get<ProductType[]>(uri);
       return data;
     } catch (err) {
@@ -183,7 +185,7 @@ export const getElectCars = createAsyncThunk(
   "dataApi/getElectCars",
   async (_, { rejectWithValue }) => {
     try {
-      const uri = `car/home/elect`;
+      const uri = `cars/electronics`;
       const { data } = await axiosInstance.get<ProductType[]>(uri);
       return data;
     } catch (err) {
@@ -284,6 +286,24 @@ export const getShowrooms = createAsyncThunk(
       const uri = `/showrooms`;
       const { data } = await axiosInstance.get(uri);
       return data;
+    } catch (err) {
+      return rejectWithValue(err);
+    }
+  }
+);
+
+export const getModels = createAsyncThunk(
+  "dataApi/getModals",
+  async (_, { rejectWithValue }) => {
+    try {
+      const uri = `/cars/models`;
+      const { data } = await axiosInstance.get<{
+        data: ModelT[];
+        status: number;
+        success: boolean;
+        message: string;
+      }>(uri);
+      return data.data;
     } catch (err) {
       return rejectWithValue(err);
     }
@@ -420,6 +440,10 @@ export const dataSlice = createSlice({
     });
     builder.addCase(getComparisonData.rejected, (state) => {
       state.comparisonDataLoading = false;
+    });
+
+    builder.addCase(getModels.fulfilled, (state, action) => {
+      state.models = action.payload;
     });
   },
 });

@@ -1,18 +1,25 @@
 import React from "react";
 import ContentLoader from "react-content-loader";
 
-export const MainSliderSkeleton = ({
-  limit = 5,
-  className = "",
-  itemWidth = "",
-}: {
+import { cn } from "../service/functions.ts";
+
+interface Props {
   limit?: number;
   className?: string;
   itemWidth?: string;
+}
+
+export const MainSliderSkeleton: React.FC<Props> = ({
+  limit = 5,
+  className = "",
+  itemWidth = "",
 }) => {
   const cards = new Array(limit).fill(null);
   return (
-    <div className={`flex items-center justify-between ${className}`}>
+    <div
+      // className={`flex items-center justify-between ${className}`}
+      className={cn("flex items-center justify-between", className)}
+    >
       {cards.map((_, index) => (
         <ContentLoader
           viewBox="0 0 240 340"

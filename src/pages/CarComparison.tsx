@@ -249,7 +249,7 @@ const CarComparison = () => {
                     <img
                       alt="Car"
                       src={`${IMAGE_URL}${i.images[0].image}`}
-                      className="transition duration-300  w-full h-full h-[180px]"
+                      className="transition duration-300  w-full h-[180px]"
                       style={{ objectPosition: "center", objectFit: "cover" }}
                     />
                   </div>

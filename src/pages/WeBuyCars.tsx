@@ -87,9 +87,9 @@ const WeBuyCars = () => {
         onOk={handleOk}
         onCancel={handleCancel}
         footer={[
-          <Button type="primary" size="large">
-            Отправить
-          </Button>,
+          // <Button type="primary" size="large">
+          //   Отправить
+          // </Button>,
         ]}
         width={1000}
       >
@@ -117,14 +117,13 @@ const WeBuyCars = () => {
             size="large"
             className="font-semibold"
           />
-          <p className="font-semibold text-lg mt-6 mb-4">Запчасти:</p>
-          <div className="grid grid-cols-12 mb-10 gap-4">
+          <div className="grid grid-cols-12 mb-10 mt-4 gap-4">
             <Input.TextArea
               value={desc}
               onChange={(e) => setDesc(e.target.value)}
               className="font-semibold col-span-12 upload"
               size="large"
-              placeholder="Пожалуйста, укажите необходимые запчасти, их количество и краткое описание"
+              placeholder="Описание"
               autoSize={{ minRows: 5, maxRows: 10 }}
             />
             <Progress
@@ -192,7 +191,7 @@ const WeBuyCars = () => {
                   >
                     <CameraOutlined className="text-[32px]" />
                     <div className="font-[700] mt-2 text-sm text-center">
-                      Загрузить фото запчасти
+                      Загрузить фото авто
                     </div>
                   </label>
                 </label>

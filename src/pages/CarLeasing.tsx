@@ -80,15 +80,15 @@ const CarLeasing = () => {
             </div>
             <div className="col-span-7 flex flex-col justify-between gap-8">
               <div className="w-full flex items-start justify-between">
-                <div className="flex flex flex-col items-start gap-4">
+                <div className="flex flex-col items-start gap-4">
                   <p className="font-normal text-lg">Удорожание</p>
                   <p className="text-2xl font-semibold">{i.bidTJS}%</p>
                 </div>
-                <div className="flex flex flex-col items-start gap-4">
+                <div className="flex flex-col items-start gap-4">
                   <p className="font-normal text-lg">Аванс</p>
                   <p className="text-2xl font-semibold">{i.bidUSD}%</p>
                 </div>
-                <div className="flex flex flex-col items-start gap-4">
+                <div className="flex flex-col items-start gap-4">
                   <p className="font-normal text-lg">Срок</p>
                   <p className="text-2xl font-semibold">{i.term} мес.</p>
                 </div>

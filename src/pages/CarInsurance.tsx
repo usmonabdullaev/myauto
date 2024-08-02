@@ -86,19 +86,19 @@ const CarInsurance = () => {
             </div>
             <div className="col-span-7 flex flex-col justify-between gap-8">
               <div className="w-full flex items-start justify-between">
-                <div className="flex flex flex-col items-start gap-4">
+                <div className="flex flex-col items-start gap-4">
                   <p className="font-normal text-lg">Стоимость страхования</p>
                   <p className="text-2xl font-semibold">
                     от {formatNumber(i.bidTJS)} с.
                   </p>
                 </div>
-                <div className="flex flex flex-col items-start gap-4">
+                <div className="flex flex-col items-start gap-4">
                   <p className="font-normal text-lg">Страховая сумма</p>
                   <p className="text-2xl font-semibold">
                     от {formatNumber(i.bidUSD)} с.
                   </p>
                 </div>
-                <div className="flex flex flex-col items-start gap-4">
+                <div className="flex flex-col items-start gap-4">
                   <p className="font-normal text-lg">Срок</p>
                   <p className="text-2xl font-semibold">{i.term} мес.</p>
                 </div>

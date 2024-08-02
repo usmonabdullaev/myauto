@@ -214,7 +214,7 @@ const Product = () => {
               <div className="col-span-2 h-full max-h-[100%] overflow-hidden flex flex-col items-center gap-y-1 justify-center">
                 <Slider {...settings} ref={setSlider2}>
                   {singleData.images.map((i, index) => (
-                    <div key={i._id} className="relative">
+                    <div key={i.id} className="relative">
                       {activeSlider === index && (
                         <div
                           className="absolute right-[100%] top-1/2"
@@ -298,7 +298,7 @@ const Product = () => {
                   arrows
                 >
                   {singleData.images.map((i) => (
-                    <div key={i._id} className="h-[400px] w-full">
+                    <div key={i.id} className="h-[400px] w-full">
                       <div
                         className="h-full w-full"
                         style={{
@@ -439,7 +439,7 @@ const Product = () => {
                       size="large"
                       max={Number.MAX_SAFE_INTEGER}
                       controls={false}
-                      className="border-0 text-xl w-full text-[#565656] rounded-b-lg rounded-t-[0] focus:shadow-[none] opacity-[1] bg-[#ffffff] focus:shadow-[0]"
+                      className="border-0 text-xl w-full text-[#565656] rounded-b-lg rounded-t-[0] focus:shadow-none opacity-[1] bg-[#ffffff] focus:shadow-[0]"
                     />
                   </div>
                   <p className="text-sm font-semibold mt-3 text-[#132435]">
@@ -724,7 +724,7 @@ const Product = () => {
           <div className="mt-4 flex item-center gap-4 justify-start">
             {similar &&
               similar.map((i) => (
-                <Link className="w-[19%]" to={`/product/${i._id}`} key={i._id}>
+                <Link className="w-[19%]" to={`/product/${i.id}`} key={i.id}>
                   <Card
                     style={{ cursor: "pointer" }}
                     cover={

@@ -1,6 +1,4 @@
-// import { Dropdown, Space } from "antd";
 import {
-  // DownOutlined,
   TikTokOutlined,
   InstagramOutlined,
   YoutubeFilled,
@@ -8,40 +6,16 @@ import {
 } from "@ant-design/icons";
 import React, { useEffect } from "react";
 import { Link, Outlet } from "react-router-dom";
+import { Button, Popover } from "antd";
+
 import { useAppDispatch, useAppSelector } from "../service/hooks.ts";
 import { getMe, setShowAuthModal, logout } from "../service/slices/user.ts";
-// import type { MenuProps } from "antd";
-
 import AuthModal from "../components/modal/Auth.tsx";
-import { Button, Popover } from "antd";
 import { IMAGE_URL } from "../service/env.tsx";
 
 const Layout = () => {
   const dispatch = useAppDispatch();
   const { authorized, user } = useAppSelector((data) => data.user);
-  // const [selectedLang, setSelectedLang] = useState("russian");
-  // const handleMenuClick: MenuProps["onClick"] = (e) => {
-  //   setSelectedLang(e.key);
-  // };
-  // const items = [
-  //   {
-  //     label: "Русский",
-  //     key: "russian",
-  //   },
-  //   {
-  //     label: "English",
-  //     key: "english",
-  //   },
-  //   {
-  //     label: "Тоҷикӣ",
-  //     key: "tajik",
-  //   },
-  // ];
-
-  // const menuProps = {
-  //   items,
-  //   onClick: handleMenuClick,
-  // };
 
   useEffect(() => {
     dispatch(getMe());
@@ -155,7 +129,7 @@ const Layout = () => {
                       )}
                       <div>
                         <p className="text-lg font-[600]">{user?.name}</p>
-                        <p className="text-xs text-gray-500">ID: {user?._id}</p>
+                        <p className="text-xs text-gray-500">ID: {user?.id}</p>
                       </div>
                     </div>
 
