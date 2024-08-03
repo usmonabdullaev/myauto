@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Badge, Select, Card, InputNumber, TreeSelect } from "antd";
+import { Badge, Select, Card, InputNumber, TreeSelect, QRCode } from "antd";
 import { Swiper as SwiperType } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
 
@@ -359,7 +359,7 @@ const Main = () => {
 
                             <img
                               alt="Car"
-                              src={`${IMAGE_URL}${i.images[0].image}`}
+                              src={`${IMAGE_URL}${i.images[0]?.image}`}
                               className="transition duration-300 hover:scale-110 h-[180px] w-full object-cover"
                               height={180}
                             />
@@ -983,7 +983,7 @@ const Main = () => {
 
       <div className="container mx-auto mt-12">
         <div
-          className="bg-[#dbe2e9] h-80 rounded-xl py-16 flex items-center"
+          className="bg-[#dbe2e9] h-80 rounded-xl py-16 flex items-center relative"
           style={{
             backgroundImage: "url(/banner-4.png)",
             backgroundRepeat: "no-repeat",
@@ -1007,6 +1007,14 @@ const Main = () => {
                 <img src="/google-play-1.png" alt="Google play" width={180} />
               </a>
             </div>
+          </div>
+          <div className="absolute right-[160px] top-1/2 -translate-y-1/2 bg-white">
+            <QRCode
+              type="svg"
+              errorLevel="H"
+              value="https://myauto-delta.vercel.app"
+              icon="/qr-code.png"
+            />
           </div>
         </div>
       </div>

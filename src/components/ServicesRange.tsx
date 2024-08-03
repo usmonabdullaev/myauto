@@ -9,15 +9,15 @@ interface Props {
 
 export const ServicesRange: React.FC<Props> = ({ className, items }) => {
   return (
-    <div className={cn("flex flex-wrap justify-start gap-8", className)}>
+    <div className={cn("grid grid-cols-4 gap-8", className)}>
       {items.map((item) => (
-        <div key={item.id} className="w-[23%]">
+        <div key={item.id} className="w-full">
           <img
             src={item.image}
             alt={item.name}
             width={300}
             height={300}
-            className="rounded-2xl size-[300px] object-cover"
+            className="rounded-2xl h-[300px] w-full object-cover"
           />
           <p className="text-xl font-semibold mt-2">{item.name}</p>
         </div>

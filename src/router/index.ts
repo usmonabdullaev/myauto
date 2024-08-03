@@ -37,3 +37,7 @@ export const OnlineOrdering = lazy(() => import("../pages/OnlineOrdering.tsx"));
 export const WeBuyCars = lazy(() => import("../pages/WeBuyCars.tsx"));
 
 export const Rental = lazy(() => import("../pages/Rental.tsx"));
+
+export const RentalPage = lazy(() => import("../pages/RentalPage.tsx"));
+
+export const CarsFromDubai = lazy(() => import("../pages/CarsFromDubai.tsx"));

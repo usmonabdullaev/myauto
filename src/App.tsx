@@ -20,6 +20,8 @@ import {
   OnlineOrdering,
   WeBuyCars,
   Rental,
+  RentalPage,
+  CarsFromDubai,
 } from "./router/index.ts";
 
 function App() {
@@ -166,6 +168,22 @@ function App() {
           element={
             <Suspense>
               <Rental />
+            </Suspense>
+          }
+        />
+        <Route
+          path="rental/:id"
+          element={
+            <Suspense>
+              <RentalPage />
+            </Suspense>
+          }
+        />
+        <Route
+          path="cars-from-dubai"
+          element={
+            <Suspense>
+              <CarsFromDubai />
             </Suspense>
           }
         />

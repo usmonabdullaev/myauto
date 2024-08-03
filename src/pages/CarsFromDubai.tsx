@@ -2,12 +2,11 @@ import React, { useEffect, useState } from "react";
 import { Button } from "antd";
 
 import { ModelsGroup } from "../components/ModelsGroup.tsx";
-import { ServicesRange } from "../components/ServicesRange.tsx";
 import { ReantalCard } from "../components/RentalCard.tsx";
 import { useAppDispatch, useAppSelector } from "../service/hooks.ts";
 import { getModels } from "../service/slices/data.ts";
 
-const Reantal = () => {
+const CarsFromDubai = () => {
   const [activeModel, setActiveModel] = useState(0);
   const dispatch = useAppDispatch();
   const { models } = useAppSelector((state) => state.data);
@@ -31,29 +30,29 @@ const Reantal = () => {
           style={{ boxShadow: "0 4px 66px 0 #00000036" }}
         >
           <img
-            src="/rental-banner.png"
+            src="/auto-dubai-banner.png"
             alt="Banner"
             className="h-full object-cover"
           />
           <div className="p-12">
             <h2 className="text-3xl font-bold mb-4">
-              Арендуйте автомобиль
-              <br />
-              без лишних забот
+              АВТО ИЗ ДУБАЯ С ДОСТАВКОЙ
             </h2>
-            <p className="mb-5">
-              У нас всегда есть то, что вам нужно для комфортного
-              <br /> передвижения в городе или в поездке с друзьями
+            <p className="mb-5 leading-8">
+              ⭐ Гарантируем лучшую цену
+              <br />⭐ Доставка от 30 дней
+              <br />⭐ Подберем и рассчитаем любой авто
+              <br />⭐ Юридическая безопасность
             </p>
-            <Button type="primary" size="large">
-              Бронировать авто
+            <Button type="primary" size="large" className="px-10">
+              Заказать
             </Button>
           </div>
         </div>
       </div>
       <div className="bg-white mt-10 py-10">
         <div className="container mx-auto">
-          <h1 className="text-3xl font-bold">Прокат автомобилей в Душанбе</h1>
+          <h1 className="text-3xl font-bold">АВТО ИЗ ДУБАЯ С ДОСТАВКОЙ</h1>
 
           <ModelsGroup
             items={[{ id: 0, name: "Все авто" }, ...modelsGroupOptions]}
@@ -87,62 +86,15 @@ const Reantal = () => {
             )}
           </div>
 
-          <h2 className="text-2xl font-bold mt-10">
-            Мы предоставляем широкий спектр услуг по прокату авто в Душанбе
-          </h2>
-          <p className="mt-2 text-gray-500">
-            Найдем решение для всех поставленных задач.
-          </p>
-
-          <ServicesRange
-            items={[
-              {
-                id: 1,
-                name: "Аренда авто в аэропорту",
-                image: "/rental-banner.png",
-              },
-              {
-                id: 2,
-                name: "Аренда авто на мероприятия",
-                image: "/rental-banner.png",
-              },
-              {
-                id: 3,
-                name: "Аренда без водителя",
-                image: "/rental-banner.png",
-              },
-              {
-                id: 4,
-                name: "Аренда с водителем",
-                image: "/rental-banner.png",
-              },
-              {
-                id: 5,
-                name: "Инвестиции в прокат",
-                image: "/rental-banner.png",
-              },
-              {
-                id: 6,
-                name: "Трансфер в гостиницу",
-                image: "/rental-banner.png",
-              },
-              {
-                id: 7,
-                name: "Трансфер на вокзал",
-                image: "/rental-banner.png",
-              },
-              {
-                id: 8,
-                name: "Фотосессии с авто",
-                image: "/rental-banner.png",
-              },
-            ]}
-            className="mt-8"
-          />
+          <div className="flex justify-center mt-10">
+            <Button type="primary" size="large">
+              Показать еще
+            </Button>
+          </div>
         </div>
       </div>
     </div>
   );
 };
 
-export default Reantal;
+export default CarsFromDubai;
