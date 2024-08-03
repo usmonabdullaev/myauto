@@ -1,7 +1,7 @@
 import React from "react";
 
-import { cn } from "../service/functions.ts";
-import { ReantalCard } from "./RentalCard.tsx";
+import { cn } from "../../service/functions.ts";
+import { ReantalCard } from "./index.ts";
 
 interface Props {
   className?: string;

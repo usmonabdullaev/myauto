@@ -1,6 +1,6 @@
 import React from "react";
 
-import { cn } from "../service/functions.ts";
+import { cn } from "../../service/functions.ts";
 
 interface Props {
   className?: string;

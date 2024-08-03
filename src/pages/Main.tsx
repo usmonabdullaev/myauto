@@ -135,6 +135,8 @@ const Main = () => {
     };
   });
 
+  console.log(filterQueries.model);
+
   return (
     <div>
       <div className="container mx-auto mt-10">
@@ -202,7 +204,9 @@ const Main = () => {
                 popupClassName="font-semibold"
                 dropdownStyle={{ maxHeight: 400, overflow: "auto" }}
                 placeholder="Марка и модель"
-                onChange={(value) => handleFilterChange(value, "model")}
+                onChange={(value) => {
+                  handleFilterChange(value, "model");
+                }}
                 treeData={modelsOptions}
                 treeDefaultExpandAll={false}
                 showSearch={false}

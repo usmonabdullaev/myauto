@@ -2,7 +2,7 @@ import React, { LegacyRef } from "react";
 import { Carousel } from "antd";
 import { CarouselRef } from "antd/es/carousel";
 
-import { cn } from "../service/functions.ts";
+import { cn } from "../../service/functions.ts";
 
 interface Props {
   className?: string;

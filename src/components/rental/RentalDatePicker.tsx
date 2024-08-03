@@ -3,7 +3,7 @@ import { DatePicker } from "antd";
 import dayjs from "dayjs";
 import type { DatePickerProps } from "antd";
 
-import { calculateDays, cn } from "../service/functions.ts";
+import { calculateDays, cn } from "../../service/functions.ts";
 
 interface Props {
   className?: string;

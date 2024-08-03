@@ -2,7 +2,7 @@ import React from "react";
 import { Tabs, Button } from "antd";
 import type { TabsProps } from "antd";
 
-import { cn } from "../service/functions.ts";
+import { cn } from "../../service/functions.ts";
 
 interface Props {
   className?: string;

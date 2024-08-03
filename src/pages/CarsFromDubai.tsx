@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Button } from "antd";
 
 import { ModelsGroup } from "../components/ModelsGroup.tsx";
-import { ReantalCard } from "../components/RentalCard.tsx";
+import { ReantalCard } from "../components/rental/index.ts";
 import { useAppDispatch, useAppSelector } from "../service/hooks.ts";
 import { getModels } from "../service/slices/data.ts";
 

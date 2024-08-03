@@ -272,9 +272,6 @@ const Search = () => {
                 popupClassName="font-semibold"
                 dropdownStyle={{ maxHeight: 400, overflow: "auto" }}
                 placeholder="Марка и модель"
-                onSelect={(...props) => {
-                  // console.log(props);
-                }}
                 onChange={(value, name) => {
                   console.log(value);
                   if (typeof value === "string") {
@@ -289,7 +286,7 @@ const Search = () => {
                     return dispatch(
                       setFilterQueries({
                         ...filterQueries,
-                        model: `${brand} - ${model}`,
+                        model: `${brand} ${model}`,
                       })
                     );
                   }
@@ -805,7 +802,7 @@ const Search = () => {
                               </div>
                               <img
                                 alt="Car"
-                                src={`${IMAGE_URL}${i.images[0].image}`}
+                                src={`${IMAGE_URL}${i.images[0]?.image}`}
                                 className="transition duration-300 hover:scale-110 w-full h-[180px] object-cover"
                                 height={180}
                               />
@@ -900,7 +897,7 @@ const Search = () => {
                             </div>
                             <img
                               alt="Car"
-                              src={`${IMAGE_URL}${i.images[0].image}`}
+                              src={`${IMAGE_URL}${i.images[0]?.image}`}
                               className="transition duration-300 hover:scale-110 h-full w-full object-cover"
                             />
                           </div>

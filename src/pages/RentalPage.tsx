@@ -2,13 +2,15 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { CarouselRef } from "antd/es/carousel";
 
-import { RentalSlider } from "../components/RentalSlider.tsx";
-import { RentalThumbnails } from "../components/RentalThumbnails.tsx";
-import { RentalFAQ } from "../components/RentalFAQ.tsx";
-import { RentalInterestings } from "../components/RentalInterestings.tsx";
-import { RentalAdvantages } from "../components/RentalAdvantages.tsx";
-import { RentalTab } from "../components/RentalTab.tsx";
-import { RentalDatePicker } from "../components/RentalDatePicker.tsx";
+import {
+  RentalSlider,
+  RentalThumbnails,
+  RentalFAQ,
+  RentalInterestings,
+  RentalAdvantages,
+  RentalTab,
+  RentalDatePicker,
+} from "../components/rental/index.ts";
 import { Button } from "antd";
 
 const RentalPage = () => {
@@ -102,6 +104,7 @@ const RentalPage = () => {
                 <h6 className="text-xl font-bold">Период аренды</h6>
                 <p className="font-medium">Кол-во дней: {days}</p>
               </div>
+
               <RentalDatePicker
                 setDays={setDays}
                 className="grid grid-cols-2 gap-4 mt-4"
@@ -158,11 +161,13 @@ const RentalPage = () => {
         </div>
 
         <RentalAdvantages title="Наши преимущества" className="my-10" />
+
         <RentalInterestings
           className="my-10"
           items={[1, 2, 3, 4]}
           title="Возможно, вам будут интересны эти автомобили:"
         />
+
         <RentalFAQ />
       </div>
     </div>
