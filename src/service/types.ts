@@ -10,7 +10,7 @@ export interface UserT {
 
 export interface ProductType {
   id: number;
-  tarif: "free" | "premium";
+  tarif: "FREE" | "PREMIUM";
   views: number;
   city: string;
   title: string;
@@ -38,7 +38,7 @@ export interface ProductType {
   created: string;
   updated: string;
   user_id: string;
-  images: { image: string; id: number; main?: boolean }[];
+  images: { image: string; id: number; main: boolean }[];
 }
 
 export interface MetaResponseType {

@@ -157,11 +157,16 @@ export const getPremiumData = createAsyncThunk(
 
 export const getSearchCar = createAsyncThunk(
   "dataApi/getSearchCar",
-  async (_, { rejectWithValue }) => {
+  async (city: string, { rejectWithValue }) => {
     try {
-      const uri = `/cars/searched?city=Душанбе`;
-      const { data } = await axiosInstance.get<ProductType[]>(uri);
-      return data;
+      const uri = `/cars/searched?city=${city}`;
+      const { data } = await axiosInstance.get<{
+        data: ProductType[];
+        message: string;
+        status: number;
+        success: boolean;
+      }>(uri);
+      return data.data;
     } catch (err) {
       return rejectWithValue(err);
     }
@@ -173,8 +178,13 @@ export const getNewCars = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const uri = `cars/new`;
-      const { data } = await axiosInstance.get<ProductType[]>(uri);
-      return data;
+      const { data } = await axiosInstance.get<{
+        data: ProductType[];
+        message: string;
+        status: number;
+        success: boolean;
+      }>(uri);
+      return data.data;
     } catch (err) {
       return rejectWithValue(err);
     }
@@ -186,8 +196,13 @@ export const getElectCars = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const uri = `cars/electronics`;
-      const { data } = await axiosInstance.get<ProductType[]>(uri);
-      return data;
+      const { data } = await axiosInstance.get<{
+        data: ProductType[];
+        message: string;
+        status: number;
+        success: boolean;
+      }>(uri);
+      return data.data;
     } catch (err) {
       return rejectWithValue(err);
     }
@@ -198,9 +213,14 @@ export const getSimilar = createAsyncThunk(
   "dataApi/getSimilar",
   async (query: { limit: number; price: number }, { rejectWithValue }) => {
     try {
-      const uri = `/car/similar?limit=${query.limit}&price=${query.price}`;
-      const { data } = await axiosInstance.get<ProductType[]>(uri);
-      return data;
+      const uri = `/cars/similar?limit=${query.limit}&price=${query.price}`;
+      const { data } = await axiosInstance.get<{
+        data: ProductType[];
+        message: string;
+        status: number;
+        success: boolean;
+      }>(uri);
+      return data.data;
     } catch (err) {
       return rejectWithValue(err);
     }
@@ -216,6 +236,9 @@ export const getFilteredData = createAsyncThunk(
       const { data } = await axiosInstance.post<{
         data: ProductType[];
         meta: MetaResponseType;
+        status: number;
+        success: boolean;
+        message: string;
       }>(uri, filtered);
 
       if (data.meta) {
